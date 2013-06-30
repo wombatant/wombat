@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "core/core.hpp"
-#include "models/enginemodels.hpp"
+#ifndef WOMBAT_CORE_ALLEGRO_GLOBS_HPP
+#define WOMBAT_CORE_ALLEGRO_GLOBS_HPP
 
-using namespace models;
+#include <allegro5/allegro.h>
 
-int main() {
-	StatusEffect se;
-	se.write();
-	wombat::core::init();
-	return 0;
+namespace wombat {
+namespace core {
+
+ALLEGRO_DISPLAY *disp = 0;
+
 }
+}
+
+#endif
+

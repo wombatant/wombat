@@ -13,14 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "core/core.hpp"
-#include "models/enginemodels.hpp"
+#include "gfx.hpp"
 
-using namespace models;
+using std::string;
+using namespace wombat::core;
 
-int main() {
-	StatusEffect se;
-	se.write();
-	wombat::core::init();
+Image* loadImage(string path) {
 	return 0;
 }
+
+Image::Image() {
+	m_alImg = 0;
+}
+
+int Image::width() {
+	return al_get_bitmap_width(m_alImg);
+}
+
+int Image::height() {
+	return al_get_bitmap_height(m_alImg);
+}
+

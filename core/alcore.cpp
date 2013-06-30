@@ -13,14 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "core/core.hpp"
-#include "models/enginemodels.hpp"
+#include <allegro5/allegro.h>
 
-using namespace models;
+#include "allegro_globs.hpp"
+#include "core.hpp"
 
-int main() {
-	StatusEffect se;
-	se.write();
-	wombat::core::init();
+namespace wombat {
+namespace core {
+
+int init(bool fullscreen, int w, int h) {
+	if (!al_init())
+		return -1;
+
+	if (fullscreen) {
+		ALLEGRO_DISPLAY_MODE dispMode;
+		al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+		al_get_display_mode(al_get_num_display_modes() - 1, &dispMode);
+		w = dispMode.width;
+		h = dispMode.height;
+	}
+
+	if (!(disp = al_create_display(w, h)))
+		return -2;
+
 	return 0;
 }
+
+}
+}
+

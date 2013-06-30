@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "core/core.hpp"
-#include "models/enginemodels.hpp"
+#ifndef WOMBAT_CORE_CORE_HPP
+#define WOMBAT_CORE_CORE_HPP
 
-using namespace models;
+#include "gfx.hpp"
 
-int main() {
-	StatusEffect se;
-	se.write();
-	wombat::core::init();
-	return 0;
+namespace wombat {
+namespace core {
+
+/**
+ * Initializes graphics, user input, and audio
+ * @return 0 if successful
+ */
+int init(bool fullscreen = true, int w = 800, int h = 600);
+
 }
+}
+
+#endif

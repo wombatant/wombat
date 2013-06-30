@@ -26,6 +26,7 @@ else (ALLEGRO_LIBRARIES AND ALLEGRO_INCLUDE_DIRS)
   find_path(ALLEGRO_INCLUDE_DIR
     NAMES
       allegro.h
+      allegro_image.h
     PATHS
       /usr/include
       /usr/local/include
@@ -50,22 +51,62 @@ else (ALLEGRO_LIBRARIES AND ALLEGRO_INCLUDE_DIRS)
       /sw/lib
   )
 
-  set(ALLEGRO_LIBRARIES ${ALLEGRO_LIBRARY})
+  find_library(ALLEGRO_AUDIO_LIBRARY
+    NAMES
+      allegro_audio
+    PATHS
+      /usr/lib
+      /usr/lib/x86_64-linux-gnu
+      /usr/local/lib
+      /opt/local/lib
+      /sw/lib
+  )
+ 
+  find_library(ALLEGRO_FONT_LIBRARY
+    NAMES
+      allegro_font
+    PATHS
+      /usr/lib
+      /usr/lib/x86_64-linux-gnu
+      /usr/local/lib
+      /opt/local/lib
+      /sw/lib
+  )
+ 
+  find_library(ALLEGRO_TTF_LIBRARY
+    NAMES
+      allegro_ttf
+    PATHS
+      /usr/lib
+      /usr/lib/x86_64-linux-gnu
+      /usr/local/lib
+      /opt/local/lib
+      /sw/lib
+  )
+ 
+  find_library(ALLEGRO_IMAGE_LIBRARY
+    NAMES
+      allegro_image
+    PATHS
+      /usr/lib
+      /usr/lib/x86_64-linux-gnu
+      /usr/local/lib
+      /opt/local/lib
+      /sw/lib
+  )
+
+  set(ALLEGRO_LIBRARIES ${ALLEGRO_LIBRARY} ${ALLEGRO_IMAGE_LIBRARY})
   set(ALLEGRO_INCLUDE_DIRS ${ALLEGRO_INCLUDE_DIR})
 
   if (ALLEGRO_INCLUDE_DIRS AND ALLEGRO_LIBRARIES)
      set(ALLEGRO_FOUND TRUE)
   endif (ALLEGRO_INCLUDE_DIRS AND ALLEGRO_LIBRARIES)
 
-  if (ALLEGRO_FOUND)
-    if (NOT Allegro_FIND_QUIETLY)
-      message(STATUS "Found Allegro: ${ALLEGRO_LIBRARIES}")
-    endif (NOT Allegro_FIND_QUIETLY)
-  else (ALLEGRO_FOUND)
+  if (NOT ALLEGRO_FOUND)
     if (Allegro_FIND_REQUIRED)
       message(FATAL_ERROR "Could not find Allegro")
     endif (Allegro_FIND_REQUIRED)
-  endif (ALLEGRO_FOUND)
+  endif (NOT ALLEGRO_FOUND)
 
   # show the ALLEGRO_INCLUDE_DIRS and ALLEGRO_LIBRARIES variables only in the advanced view
   mark_as_advanced(ALLEGRO_INCLUDE_DIRS ALLEGRO_LIBRARIES)

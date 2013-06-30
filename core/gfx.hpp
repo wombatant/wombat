@@ -13,14 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "core/core.hpp"
-#include "models/enginemodels.hpp"
+#ifndef WOMBAT_CORE_GFX_HPP
+#define WOMBAT_CORE_GFX_HPP
 
-using namespace models;
+#include <string>
 
-int main() {
-	StatusEffect se;
-	se.write();
-	wombat::core::init();
-	return 0;
+#ifdef WITH_ALLEGRO
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_image.h>
+#endif
+
+namespace wombat {
+namespace core {
+
+class Image {
+	protected:
+#ifdef WITH_ALLEGRO
+		ALLEGRO_BITMAP *m_alImg;
+#endif
+
+	public:
+		Image();
+		int width();
+		int height();
+};
+
+Image* loadImage(std::string path);
+
 }
+}
+
+#endif

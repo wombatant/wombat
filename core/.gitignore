@@ -1,0 +1,6 @@
+tags
+cmake_install.cmake
+libcore.a
+CMakeCache.txt
+CMakeFiles
+Makefile

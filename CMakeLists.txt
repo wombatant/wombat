@@ -12,6 +12,10 @@ find_package(Allegro REQUIRED)
 include_directories(${Allegro_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${ALLEGRO_LIBRARIES})
 
+include_directories("${PROJECT_SOURCE_DIR}/core")
+add_subdirectory(core)
+set(LIBS ${LIBS} core)
+
 include_directories("${PROJECT_SOURCE_DIR}/models")
 add_subdirectory(models)
 set(LIBS ${LIBS} models)
