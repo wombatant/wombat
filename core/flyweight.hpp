@@ -13,12 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "core/core.hpp"
-#include "models/enginemodels.hpp"
+#ifndef WOMBAT_CORE_FLYWEIGHT_HPP
+#define WOMBAT_CORE_FLYWEIGHT_HPP
 
-using namespace models;
+#include <map>
+#include <string>
 
-int main() {
-	wombat::core::init();
-	return 0;
+namespace wombat {
+namespace core {
+
+using std::map;
+using std::string;
+
+class FlyweightNode {
+	friend class Flyweight;
+	protected:
+		int dependents;
+	public:
+		virtual ~FlyweightNode();
+		virtual string key() = 0;
+};
+
+class Flyweight {
+	private:
+		map<string, FlyweightNode*> m_cache;
+		FlyweightNode *(*m_build)(string);
+	public:
+		Flyweight(FlyweightNode *(*build)(string));
+		FlyweightNode* checkout(string key);
+		void checkin(string key);
+		void checkin(FlyweightNode *val);
+};
+
 }
+}
+
+#endif

@@ -13,31 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_CORE_CORE_HPP
-#define WOMBAT_CORE_CORE_HPP
-
 #include "gfx.hpp"
+#include "flyweight.hpp"
 
 namespace wombat {
 namespace core {
 
-typedef char int8;
-typedef unsigned char uint8;
-typedef short int16;
-typedef unsigned short uint16;
-typedef unsigned uint;
-typedef long long int64;
-typedef unsigned long long uint64;
+using std::string;
 
-/**
- * Initializes graphics, user input, and audio
- * @return 0 if successful
- */
-int init(bool fullscreen = true, int w = 800, int h = 600);
+//Image
 
-void addDrawer(Drawer*);
+FlyweightNode *loadImage(string key) {
+	Image *i = new Image(key);
+	if (i->loaded()) {
+		return (FlyweightNode*) i;
+	} else {
+		delete i;
+		return 0;
+	}
+}
+
+Flyweight imageCache(loadImage);
+
+Image *checkoutImage(models::Image &img) {
+	return (Image*) imageCache.checkout(img.path);
+}
+
+void checkinImage(string path) {
+	imageCache.checkin(path);
+}
+
+void checkinImage(Image &i) {
+	checkinImage(i.key());
+}
+
+
+Image::Image(models::Image &img) {
+	Image(img.path);
+}
+
+string Image::key() {
+	return m_path;
+}
 
 }
 }
-
-#endif

@@ -1,6 +1,6 @@
 tags
 cmake_install.cmake
-libmodels.a
+libWombatModels.a
 CMakeCache.txt
 CMakeFiles
 Makefile

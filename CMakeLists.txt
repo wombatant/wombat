@@ -12,13 +12,13 @@ find_package(Allegro REQUIRED)
 include_directories(${Allegro_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${ALLEGRO_LIBRARIES})
 
-include_directories("${PROJECT_SOURCE_DIR}/core")
-add_subdirectory(core)
-set(LIBS ${LIBS} core)
-
 include_directories("${PROJECT_SOURCE_DIR}/models")
 add_subdirectory(models)
-set(LIBS ${LIBS} models)
+set(LIBS ${LIBS} WombatModels)
 
-add_executable(wombat main.cpp)
+include_directories("${PROJECT_SOURCE_DIR}/core")
+add_subdirectory(core)
+set(LIBS ${LIBS} WombatCore)
+
+add_executable(wombat main.cpp tests.cpp)
 target_link_libraries(wombat ${LIBS})

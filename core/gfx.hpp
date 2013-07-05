@@ -23,22 +23,52 @@
 #include <allegro5/allegro_image.h>
 #endif
 
+#include "../models/enginemodels.hpp"
+
 namespace wombat {
 namespace core {
 
+using std::string;
+
 class Image {
-	protected:
+	public:
 #ifdef WITH_ALLEGRO
 		ALLEGRO_BITMAP *m_alImg;
 #endif
-
+	private:
+		string m_path;
 	public:
-		Image();
+		Image(models::Image&);
+		Image(string path);
+		virtual ~Image();
 		int width();
 		int height();
+		bool loaded();
+		string key();
 };
 
-Image* loadImage(std::string path);
+class Animation {
+	private:
+		vector<Image*> imgs;
+	public:
+		Animation(models::Animation&);
+		void add(Image*);
+};
+
+class Graphics {
+	void draw(Image* img, int x, int y, int w = -1, int h = -1);
+};
+
+class Drawer {
+	public:
+		virtual void draw(Graphics*) = 0;
+};
+
+Image *checkoutImage(string path);
+
+void checkinImage(string path);
+
+void checkinImage(Image &img);
 
 }
 }

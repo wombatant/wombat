@@ -13,12 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "core/core.hpp"
-#include "models/enginemodels.hpp"
+#include "flyweight.hpp"
 
-using namespace models;
+namespace wombat {
+namespace core {
 
-int main() {
-	wombat::core::init();
-	return 0;
+Flyweight::Flyweight(FlyweightNode *(*build)(string)) {
+	m_build = build;
+}
+
+FlyweightNode* Flyweight::checkout(string key) {
+	FlyweightNode *v = m_cache[key];
+	if (!v) {
+		v = m_build(key);
+	}
+	v->dependents++;
+	return v;
+}
+
+void Flyweight::checkin(string key) {
+	FlyweightNode *v = m_cache[key];
+	checkin(v);
+}
+
+void Flyweight::checkin(FlyweightNode *v) {
+	v->dependents--;
+	if (!v->dependents) {
+		m_cache.erase(v->key());
+		delete v;
+	}
+}
+
+}
 }

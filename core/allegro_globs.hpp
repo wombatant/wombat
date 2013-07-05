@@ -21,7 +21,8 @@
 namespace wombat {
 namespace core {
 
-ALLEGRO_DISPLAY *disp = 0;
+ALLEGRO_DISPLAY *display = 0;
+ALLEGRO_THREAD *drawThread = 0;
 
 }
 }

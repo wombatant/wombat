@@ -13,17 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <vector>
+
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_image.h>
 
 #include "allegro_globs.hpp"
 #include "core.hpp"
 
+
 namespace wombat {
 namespace core {
+
+std::vector<Drawer*> drawers;
+std::vector<Graphics*> graphicsInstances;
+
+static void* drawThreadFunc(ALLEGRO_THREAD *t, void *arg) {
+	while (1) {
+		for (int i = 0; i < drawers.size(); i++) {
+			drawers[i]->draw(graphicsInstances[i]);
+		}
+		al_flip_display();
+		al_rest(0.016);
+	}
+	return 0;
+}
 
 int init(bool fullscreen, int w, int h) {
 	if (!al_init())
 		return -1;
+	if (!al_init_image_addon())
+		return -2;
 
 	if (fullscreen) {
 		ALLEGRO_DISPLAY_MODE dispMode;
@@ -33,10 +53,26 @@ int init(bool fullscreen, int w, int h) {
 		h = dispMode.height;
 	}
 
-	if (!(disp = al_create_display(w, h)))
-		return -2;
+	display = al_create_display(w, h);
+	if (!display)
+		return -3;
+
+	drawThread = al_create_thread(drawThreadFunc, 0);
+	if (drawThread) {
+		al_start_thread(drawThread);
+	} else {
+		al_destroy_display(display);
+		return -4;
+	}
+
+	al_rest(30);
 
 	return 0;
+}
+
+void addDrawer(Drawer *d) {
+	graphicsInstances.push_back(new Graphics());
+	drawers.push_back(d);
 }
 
 }

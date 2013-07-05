@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 #include "gfx.hpp"
+#include "flyweight.hpp"
+
+namespace wombat {
+namespace core {
 
 using std::string;
-using namespace wombat::core;
 
-Image* loadImage(string path) {
-	return 0;
+//Image
+
+Image::Image(string path) {
+	m_alImg = al_load_bitmap(path.c_str());
 }
 
-Image::Image() {
-	m_alImg = 0;
+Image::~Image() {
+	al_destroy_bitmap(m_alImg);
 }
 
 int Image::width() {
@@ -34,3 +39,26 @@ int Image::height() {
 	return al_get_bitmap_height(m_alImg);
 }
 
+bool Image::loaded() {
+	return m_alImg;
+}
+
+
+//Animation
+
+Animation::Animation(models::Animation &anim) {
+}
+
+
+//Graphics
+
+void Graphics::draw(Image* img, int x, int y, int w, int h) {
+	if (w == -1)
+		w = img->width();
+	if (h == -1)
+		h = img->height();
+	al_draw_scaled_bitmap(img->m_alImg, 0, 0, img->width(), img->height(), x, y, w, h, 0);
+}
+
+}
+}

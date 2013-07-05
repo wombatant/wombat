@@ -13,12 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifndef WOMBAT_TESTS_HPP
+#define WOMBAT_TESTS_HPP
+
+#include <string>
+
 #include "core/core.hpp"
 #include "models/enginemodels.hpp"
 
-using namespace models;
+namespace wombat {
+namespace tests {
 
-int main() {
-	wombat::core::init();
-	return 0;
+using namespace wombat::core;
+
+class AnimationTest: public Drawer {
+	private:
+		models::Animation anim;
+	public:
+		AnimationTest(std::string path);
+		void draw(Graphics*);
+};
+
 }
+}
+
+#endif
