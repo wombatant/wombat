@@ -26,6 +26,14 @@ namespace tests {
 
 using namespace wombat::core;
 
+class ImageTest: public Drawer {
+	private:
+		Image *m_img;
+	public:
+		ImageTest(std::string path);
+		void draw(Graphics*);
+};
+
 class AnimationTest: public Drawer {
 	private:
 		models::Animation anim;

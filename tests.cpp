@@ -18,8 +18,20 @@
 namespace wombat {
 namespace tests {
 
+ImageTest::ImageTest(std::string path) {
+	models::Image img;
+	img.loadFile(path);
+	m_img = core::checkoutImage(img);
+}
+
+void ImageTest::draw(Graphics *g) {
+	if (m_img && m_img->loaded()) {
+		g->draw(m_img, 42, 42);
+	}
+}
+
 AnimationTest::AnimationTest(std::string path) {
-	anim.load(path);
+	anim.loadFile(path);
 }
 
 void AnimationTest::draw(Graphics *g) {

@@ -14,46 +14,13 @@
  * limitations under the License.
  */
 #include <iostream>
-#include "core.hpp"
-#include "flyweight.hpp"
+#include <string>
 
 namespace wombat {
 namespace core {
 
-using std::string;
-
-//Image
-
-FlyweightNode *loadImage(string key) {
-	Image *i = new Image(key);
-	if (i->loaded()) {
-		return i;
-	} else {
-		delete i;
-		return 0;
-	}
-}
-
-Flyweight imageCache(loadImage);
-
-Image *checkoutImage(string path) {
-	return (Image*) imageCache.checkout(path);
-}
-
-Image *checkoutImage(models::Image &img) {
-	return (Image*) imageCache.checkout(img.path);
-}
-
-void checkinImage(string path) {
-	imageCache.checkin(path);
-}
-
-void checkinImage(Image &i) {
-	checkinImage(i.key());
-}
-
-string Image::key() {
-	return m_path;
+void debug(std::string txt) {
+	std::cout << txt << std::endl;
 }
 
 }

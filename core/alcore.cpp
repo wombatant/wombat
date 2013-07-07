@@ -21,7 +21,6 @@
 #include "allegro_globs.hpp"
 #include "core.hpp"
 
-
 namespace wombat {
 namespace core {
 
@@ -29,12 +28,13 @@ std::vector<Drawer*> drawers;
 std::vector<Graphics*> graphicsInstances;
 
 static void* drawThreadFunc(ALLEGRO_THREAD *t, void *arg) {
+	al_set_target_backbuffer(display);
 	while (1) {
 		for (int i = 0; i < drawers.size(); i++) {
 			drawers[i]->draw(graphicsInstances[i]);
 		}
 		al_flip_display();
-		al_rest(0.016);
+		sleep(16);
 	}
 	return 0;
 }
@@ -65,14 +65,16 @@ int init(bool fullscreen, int w, int h) {
 		return -4;
 	}
 
-	al_rest(30);
-
 	return 0;
 }
 
 void addDrawer(Drawer *d) {
 	graphicsInstances.push_back(new Graphics());
 	drawers.push_back(d);
+}
+
+void sleep(uint64 ms) {
+	al_rest(ms * 0.001);
 }
 
 }

@@ -16,6 +16,7 @@
 #ifndef WOMBAT_CORE_CORE_HPP
 #define WOMBAT_CORE_CORE_HPP
 
+#include <string>
 #include "gfx.hpp"
 
 namespace wombat {
@@ -36,6 +37,10 @@ typedef unsigned long long uint64;
 int init(bool fullscreen = true, int w = 800, int h = 600);
 
 void addDrawer(Drawer*);
+
+void sleep(uint64 ms);
+
+inline void debug(std::string);
 
 }
 }

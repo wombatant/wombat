@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "core.hpp"
 #include "flyweight.hpp"
 
 namespace wombat {
@@ -25,10 +26,15 @@ Flyweight::Flyweight(FlyweightNode *(*build)(string)) {
 FlyweightNode* Flyweight::checkout(string key) {
 	FlyweightNode *v = m_cache[key];
 	if (!v) {
-		v = m_build(key);
+		m_cache[key] = v = m_build(key);
 	}
-	v->dependents++;
+	if (v) {	
+		v->dependents++;
+	}
 	return v;
+}
+
+FlyweightNode::~FlyweightNode() {
 }
 
 void Flyweight::checkin(string key) {

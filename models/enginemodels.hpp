@@ -89,6 +89,24 @@ class Fraction: public modelmaker::Model {
 
 namespace models {
 
+class Image: public modelmaker::Model {
+
+	public:
+
+		Image();
+
+		bool load_json_t(json_t *obj);
+
+		json_t* buildJsonObj();
+
+		string path;
+};
+
+}
+
+
+namespace models {
+
 class ModelFile: public modelmaker::Model {
 
 	public:
@@ -138,6 +156,69 @@ class Size: public modelmaker::Model {
 
 		int width;
 		int height;
+};
+
+}
+
+
+namespace models {
+
+class Animation: public modelmaker::Model {
+
+	public:
+
+		Animation();
+
+		bool load_json_t(json_t *obj);
+
+		json_t* buildJsonObj();
+
+		int interval;
+		vector< Image > images;
+};
+
+}
+
+
+namespace models {
+
+class AnimLayer: public modelmaker::Model {
+
+	public:
+
+		AnimLayer();
+
+		bool load_json_t(json_t *obj);
+
+		json_t* buildJsonObj();
+
+		Point point;
+		Animation animation;
+};
+
+}
+
+
+namespace models {
+
+class CreatureClass: public modelmaker::Model {
+
+	public:
+
+		CreatureClass();
+
+		bool load_json_t(json_t *obj);
+
+		json_t* buildJsonObj();
+
+		map< string, string > name;
+		string successor;
+		string predecessor;
+		vector< string > types;
+		vector< string > canLearn;
+		map< int, string > learnsAtLevel;
+		Animation frontView;
+		Animation backView;
 };
 
 }
@@ -266,75 +347,44 @@ class ZoneInstance: public modelmaker::Model {
 
 namespace models {
 
-class Image: public modelmaker::Model {
+class TileClass: public modelmaker::Model {
 
 	public:
 
-		Image();
+		TileClass();
 
 		bool load_json_t(json_t *obj);
 
 		json_t* buildJsonObj();
 
-		Size size;
+		int terrainFlags;
+		string import;
+		vector< AnimLayer > lowerAnims;
+		vector< AnimLayer > upperAnims;
+};
+
+}
+
+
+namespace models {
+
+class Sprite: public modelmaker::Model {
+
+	public:
+
+		Sprite();
+
+		bool load_json_t(json_t *obj);
+
+		json_t* buildJsonObj();
+
+		vector< vector< AnimLayer > > animLayers;
+		int spriteType;
+		int personID;
+		int speed;
+		string name;
 		string path;
-};
-
-}
-
-
-namespace models {
-
-class ZoneHeader: public modelmaker::Model {
-
-	public:
-
-		ZoneHeader();
-
-		bool load_json_t(json_t *obj);
-
-		json_t* buildJsonObj();
-
-		string path;
-		Size size;
-};
-
-}
-
-
-namespace models {
-
-class Animation: public modelmaker::Model {
-
-	public:
-
-		Animation();
-
-		bool load_json_t(json_t *obj);
-
-		json_t* buildJsonObj();
-
-		int interval;
-		vector< Image > images;
-};
-
-}
-
-
-namespace models {
-
-class AnimLayer: public modelmaker::Model {
-
-	public:
-
-		AnimLayer();
-
-		bool load_json_t(json_t *obj);
-
-		json_t* buildJsonObj();
-
-		Point point;
-		Animation animation;
+		string scriptPath;
 };
 
 }
@@ -361,24 +411,18 @@ class SaveFile: public modelmaker::Model {
 
 namespace models {
 
-class CreatureClass: public modelmaker::Model {
+class Tile: public modelmaker::Model {
 
 	public:
 
-		CreatureClass();
+		Tile();
 
 		bool load_json_t(json_t *obj);
 
 		json_t* buildJsonObj();
 
-		map< string, string > name;
-		string successor;
-		string predecessor;
-		vector< string > types;
-		vector< string > canLearn;
-		map< int, string > learnsAtLevel;
-		Animation frontView;
-		Animation backView;
+		TileClass tileClass;
+		Sprite occupant;
 };
 
 }
@@ -386,20 +430,56 @@ class CreatureClass: public modelmaker::Model {
 
 namespace models {
 
-class TileClass: public modelmaker::Model {
+class World: public modelmaker::Model {
 
 	public:
 
-		TileClass();
+		World();
 
 		bool load_json_t(json_t *obj);
 
 		json_t* buildJsonObj();
 
-		int terrainFlags;
-		string import;
-		vector< AnimLayer > lowerAnims;
-		vector< AnimLayer > upperAnims;
+		vector< ZoneInstance > zones;
+};
+
+}
+
+
+namespace models {
+
+class ZoneHeader: public modelmaker::Model {
+
+	public:
+
+		ZoneHeader();
+
+		bool load_json_t(json_t *obj);
+
+		json_t* buildJsonObj();
+
+		string path;
+		Size size;
+};
+
+}
+
+
+namespace models {
+
+class Zone: public modelmaker::Model {
+
+	public:
+
+		Zone();
+
+		bool load_json_t(json_t *obj);
+
+		json_t* buildJsonObj();
+
+		vector< vector< vector< Tile > > > tiles;
+		vector< string > initScripts;
+		Point location;
 };
 
 }
@@ -441,87 +521,6 @@ class Person: public modelmaker::Model {
 		json_t* buildJsonObj();
 
 		PersonClass personClass;
-};
-
-}
-
-
-namespace models {
-
-class World: public modelmaker::Model {
-
-	public:
-
-		World();
-
-		bool load_json_t(json_t *obj);
-
-		json_t* buildJsonObj();
-
-		vector< ZoneInstance > zones;
-};
-
-}
-
-
-namespace models {
-
-class Sprite: public modelmaker::Model {
-
-	public:
-
-		Sprite();
-
-		bool load_json_t(json_t *obj);
-
-		json_t* buildJsonObj();
-
-		vector< vector< AnimLayer > > animLayers;
-		int spriteType;
-		int personID;
-		int speed;
-		string name;
-		string path;
-		string scriptPath;
-};
-
-}
-
-
-namespace models {
-
-class Tile: public modelmaker::Model {
-
-	public:
-
-		Tile();
-
-		bool load_json_t(json_t *obj);
-
-		json_t* buildJsonObj();
-
-		TileClass tileClass;
-		Sprite occupant;
-};
-
-}
-
-
-namespace models {
-
-class Zone: public modelmaker::Model {
-
-	public:
-
-		Zone();
-
-		bool load_json_t(json_t *obj);
-
-		json_t* buildJsonObj();
-
-		vector< vector< vector< Tile > > > tiles;
-		vector< string > initScripts;
-		Point location;
 };
 
 }

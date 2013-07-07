@@ -15,10 +15,18 @@
  */
 #include "core/core.hpp"
 #include "models/enginemodels.hpp"
+#include "tests.hpp"
 
 using namespace models;
+using namespace wombat;
+using namespace tests;
 
-int main() {
-	wombat::core::init();
+int main(int argc, const char **args) {
+	if (core::init(0, 800, 600))
+		return 1;
+	ImageTest imgTest("tests/boxman.json");
+	core::addDrawer(&imgTest);
+	while (1)
+		core::sleep(200);
 	return 0;
 }

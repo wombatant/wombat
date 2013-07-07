@@ -25,12 +25,14 @@
 
 #include "../models/enginemodels.hpp"
 
+#include "flyweight.hpp"
+
 namespace wombat {
 namespace core {
 
 using std::string;
 
-class Image {
+class Image: public FlyweightNode {
 	public:
 #ifdef WITH_ALLEGRO
 		ALLEGRO_BITMAP *m_alImg;
@@ -56,7 +58,8 @@ class Animation {
 };
 
 class Graphics {
-	void draw(Image* img, int x, int y, int w = -1, int h = -1);
+	public:
+		void draw(Image *img, int x, int y, int w = -1, int h = -1);
 };
 
 class Drawer {
@@ -64,7 +67,12 @@ class Drawer {
 		virtual void draw(Graphics*) = 0;
 };
 
+
 Image *checkoutImage(string path);
+
+Image *checkoutImage(models::Image &img);
+
+void checkinImage(string path);
 
 void checkinImage(string path);
 

@@ -64,11 +64,10 @@ Fraction
 	Available	int
 
 Image
-	Size	Size
-	Path	string
+	Path string
 
 ModelFile
-	Type	string
+	Type string
 
 PersonClass
 	ID			int

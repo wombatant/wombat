@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "gfx.hpp"
+#include <iostream>
+#include "core.hpp"
 #include "flyweight.hpp"
 
 namespace wombat {
@@ -25,6 +26,10 @@ using std::string;
 
 Image::Image(string path) {
 	m_alImg = al_load_bitmap(path.c_str());
+}
+
+Image::Image(models::Image &img) {
+	m_alImg = al_load_bitmap(img.path.c_str());
 }
 
 Image::~Image() {
@@ -52,12 +57,14 @@ Animation::Animation(models::Animation &anim) {
 
 //Graphics
 
-void Graphics::draw(Image* img, int x, int y, int w, int h) {
-	if (w == -1)
-		w = img->width();
-	if (h == -1)
-		h = img->height();
-	al_draw_scaled_bitmap(img->m_alImg, 0, 0, img->width(), img->height(), x, y, w, h, 0);
+void Graphics::draw(Image *img, int x, int y, int w, int h) {
+	if (img->loaded()) {
+		if (w == -1)
+			w = img->width();
+		if (h == -1)
+			h = img->height();
+		al_draw_scaled_bitmap(img->m_alImg, 0, 0, img->width(), img->height(), x, y, w, h, 0);
+	}
 }
 
 }
