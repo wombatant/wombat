@@ -24,8 +24,9 @@ using std::string;
 
 //Image
 
-FlyweightNode *loadImage(string key) {
-	Image *i = new Image(key);
+FlyweightNode *loadImage(modelmaker::Model &key) {
+	models::Image &mod = (models::Image&) key;
+	Image *i = new Image(mod);
 	if (i->loaded()) {
 		return i;
 	} else {
@@ -37,11 +38,15 @@ FlyweightNode *loadImage(string key) {
 Flyweight imageCache(loadImage);
 
 Image *checkoutImage(string path) {
-	return (Image*) imageCache.checkout(path);
+	models::Image img;
+	img.path = path;
+	img.defaultSize.width = -1;
+	img.defaultSize.height = -1;
+	return (Image*) imageCache.checkout(img);
 }
 
 Image *checkoutImage(models::Image &img) {
-	return (Image*) imageCache.checkout(img.path);
+	return (Image*) imageCache.checkout(img);
 }
 
 void checkinImage(string path) {
@@ -49,11 +54,19 @@ void checkinImage(string path) {
 }
 
 void checkinImage(Image &i) {
-	checkinImage(i.key());
+	checkinImage(i);
 }
 
 string Image::key() {
 	return m_path;
+}
+
+int Image::defaultWidth() {
+	return m_defaultSize.width;
+}
+
+int Image::defaultHeight() {
+	return m_defaultSize.height;
 }
 
 }

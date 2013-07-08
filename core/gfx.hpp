@@ -38,6 +38,7 @@ class Image: public FlyweightNode {
 		ALLEGRO_BITMAP *m_alImg;
 #endif
 	private:
+		models::Size m_defaultSize;
 		string m_path;
 	public:
 		Image(models::Image&);
@@ -45,6 +46,8 @@ class Image: public FlyweightNode {
 		virtual ~Image();
 		int width();
 		int height();
+		int defaultWidth();
+		int defaultHeight();
 		bool loaded();
 		string key();
 };

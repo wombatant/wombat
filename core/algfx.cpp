@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <iostream>
 #include "core.hpp"
 #include "flyweight.hpp"
 
@@ -26,10 +25,14 @@ using std::string;
 
 Image::Image(string path) {
 	m_alImg = al_load_bitmap(path.c_str());
+	m_defaultSize.width = -1;
+	m_defaultSize.height = -1;
 }
 
 Image::Image(models::Image &img) {
 	m_alImg = al_load_bitmap(img.path.c_str());
+	m_defaultSize.width = img.defaultSize.width;
+	m_defaultSize.height = img.defaultSize.height;
 }
 
 Image::~Image() {
@@ -59,10 +62,18 @@ Animation::Animation(models::Animation &anim) {
 
 void Graphics::draw(Image *img, int x, int y, int w, int h) {
 	if (img->loaded()) {
-		if (w == -1)
-			w = img->width();
-		if (h == -1)
-			h = img->height();
+		if (w == -1) {
+			if (img->defaultWidth() == -1)
+				w = img->width();
+			else
+				w = img->defaultWidth();
+		}
+		if (h == -1) {
+			if (img->defaultHeight() == -1)
+				h = img->height();
+			else
+				h = img->defaultHeight();
+		}
 		al_draw_scaled_bitmap(img->m_alImg, 0, 0, img->width(), img->height(), x, y, w, h, 0);
 	}
 }

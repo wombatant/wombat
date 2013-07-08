@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <string.h>
 #include "core/core.hpp"
 #include "models/enginemodels.hpp"
 #include "tests.hpp"
@@ -24,8 +25,12 @@ using namespace tests;
 int main(int argc, const char **args) {
 	if (core::init(0, 800, 600))
 		return 1;
-	ImageTest imgTest("tests/boxman.json");
-	core::addDrawer(&imgTest);
+	if (argc == 4 && !strcmp(args[1], "test")) {
+		if (!strcmp(args[2], "image")) {
+			ImageTest imgTest(args[3]);
+			core::addDrawer(&imgTest);
+		}
+	}
 	while (1)
 		core::sleep(200);
 	return 0;

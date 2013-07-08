@@ -20,7 +20,7 @@ namespace tests {
 
 ImageTest::ImageTest(std::string path) {
 	models::Image img;
-	img.loadFile(path);
+	img.loadFile(path + ".json");
 	m_img = core::checkoutImage(img);
 }
 

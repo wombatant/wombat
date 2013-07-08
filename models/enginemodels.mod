@@ -64,7 +64,8 @@ Fraction
 	Available	int
 
 Image
-	Path string
+	Path 		string
+	DefaultSize	Size
 
 ModelFile
 	Type string

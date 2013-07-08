@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <iostream>
+#include "stdio.h"
 #include <string>
 
 namespace wombat {
 namespace core {
 
 void debug(std::string txt) {
-	std::cout << txt << std::endl;
+	printf("%s\n", txt.c_str());
 }
 
 }

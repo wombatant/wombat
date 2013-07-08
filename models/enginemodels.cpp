@@ -34,10 +34,6 @@ Fraction::Fraction() {
 	this->available = 0;
 }
 
-Image::Image() {
-	this->path = "";
-}
-
 ModelFile::ModelFile() {
 	this->type = "";
 }
@@ -50,18 +46,6 @@ Point::Point() {
 Size::Size() {
 	this->width = 0;
 	this->height = 0;
-}
-
-Animation::Animation() {
-	this->interval = 0;
-}
-
-AnimLayer::AnimLayer() {
-}
-
-CreatureClass::CreatureClass() {
-	this->successor = "";
-	this->predecessor = "";
 }
 
 CreatureMove::CreatureMove() {
@@ -104,9 +88,42 @@ ZoneInstance::ZoneInstance() {
 	this->path = "";
 }
 
+Image::Image() {
+	this->path = "";
+}
+
+ZoneHeader::ZoneHeader() {
+	this->path = "";
+}
+
+Animation::Animation() {
+	this->interval = 0;
+}
+
+AnimLayer::AnimLayer() {
+}
+
+SaveFile::SaveFile() {
+}
+
+CreatureClass::CreatureClass() {
+	this->successor = "";
+	this->predecessor = "";
+}
+
 TileClass::TileClass() {
 	this->terrainFlags = 0;
 	this->import = "";
+}
+
+PersonClass::PersonClass() {
+	this->iD = 0;
+}
+
+Person::Person() {
+}
+
+World::World() {
 }
 
 Sprite::Sprite() {
@@ -118,27 +135,10 @@ Sprite::Sprite() {
 	this->scriptPath = "";
 }
 
-SaveFile::SaveFile() {
-}
-
 Tile::Tile() {
 }
 
-World::World() {
-}
-
-ZoneHeader::ZoneHeader() {
-	this->path = "";
-}
-
 Zone::Zone() {
-}
-
-PersonClass::PersonClass() {
-	this->iD = 0;
-}
-
-Person::Person() {
 }
 
 bool CreatureType::load_json_t(json_t *in) {
@@ -245,18 +245,6 @@ bool Fraction::load_json_t(json_t *in) {
 	return true;
 }
 
-bool Image::load_json_t(json_t *in) {
-	{
-		json_t *obj0 = json_object_get(in, "Path");
-		{
-			if (json_is_string(obj0)) {
-				this->path = json_string_value(obj0);
-			}
-		}
-	}
-	return true;
-}
-
 bool ModelFile::load_json_t(json_t *in) {
 	{
 		json_t *obj0 = json_object_get(in, "Type");
@@ -303,163 +291,6 @@ bool Size::load_json_t(json_t *in) {
 		{
 			if (json_is_integer(obj0)) {
 				this->height = (int) json_integer_value(obj0);
-			}
-		}
-	}
-	return true;
-}
-
-bool Animation::load_json_t(json_t *in) {
-	{
-		json_t *obj0 = json_object_get(in, "Interval");
-		{
-			if (json_is_integer(obj0)) {
-				this->interval = (int) json_integer_value(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "Images");
-		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
-			unsigned int size = json_array_size(obj0);
-			this->images.resize(size);
-			for (unsigned int i = 0; i < size; i++) {
-				json_t *obj1 = json_array_get(obj0, i);
-				{
-					if (json_is_object(obj1)) {
-						this->images[i].load_json_t(obj1);
-					}
-				}
-			}
-		}
-	}
-	return true;
-}
-
-bool AnimLayer::load_json_t(json_t *in) {
-	{
-		json_t *obj0 = json_object_get(in, "Point");
-		{
-			if (json_is_object(obj0)) {
-				this->point.load_json_t(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "Animation");
-		{
-			if (json_is_object(obj0)) {
-				this->animation.load_json_t(obj0);
-			}
-		}
-	}
-	return true;
-}
-
-bool CreatureClass::load_json_t(json_t *in) {
-	{
-		json_t *obj0 = json_object_get(in, "Name");
-		if (obj0 != NULL && json_typeof(obj0) == JSON_OBJECT) {
-			const char *key;
-			json_t *obj1;
-			json_object_foreach(obj0, key, obj1) {
-				string i;
-				{
-					std::stringstream s;
-					s << key;
-					s >> i;
-				}
-				string val;
-				this->name.insert(make_pair(i, val));
-				{
-					if (json_is_string(obj1)) {
-						this->name[i] = json_string_value(obj1);
-					}
-				}
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "Successor");
-		{
-			if (json_is_string(obj0)) {
-				this->successor = json_string_value(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "Predecessor");
-		{
-			if (json_is_string(obj0)) {
-				this->predecessor = json_string_value(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "Types");
-		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
-			unsigned int size = json_array_size(obj0);
-			this->types.resize(size);
-			for (unsigned int i = 0; i < size; i++) {
-				json_t *obj1 = json_array_get(obj0, i);
-				{
-					if (json_is_string(obj1)) {
-						this->types[i] = json_string_value(obj1);
-					}
-				}
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "CanLearn");
-		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
-			unsigned int size = json_array_size(obj0);
-			this->canLearn.resize(size);
-			for (unsigned int i = 0; i < size; i++) {
-				json_t *obj1 = json_array_get(obj0, i);
-				{
-					if (json_is_string(obj1)) {
-						this->canLearn[i] = json_string_value(obj1);
-					}
-				}
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "LearnsAtLevel");
-		if (obj0 != NULL && json_typeof(obj0) == JSON_OBJECT) {
-			const char *key;
-			json_t *obj1;
-			json_object_foreach(obj0, key, obj1) {
-				int i;
-				{
-					std::stringstream s;
-					s << key;
-					s >> i;
-				}
-				string val;
-				this->learnsAtLevel.insert(make_pair(i, val));
-				{
-					if (json_is_string(obj1)) {
-						this->learnsAtLevel[i] = json_string_value(obj1);
-					}
-				}
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "FrontView");
-		{
-			if (json_is_object(obj0)) {
-				this->frontView.load_json_t(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "BackView");
-		{
-			if (json_is_object(obj0)) {
-				this->backView.load_json_t(obj0);
 			}
 		}
 	}
@@ -809,6 +640,235 @@ bool ZoneInstance::load_json_t(json_t *in) {
 	return true;
 }
 
+bool Image::load_json_t(json_t *in) {
+	{
+		json_t *obj0 = json_object_get(in, "Path");
+		{
+			if (json_is_string(obj0)) {
+				this->path = json_string_value(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "DefaultSize");
+		{
+			if (json_is_object(obj0)) {
+				this->defaultSize.load_json_t(obj0);
+			}
+		}
+	}
+	return true;
+}
+
+bool ZoneHeader::load_json_t(json_t *in) {
+	{
+		json_t *obj0 = json_object_get(in, "Path");
+		{
+			if (json_is_string(obj0)) {
+				this->path = json_string_value(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "Size");
+		{
+			if (json_is_object(obj0)) {
+				this->size.load_json_t(obj0);
+			}
+		}
+	}
+	return true;
+}
+
+bool Animation::load_json_t(json_t *in) {
+	{
+		json_t *obj0 = json_object_get(in, "Interval");
+		{
+			if (json_is_integer(obj0)) {
+				this->interval = (int) json_integer_value(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "Images");
+		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
+			unsigned int size = json_array_size(obj0);
+			this->images.resize(size);
+			for (unsigned int i = 0; i < size; i++) {
+				json_t *obj1 = json_array_get(obj0, i);
+				{
+					if (json_is_object(obj1)) {
+						this->images[i].load_json_t(obj1);
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+
+bool AnimLayer::load_json_t(json_t *in) {
+	{
+		json_t *obj0 = json_object_get(in, "Point");
+		{
+			if (json_is_object(obj0)) {
+				this->point.load_json_t(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "Animation");
+		{
+			if (json_is_object(obj0)) {
+				this->animation.load_json_t(obj0);
+			}
+		}
+	}
+	return true;
+}
+
+bool SaveFile::load_json_t(json_t *in) {
+	{
+		json_t *obj0 = json_object_get(in, "Vars");
+		if (obj0 != NULL && json_typeof(obj0) == JSON_OBJECT) {
+			const char *key;
+			json_t *obj1;
+			json_object_foreach(obj0, key, obj1) {
+				string i;
+				{
+					std::stringstream s;
+					s << key;
+					s >> i;
+				}
+				modelmaker::unknown val;
+				this->vars.insert(make_pair(i, val));
+				{
+					this->vars[i].load_json_t(obj1);
+				}
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "User");
+		{
+			if (json_is_object(obj0)) {
+				this->user.load_json_t(obj0);
+			}
+		}
+	}
+	return true;
+}
+
+bool CreatureClass::load_json_t(json_t *in) {
+	{
+		json_t *obj0 = json_object_get(in, "Name");
+		if (obj0 != NULL && json_typeof(obj0) == JSON_OBJECT) {
+			const char *key;
+			json_t *obj1;
+			json_object_foreach(obj0, key, obj1) {
+				string i;
+				{
+					std::stringstream s;
+					s << key;
+					s >> i;
+				}
+				string val;
+				this->name.insert(make_pair(i, val));
+				{
+					if (json_is_string(obj1)) {
+						this->name[i] = json_string_value(obj1);
+					}
+				}
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "Successor");
+		{
+			if (json_is_string(obj0)) {
+				this->successor = json_string_value(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "Predecessor");
+		{
+			if (json_is_string(obj0)) {
+				this->predecessor = json_string_value(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "Types");
+		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
+			unsigned int size = json_array_size(obj0);
+			this->types.resize(size);
+			for (unsigned int i = 0; i < size; i++) {
+				json_t *obj1 = json_array_get(obj0, i);
+				{
+					if (json_is_string(obj1)) {
+						this->types[i] = json_string_value(obj1);
+					}
+				}
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "CanLearn");
+		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
+			unsigned int size = json_array_size(obj0);
+			this->canLearn.resize(size);
+			for (unsigned int i = 0; i < size; i++) {
+				json_t *obj1 = json_array_get(obj0, i);
+				{
+					if (json_is_string(obj1)) {
+						this->canLearn[i] = json_string_value(obj1);
+					}
+				}
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "LearnsAtLevel");
+		if (obj0 != NULL && json_typeof(obj0) == JSON_OBJECT) {
+			const char *key;
+			json_t *obj1;
+			json_object_foreach(obj0, key, obj1) {
+				int i;
+				{
+					std::stringstream s;
+					s << key;
+					s >> i;
+				}
+				string val;
+				this->learnsAtLevel.insert(make_pair(i, val));
+				{
+					if (json_is_string(obj1)) {
+						this->learnsAtLevel[i] = json_string_value(obj1);
+					}
+				}
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "FrontView");
+		{
+			if (json_is_object(obj0)) {
+				this->frontView.load_json_t(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "BackView");
+		{
+			if (json_is_object(obj0)) {
+				this->backView.load_json_t(obj0);
+			}
+		}
+	}
+	return true;
+}
+
 bool TileClass::load_json_t(json_t *in) {
 	{
 		json_t *obj0 = json_object_get(in, "TerrainFlags");
@@ -853,227 +913,6 @@ bool TileClass::load_json_t(json_t *in) {
 						this->upperAnims[i].load_json_t(obj1);
 					}
 				}
-			}
-		}
-	}
-	return true;
-}
-
-bool Sprite::load_json_t(json_t *in) {
-	{
-		json_t *obj0 = json_object_get(in, "AnimLayers");
-		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
-			unsigned int size = json_array_size(obj0);
-			this->animLayers.resize(size);
-			for (unsigned int i = 0; i < size; i++) {
-				json_t *obj1 = json_array_get(obj0, i);
-				if (obj1 != NULL && json_typeof(obj1) == JSON_ARRAY) {
-					unsigned int size = json_array_size(obj1);
-					this->animLayers[i].resize(size);
-					for (unsigned int ii = 0; ii < size; ii++) {
-						json_t *obj2 = json_array_get(obj1, ii);
-						{
-							if (json_is_object(obj2)) {
-								this->animLayers[i][ii].load_json_t(obj2);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "SpriteType");
-		{
-			if (json_is_integer(obj0)) {
-				this->spriteType = (int) json_integer_value(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "PersonID");
-		{
-			if (json_is_integer(obj0)) {
-				this->personID = (int) json_integer_value(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "Speed");
-		{
-			if (json_is_integer(obj0)) {
-				this->speed = (int) json_integer_value(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "Name");
-		{
-			if (json_is_string(obj0)) {
-				this->name = json_string_value(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "Path");
-		{
-			if (json_is_string(obj0)) {
-				this->path = json_string_value(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "ScriptPath");
-		{
-			if (json_is_string(obj0)) {
-				this->scriptPath = json_string_value(obj0);
-			}
-		}
-	}
-	return true;
-}
-
-bool SaveFile::load_json_t(json_t *in) {
-	{
-		json_t *obj0 = json_object_get(in, "Vars");
-		if (obj0 != NULL && json_typeof(obj0) == JSON_OBJECT) {
-			const char *key;
-			json_t *obj1;
-			json_object_foreach(obj0, key, obj1) {
-				string i;
-				{
-					std::stringstream s;
-					s << key;
-					s >> i;
-				}
-				modelmaker::unknown val;
-				this->vars.insert(make_pair(i, val));
-				{
-					this->vars[i].load_json_t(obj1);
-				}
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "User");
-		{
-			if (json_is_object(obj0)) {
-				this->user.load_json_t(obj0);
-			}
-		}
-	}
-	return true;
-}
-
-bool Tile::load_json_t(json_t *in) {
-	{
-		json_t *obj0 = json_object_get(in, "TileClass");
-		{
-			if (json_is_object(obj0)) {
-				this->tileClass.load_json_t(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "Occupant");
-		{
-			if (json_is_object(obj0)) {
-				this->occupant.load_json_t(obj0);
-			}
-		}
-	}
-	return true;
-}
-
-bool World::load_json_t(json_t *in) {
-	{
-		json_t *obj0 = json_object_get(in, "Zones");
-		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
-			unsigned int size = json_array_size(obj0);
-			this->zones.resize(size);
-			for (unsigned int i = 0; i < size; i++) {
-				json_t *obj1 = json_array_get(obj0, i);
-				{
-					if (json_is_object(obj1)) {
-						this->zones[i].load_json_t(obj1);
-					}
-				}
-			}
-		}
-	}
-	return true;
-}
-
-bool ZoneHeader::load_json_t(json_t *in) {
-	{
-		json_t *obj0 = json_object_get(in, "Path");
-		{
-			if (json_is_string(obj0)) {
-				this->path = json_string_value(obj0);
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "Size");
-		{
-			if (json_is_object(obj0)) {
-				this->size.load_json_t(obj0);
-			}
-		}
-	}
-	return true;
-}
-
-bool Zone::load_json_t(json_t *in) {
-	{
-		json_t *obj0 = json_object_get(in, "Tiles");
-		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
-			unsigned int size = json_array_size(obj0);
-			this->tiles.resize(size);
-			for (unsigned int i = 0; i < size; i++) {
-				json_t *obj1 = json_array_get(obj0, i);
-				if (obj1 != NULL && json_typeof(obj1) == JSON_ARRAY) {
-					unsigned int size = json_array_size(obj1);
-					this->tiles[i].resize(size);
-					for (unsigned int ii = 0; ii < size; ii++) {
-						json_t *obj2 = json_array_get(obj1, ii);
-						if (obj2 != NULL && json_typeof(obj2) == JSON_ARRAY) {
-							unsigned int size = json_array_size(obj2);
-							this->tiles[i][ii].resize(size);
-							for (unsigned int iii = 0; iii < size; iii++) {
-								json_t *obj3 = json_array_get(obj2, iii);
-								{
-									if (json_is_object(obj3)) {
-										this->tiles[i][ii][iii].load_json_t(obj3);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "InitScripts");
-		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
-			unsigned int size = json_array_size(obj0);
-			this->initScripts.resize(size);
-			for (unsigned int i = 0; i < size; i++) {
-				json_t *obj1 = json_array_get(obj0, i);
-				{
-					if (json_is_string(obj1)) {
-						this->initScripts[i] = json_string_value(obj1);
-					}
-				}
-			}
-		}
-	}
-	{
-		json_t *obj0 = json_object_get(in, "Location");
-		{
-			if (json_is_object(obj0)) {
-				this->location.load_json_t(obj0);
 			}
 		}
 	}
@@ -1172,6 +1011,175 @@ bool Person::load_json_t(json_t *in) {
 	return true;
 }
 
+bool World::load_json_t(json_t *in) {
+	{
+		json_t *obj0 = json_object_get(in, "Zones");
+		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
+			unsigned int size = json_array_size(obj0);
+			this->zones.resize(size);
+			for (unsigned int i = 0; i < size; i++) {
+				json_t *obj1 = json_array_get(obj0, i);
+				{
+					if (json_is_object(obj1)) {
+						this->zones[i].load_json_t(obj1);
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+
+bool Sprite::load_json_t(json_t *in) {
+	{
+		json_t *obj0 = json_object_get(in, "AnimLayers");
+		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
+			unsigned int size = json_array_size(obj0);
+			this->animLayers.resize(size);
+			for (unsigned int i = 0; i < size; i++) {
+				json_t *obj1 = json_array_get(obj0, i);
+				if (obj1 != NULL && json_typeof(obj1) == JSON_ARRAY) {
+					unsigned int size = json_array_size(obj1);
+					this->animLayers[i].resize(size);
+					for (unsigned int ii = 0; ii < size; ii++) {
+						json_t *obj2 = json_array_get(obj1, ii);
+						{
+							if (json_is_object(obj2)) {
+								this->animLayers[i][ii].load_json_t(obj2);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "SpriteType");
+		{
+			if (json_is_integer(obj0)) {
+				this->spriteType = (int) json_integer_value(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "PersonID");
+		{
+			if (json_is_integer(obj0)) {
+				this->personID = (int) json_integer_value(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "Speed");
+		{
+			if (json_is_integer(obj0)) {
+				this->speed = (int) json_integer_value(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "Name");
+		{
+			if (json_is_string(obj0)) {
+				this->name = json_string_value(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "Path");
+		{
+			if (json_is_string(obj0)) {
+				this->path = json_string_value(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "ScriptPath");
+		{
+			if (json_is_string(obj0)) {
+				this->scriptPath = json_string_value(obj0);
+			}
+		}
+	}
+	return true;
+}
+
+bool Tile::load_json_t(json_t *in) {
+	{
+		json_t *obj0 = json_object_get(in, "TileClass");
+		{
+			if (json_is_object(obj0)) {
+				this->tileClass.load_json_t(obj0);
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "Occupant");
+		{
+			if (json_is_object(obj0)) {
+				this->occupant.load_json_t(obj0);
+			}
+		}
+	}
+	return true;
+}
+
+bool Zone::load_json_t(json_t *in) {
+	{
+		json_t *obj0 = json_object_get(in, "Tiles");
+		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
+			unsigned int size = json_array_size(obj0);
+			this->tiles.resize(size);
+			for (unsigned int i = 0; i < size; i++) {
+				json_t *obj1 = json_array_get(obj0, i);
+				if (obj1 != NULL && json_typeof(obj1) == JSON_ARRAY) {
+					unsigned int size = json_array_size(obj1);
+					this->tiles[i].resize(size);
+					for (unsigned int ii = 0; ii < size; ii++) {
+						json_t *obj2 = json_array_get(obj1, ii);
+						if (obj2 != NULL && json_typeof(obj2) == JSON_ARRAY) {
+							unsigned int size = json_array_size(obj2);
+							this->tiles[i][ii].resize(size);
+							for (unsigned int iii = 0; iii < size; iii++) {
+								json_t *obj3 = json_array_get(obj2, iii);
+								{
+									if (json_is_object(obj3)) {
+										this->tiles[i][ii][iii].load_json_t(obj3);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "InitScripts");
+		if (obj0 != NULL && json_typeof(obj0) == JSON_ARRAY) {
+			unsigned int size = json_array_size(obj0);
+			this->initScripts.resize(size);
+			for (unsigned int i = 0; i < size; i++) {
+				json_t *obj1 = json_array_get(obj0, i);
+				{
+					if (json_is_string(obj1)) {
+						this->initScripts[i] = json_string_value(obj1);
+					}
+				}
+			}
+		}
+	}
+	{
+		json_t *obj0 = json_object_get(in, "Location");
+		{
+			if (json_is_object(obj0)) {
+				this->location.load_json_t(obj0);
+			}
+		}
+	}
+	return true;
+}
+
 json_t* CreatureType::buildJsonObj() {
 	json_t *obj = json_object();
 	{
@@ -1246,16 +1254,6 @@ json_t* Fraction::buildJsonObj() {
 	return obj;
 }
 
-json_t* Image::buildJsonObj() {
-	json_t *obj = json_object();
-	{
-		json_t *out0 = json_string(this->path.c_str());
-		json_object_set(obj, "Path", out0);
-		json_decref(out0);
-	}
-	return obj;
-}
-
 json_t* ModelFile::buildJsonObj() {
 	json_t *obj = json_object();
 	{
@@ -1291,114 +1289,6 @@ json_t* Size::buildJsonObj() {
 	{
 		json_t *out0 = json_integer(this->height);
 		json_object_set(obj, "Height", out0);
-		json_decref(out0);
-	}
-	return obj;
-}
-
-json_t* Animation::buildJsonObj() {
-	json_t *obj = json_object();
-	{
-		json_t *out0 = json_integer(this->interval);
-		json_object_set(obj, "Interval", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out1 = json_array();
-		for (unsigned int i = 0; i < this->images.size(); i++) {
-			json_t *out0 = this->images[i].buildJsonObj();
-			json_array_append(out1, out0);
-			json_decref(out0);
-		}
-		json_object_set(obj, "Images", out1);
-		json_decref(out1);
-	}
-	return obj;
-}
-
-json_t* AnimLayer::buildJsonObj() {
-	json_t *obj = json_object();
-	{
-		json_t *out0 = this->point.buildJsonObj();
-		json_object_set(obj, "Point", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out0 = this->animation.buildJsonObj();
-		json_object_set(obj, "Animation", out0);
-		json_decref(out0);
-	}
-	return obj;
-}
-
-json_t* CreatureClass::buildJsonObj() {
-	json_t *obj = json_object();
-	{
-		json_t *out1 = json_object();
-		for (map< string, string >::iterator n = this->name.begin(); n != this->name.end(); ++n) {
-			std::stringstream s;
-			string key;
-			s << n->first;
-			s >> key;
-			json_t *out0 = json_string(this->name[n->first].c_str());
-			json_object_set(out1, key.c_str(), out0);
-			json_decref(out0);
-		}
-		json_object_set(obj, "Name", out1);
-		json_decref(out1);
-	}
-	{
-		json_t *out0 = json_string(this->successor.c_str());
-		json_object_set(obj, "Successor", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out0 = json_string(this->predecessor.c_str());
-		json_object_set(obj, "Predecessor", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out1 = json_array();
-		for (unsigned int i = 0; i < this->types.size(); i++) {
-			json_t *out0 = json_string(this->types[i].c_str());
-			json_array_append(out1, out0);
-			json_decref(out0);
-		}
-		json_object_set(obj, "Types", out1);
-		json_decref(out1);
-	}
-	{
-		json_t *out1 = json_array();
-		for (unsigned int i = 0; i < this->canLearn.size(); i++) {
-			json_t *out0 = json_string(this->canLearn[i].c_str());
-			json_array_append(out1, out0);
-			json_decref(out0);
-		}
-		json_object_set(obj, "CanLearn", out1);
-		json_decref(out1);
-	}
-	{
-		json_t *out1 = json_object();
-		for (map< int, string >::iterator n = this->learnsAtLevel.begin(); n != this->learnsAtLevel.end(); ++n) {
-			std::stringstream s;
-			string key;
-			s << n->first;
-			s >> key;
-			json_t *out0 = json_string(this->learnsAtLevel[n->first].c_str());
-			json_object_set(out1, key.c_str(), out0);
-			json_decref(out0);
-		}
-		json_object_set(obj, "LearnsAtLevel", out1);
-		json_decref(out1);
-	}
-	{
-		json_t *out0 = this->frontView.buildJsonObj();
-		json_object_set(obj, "FrontView", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out0 = this->backView.buildJsonObj();
-		json_object_set(obj, "BackView", out0);
 		json_decref(out0);
 	}
 	return obj;
@@ -1632,6 +1522,168 @@ json_t* ZoneInstance::buildJsonObj() {
 	return obj;
 }
 
+json_t* Image::buildJsonObj() {
+	json_t *obj = json_object();
+	{
+		json_t *out0 = json_string(this->path.c_str());
+		json_object_set(obj, "Path", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out0 = this->defaultSize.buildJsonObj();
+		json_object_set(obj, "DefaultSize", out0);
+		json_decref(out0);
+	}
+	return obj;
+}
+
+json_t* ZoneHeader::buildJsonObj() {
+	json_t *obj = json_object();
+	{
+		json_t *out0 = json_string(this->path.c_str());
+		json_object_set(obj, "Path", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out0 = this->size.buildJsonObj();
+		json_object_set(obj, "Size", out0);
+		json_decref(out0);
+	}
+	return obj;
+}
+
+json_t* Animation::buildJsonObj() {
+	json_t *obj = json_object();
+	{
+		json_t *out0 = json_integer(this->interval);
+		json_object_set(obj, "Interval", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out1 = json_array();
+		for (unsigned int i = 0; i < this->images.size(); i++) {
+			json_t *out0 = this->images[i].buildJsonObj();
+			json_array_append(out1, out0);
+			json_decref(out0);
+		}
+		json_object_set(obj, "Images", out1);
+		json_decref(out1);
+	}
+	return obj;
+}
+
+json_t* AnimLayer::buildJsonObj() {
+	json_t *obj = json_object();
+	{
+		json_t *out0 = this->point.buildJsonObj();
+		json_object_set(obj, "Point", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out0 = this->animation.buildJsonObj();
+		json_object_set(obj, "Animation", out0);
+		json_decref(out0);
+	}
+	return obj;
+}
+
+json_t* SaveFile::buildJsonObj() {
+	json_t *obj = json_object();
+	{
+		json_t *out1 = json_object();
+		for (map< string, modelmaker::unknown >::iterator n = this->vars.begin(); n != this->vars.end(); ++n) {
+			std::stringstream s;
+			string key;
+			s << n->first;
+			s >> key;
+			json_t *out0 = this->vars[n->first].buildJsonObj();
+			json_object_set(out1, key.c_str(), out0);
+			json_decref(out0);
+		}
+		json_object_set(obj, "Vars", out1);
+		json_decref(out1);
+	}
+	{
+		json_t *out0 = this->user.buildJsonObj();
+		json_object_set(obj, "User", out0);
+		json_decref(out0);
+	}
+	return obj;
+}
+
+json_t* CreatureClass::buildJsonObj() {
+	json_t *obj = json_object();
+	{
+		json_t *out1 = json_object();
+		for (map< string, string >::iterator n = this->name.begin(); n != this->name.end(); ++n) {
+			std::stringstream s;
+			string key;
+			s << n->first;
+			s >> key;
+			json_t *out0 = json_string(this->name[n->first].c_str());
+			json_object_set(out1, key.c_str(), out0);
+			json_decref(out0);
+		}
+		json_object_set(obj, "Name", out1);
+		json_decref(out1);
+	}
+	{
+		json_t *out0 = json_string(this->successor.c_str());
+		json_object_set(obj, "Successor", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out0 = json_string(this->predecessor.c_str());
+		json_object_set(obj, "Predecessor", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out1 = json_array();
+		for (unsigned int i = 0; i < this->types.size(); i++) {
+			json_t *out0 = json_string(this->types[i].c_str());
+			json_array_append(out1, out0);
+			json_decref(out0);
+		}
+		json_object_set(obj, "Types", out1);
+		json_decref(out1);
+	}
+	{
+		json_t *out1 = json_array();
+		for (unsigned int i = 0; i < this->canLearn.size(); i++) {
+			json_t *out0 = json_string(this->canLearn[i].c_str());
+			json_array_append(out1, out0);
+			json_decref(out0);
+		}
+		json_object_set(obj, "CanLearn", out1);
+		json_decref(out1);
+	}
+	{
+		json_t *out1 = json_object();
+		for (map< int, string >::iterator n = this->learnsAtLevel.begin(); n != this->learnsAtLevel.end(); ++n) {
+			std::stringstream s;
+			string key;
+			s << n->first;
+			s >> key;
+			json_t *out0 = json_string(this->learnsAtLevel[n->first].c_str());
+			json_object_set(out1, key.c_str(), out0);
+			json_decref(out0);
+		}
+		json_object_set(obj, "LearnsAtLevel", out1);
+		json_decref(out1);
+	}
+	{
+		json_t *out0 = this->frontView.buildJsonObj();
+		json_object_set(obj, "FrontView", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out0 = this->backView.buildJsonObj();
+		json_object_set(obj, "BackView", out0);
+		json_decref(out0);
+	}
+	return obj;
+}
+
 json_t* TileClass::buildJsonObj() {
 	json_t *obj = json_object();
 	{
@@ -1663,165 +1715,6 @@ json_t* TileClass::buildJsonObj() {
 		}
 		json_object_set(obj, "UpperAnims", out1);
 		json_decref(out1);
-	}
-	return obj;
-}
-
-json_t* Sprite::buildJsonObj() {
-	json_t *obj = json_object();
-	{
-		json_t *out2 = json_array();
-		for (unsigned int i = 0; i < this->animLayers.size(); i++) {
-			json_t *out1 = json_array();
-			for (unsigned int ii = 0; ii < this->animLayers[i].size(); ii++) {
-				json_t *out0 = this->animLayers[i][ii].buildJsonObj();
-				json_array_append(out1, out0);
-				json_decref(out0);
-			}
-			json_array_append(out2, out1);
-			json_decref(out1);
-		}
-		json_object_set(obj, "AnimLayers", out2);
-		json_decref(out2);
-	}
-	{
-		json_t *out0 = json_integer(this->spriteType);
-		json_object_set(obj, "SpriteType", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out0 = json_integer(this->personID);
-		json_object_set(obj, "PersonID", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out0 = json_integer(this->speed);
-		json_object_set(obj, "Speed", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out0 = json_string(this->name.c_str());
-		json_object_set(obj, "Name", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out0 = json_string(this->path.c_str());
-		json_object_set(obj, "Path", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out0 = json_string(this->scriptPath.c_str());
-		json_object_set(obj, "ScriptPath", out0);
-		json_decref(out0);
-	}
-	return obj;
-}
-
-json_t* SaveFile::buildJsonObj() {
-	json_t *obj = json_object();
-	{
-		json_t *out1 = json_object();
-		for (map< string, modelmaker::unknown >::iterator n = this->vars.begin(); n != this->vars.end(); ++n) {
-			std::stringstream s;
-			string key;
-			s << n->first;
-			s >> key;
-			json_t *out0 = this->vars[n->first].buildJsonObj();
-			json_object_set(out1, key.c_str(), out0);
-			json_decref(out0);
-		}
-		json_object_set(obj, "Vars", out1);
-		json_decref(out1);
-	}
-	{
-		json_t *out0 = this->user.buildJsonObj();
-		json_object_set(obj, "User", out0);
-		json_decref(out0);
-	}
-	return obj;
-}
-
-json_t* Tile::buildJsonObj() {
-	json_t *obj = json_object();
-	{
-		json_t *out0 = this->tileClass.buildJsonObj();
-		json_object_set(obj, "TileClass", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out0 = this->occupant.buildJsonObj();
-		json_object_set(obj, "Occupant", out0);
-		json_decref(out0);
-	}
-	return obj;
-}
-
-json_t* World::buildJsonObj() {
-	json_t *obj = json_object();
-	{
-		json_t *out1 = json_array();
-		for (unsigned int i = 0; i < this->zones.size(); i++) {
-			json_t *out0 = this->zones[i].buildJsonObj();
-			json_array_append(out1, out0);
-			json_decref(out0);
-		}
-		json_object_set(obj, "Zones", out1);
-		json_decref(out1);
-	}
-	return obj;
-}
-
-json_t* ZoneHeader::buildJsonObj() {
-	json_t *obj = json_object();
-	{
-		json_t *out0 = json_string(this->path.c_str());
-		json_object_set(obj, "Path", out0);
-		json_decref(out0);
-	}
-	{
-		json_t *out0 = this->size.buildJsonObj();
-		json_object_set(obj, "Size", out0);
-		json_decref(out0);
-	}
-	return obj;
-}
-
-json_t* Zone::buildJsonObj() {
-	json_t *obj = json_object();
-	{
-		json_t *out3 = json_array();
-		for (unsigned int i = 0; i < this->tiles.size(); i++) {
-			json_t *out2 = json_array();
-			for (unsigned int ii = 0; ii < this->tiles[i].size(); ii++) {
-				json_t *out1 = json_array();
-				for (unsigned int iii = 0; iii < this->tiles[i][ii].size(); iii++) {
-					json_t *out0 = this->tiles[i][ii][iii].buildJsonObj();
-					json_array_append(out1, out0);
-					json_decref(out0);
-				}
-				json_array_append(out2, out1);
-				json_decref(out1);
-			}
-			json_array_append(out3, out2);
-			json_decref(out2);
-		}
-		json_object_set(obj, "Tiles", out3);
-		json_decref(out3);
-	}
-	{
-		json_t *out1 = json_array();
-		for (unsigned int i = 0; i < this->initScripts.size(); i++) {
-			json_t *out0 = json_string(this->initScripts[i].c_str());
-			json_array_append(out1, out0);
-			json_decref(out0);
-		}
-		json_object_set(obj, "InitScripts", out1);
-		json_decref(out1);
-	}
-	{
-		json_t *out0 = this->location.buildJsonObj();
-		json_object_set(obj, "Location", out0);
-		json_decref(out0);
 	}
 	return obj;
 }
@@ -1885,6 +1778,126 @@ json_t* Person::buildJsonObj() {
 	{
 		json_t *out0 = this->personClass.buildJsonObj();
 		json_object_set(obj, "PersonClass", out0);
+		json_decref(out0);
+	}
+	return obj;
+}
+
+json_t* World::buildJsonObj() {
+	json_t *obj = json_object();
+	{
+		json_t *out1 = json_array();
+		for (unsigned int i = 0; i < this->zones.size(); i++) {
+			json_t *out0 = this->zones[i].buildJsonObj();
+			json_array_append(out1, out0);
+			json_decref(out0);
+		}
+		json_object_set(obj, "Zones", out1);
+		json_decref(out1);
+	}
+	return obj;
+}
+
+json_t* Sprite::buildJsonObj() {
+	json_t *obj = json_object();
+	{
+		json_t *out2 = json_array();
+		for (unsigned int i = 0; i < this->animLayers.size(); i++) {
+			json_t *out1 = json_array();
+			for (unsigned int ii = 0; ii < this->animLayers[i].size(); ii++) {
+				json_t *out0 = this->animLayers[i][ii].buildJsonObj();
+				json_array_append(out1, out0);
+				json_decref(out0);
+			}
+			json_array_append(out2, out1);
+			json_decref(out1);
+		}
+		json_object_set(obj, "AnimLayers", out2);
+		json_decref(out2);
+	}
+	{
+		json_t *out0 = json_integer(this->spriteType);
+		json_object_set(obj, "SpriteType", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out0 = json_integer(this->personID);
+		json_object_set(obj, "PersonID", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out0 = json_integer(this->speed);
+		json_object_set(obj, "Speed", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out0 = json_string(this->name.c_str());
+		json_object_set(obj, "Name", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out0 = json_string(this->path.c_str());
+		json_object_set(obj, "Path", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out0 = json_string(this->scriptPath.c_str());
+		json_object_set(obj, "ScriptPath", out0);
+		json_decref(out0);
+	}
+	return obj;
+}
+
+json_t* Tile::buildJsonObj() {
+	json_t *obj = json_object();
+	{
+		json_t *out0 = this->tileClass.buildJsonObj();
+		json_object_set(obj, "TileClass", out0);
+		json_decref(out0);
+	}
+	{
+		json_t *out0 = this->occupant.buildJsonObj();
+		json_object_set(obj, "Occupant", out0);
+		json_decref(out0);
+	}
+	return obj;
+}
+
+json_t* Zone::buildJsonObj() {
+	json_t *obj = json_object();
+	{
+		json_t *out3 = json_array();
+		for (unsigned int i = 0; i < this->tiles.size(); i++) {
+			json_t *out2 = json_array();
+			for (unsigned int ii = 0; ii < this->tiles[i].size(); ii++) {
+				json_t *out1 = json_array();
+				for (unsigned int iii = 0; iii < this->tiles[i][ii].size(); iii++) {
+					json_t *out0 = this->tiles[i][ii][iii].buildJsonObj();
+					json_array_append(out1, out0);
+					json_decref(out0);
+				}
+				json_array_append(out2, out1);
+				json_decref(out1);
+			}
+			json_array_append(out3, out2);
+			json_decref(out2);
+		}
+		json_object_set(obj, "Tiles", out3);
+		json_decref(out3);
+	}
+	{
+		json_t *out1 = json_array();
+		for (unsigned int i = 0; i < this->initScripts.size(); i++) {
+			json_t *out0 = json_string(this->initScripts[i].c_str());
+			json_array_append(out1, out0);
+			json_decref(out0);
+		}
+		json_object_set(obj, "InitScripts", out1);
+		json_decref(out1);
+	}
+	{
+		json_t *out0 = this->location.buildJsonObj();
+		json_object_set(obj, "Location", out0);
 		json_decref(out0);
 	}
 	return obj;

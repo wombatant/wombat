@@ -19,22 +19,23 @@
 namespace wombat {
 namespace core {
 
-Flyweight::Flyweight(FlyweightNode *(*build)(string)) {
+Flyweight::Flyweight(FlyweightNode *(*build)(modelmaker::Model&)) {
 	m_build = build;
 }
 
-FlyweightNode* Flyweight::checkout(string key) {
-	FlyweightNode *v = m_cache[key];
+FlyweightNode::~FlyweightNode() {
+}
+
+FlyweightNode* Flyweight::checkout(modelmaker::Model &key) {
+	string keyStr = key.write();
+	FlyweightNode *v = m_cache[keyStr];
 	if (!v) {
-		m_cache[key] = v = m_build(key);
+		m_cache[keyStr] = v = m_build(key);
 	}
 	if (v) {	
 		v->dependents++;
 	}
 	return v;
-}
-
-FlyweightNode::~FlyweightNode() {
 }
 
 void Flyweight::checkin(string key) {
