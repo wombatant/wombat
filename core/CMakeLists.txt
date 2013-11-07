@@ -4,5 +4,5 @@ add_definitions(-DWITH_ALLEGRO)
 
 add_library(WombatCore alcore.cpp core.cpp algfx.cpp gfx.cpp flyweight.cpp)
 
-install(TARGETS WombatCore DESTINATION bin)
-install(FILES core.hpp DESTINATION include)
+install(TARGETS WombatCore DESTINATION lib)
+install(FILES core.hpp DESTINATION include/wombat/core)

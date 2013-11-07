@@ -42,6 +42,8 @@ class AnimationTest: public Drawer {
 		void draw(Graphics*);
 };
 
+Drawer *test(std::vector<std::string>&);
+
 }
 }
 

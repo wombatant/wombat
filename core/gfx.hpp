@@ -23,7 +23,7 @@
 #include <allegro5/allegro_image.h>
 #endif
 
-#include "../models/enginemodels.hpp"
+#include "models/enginemodels.hpp"
 
 #include "flyweight.hpp"
 
@@ -33,6 +33,7 @@ namespace core {
 using std::string;
 
 class Image: public FlyweightNode {
+	friend class Graphics;
 	public:
 #ifdef WITH_ALLEGRO
 		ALLEGRO_BITMAP *m_alImg;
@@ -40,6 +41,11 @@ class Image: public FlyweightNode {
 	private:
 		models::Size m_defaultSize;
 		string m_path;
+	protected:
+		/**
+		 * The bounds to cut out of the source image.
+		 */
+		models::Bounds m_bounds;
 	public:
 		Image(models::Image&);
 		Image(string path);
@@ -54,7 +60,7 @@ class Image: public FlyweightNode {
 
 class Animation {
 	private:
-		vector<Image*> imgs;
+		std::vector<Image*> imgs;
 	public:
 		Animation(models::Animation&);
 		void add(Image*);
@@ -67,11 +73,10 @@ class Graphics {
 
 class Drawer {
 	public:
+		virtual ~Drawer() {};
 		virtual void draw(Graphics*) = 0;
 };
 
-
-Image *checkoutImage(string path);
 
 Image *checkoutImage(models::Image &img);
 

@@ -40,7 +40,7 @@ void addDrawer(Drawer*);
 
 void sleep(uint64 ms);
 
-inline void debug(std::string);
+void debug(std::string);
 
 }
 }

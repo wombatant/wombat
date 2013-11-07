@@ -19,15 +19,15 @@
 namespace wombat {
 namespace core {
 
-Flyweight::Flyweight(FlyweightNode *(*build)(modelmaker::Model&)) {
+Flyweight::Flyweight(FlyweightNode *(*build)(models::cyborgbear::Model&)) {
 	m_build = build;
 }
 
 FlyweightNode::~FlyweightNode() {
 }
 
-FlyweightNode* Flyweight::checkout(modelmaker::Model &key) {
-	string keyStr = key.write();
+FlyweightNode* Flyweight::checkout(models::cyborgbear::Model &key) {
+	string keyStr = key.toJson();
 	FlyweightNode *v = m_cache[keyStr];
 	if (!v) {
 		m_cache[keyStr] = v = m_build(key);

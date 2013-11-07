@@ -24,7 +24,7 @@ using std::string;
 
 //Image
 
-FlyweightNode *loadImage(modelmaker::Model &key) {
+FlyweightNode *loadImage(models::cyborgbear::Model &key) {
 	models::Image &mod = (models::Image&) key;
 	Image *i = new Image(mod);
 	if (i->loaded()) {
@@ -47,10 +47,6 @@ Image *checkoutImage(string path) {
 
 Image *checkoutImage(models::Image &img) {
 	return (Image*) imageCache.checkout(img);
-}
-
-void checkinImage(string path) {
-	imageCache.checkin(path);
 }
 
 void checkinImage(Image &i) {

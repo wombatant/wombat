@@ -18,20 +18,31 @@
 namespace wombat {
 namespace tests {
 
+Drawer *test(std::vector<std::string> &args) {
+	ImageTest *test = 0;
+	if (args[2] == "image") {
+		test = new ImageTest(args[3]);
+		core::addDrawer(test);
+	}
+	return test;
+}
+
 ImageTest::ImageTest(std::string path) {
 	models::Image img;
-	img.loadFile(path + ".json");
+	img.readJsonFile(path + ".json");
 	m_img = core::checkoutImage(img);
 }
 
 void ImageTest::draw(Graphics *g) {
 	if (m_img && m_img->loaded()) {
+		printf("drawing\n");
 		g->draw(m_img, 42, 42);
 	}
 }
 
+//Animation Test
 AnimationTest::AnimationTest(std::string path) {
-	anim.loadFile(path);
+	anim.readJsonFile(path);
 }
 
 void AnimationTest::draw(Graphics *g) {

@@ -37,11 +37,11 @@ class FlyweightNode {
 class Flyweight {
 	private:
 		map<string, FlyweightNode*> m_cache;
-		FlyweightNode *(*m_build)(modelmaker::Model&);
+		FlyweightNode *(*m_build)(models::cyborgbear::Model&);
 	public:
-		Flyweight(FlyweightNode *(*build)(modelmaker::Model&));
+		Flyweight(FlyweightNode *(*build)(models::cyborgbear::Model&));
 		FlyweightNode* checkout(string key);
-		FlyweightNode* checkout(modelmaker::Model &key);
+		FlyweightNode* checkout(models::cyborgbear::Model &key);
 		void checkin(string key);
 		void checkin(FlyweightNode *val);
 };

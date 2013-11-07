@@ -74,7 +74,9 @@ void Graphics::draw(Image *img, int x, int y, int w, int h) {
 			else
 				h = img->defaultHeight();
 		}
-		al_draw_scaled_bitmap(img->m_alImg, 0, 0, img->width(), img->height(), x, y, w, h, 0);
+		printf("Draw1: %d, %d, %d, %d\n", x, y, w, h);
+		printf("Draw2: %d, %d, %d, %d\n", img->m_bounds.x, img->m_bounds.y, img->width(), img->height());
+		al_draw_scaled_bitmap(img->m_alImg, img->m_bounds.x, img->m_bounds.y, img->width(), img->height(), x, y, w, h, 0);
 	}
 }
 

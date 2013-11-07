@@ -1,2 +1,2 @@
-modelmaker -i enginemodels.mod -o enginemodels
+cyborgbear -i enginemodels.cy -o enginemodels
 liccor > /dev/null

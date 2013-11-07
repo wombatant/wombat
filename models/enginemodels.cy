@@ -89,6 +89,12 @@ Size
 	Width	int
 	Height	int
 
+Bounds
+	X		int
+	Y		int
+	Width	int
+	Height	int
+
 Sprite
 	AnimLayers	[][]AnimLayer
 	SpriteType	int
