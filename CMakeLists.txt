@@ -10,9 +10,13 @@ find_package(Jansson REQUIRED)
 include_directories(${Jansson_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${JANSSON_LIBRARY})
 
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR})
-set(LIBS ${LIBS} ${SDL2_LIBRARY})
+find_package(SDL REQUIRED)
+include_directories(${SDL_INCLUDE_DIR})
+set(LIBS ${LIBS} ${SDL_LIBRARY})
+
+find_package(SDL_IMAGE REQUIRED)
+include_directories(${SDL_IMAGE_INCLUDE_DIR})
+set(LIBS ${LIBS} ${SDL_IMAGE_LIBRARY})
 
 
 #project packages
