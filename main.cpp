@@ -22,7 +22,7 @@ using namespace models;
 using namespace wombat;
 
 int main(int argc, const char **args) {
-	if (core::init(false)) {
+	if (core::init(false) != 0) {
 		return 1;
 	}
 
@@ -37,7 +37,10 @@ int main(int argc, const char **args) {
 	}
 
 	while (1) {
-		core::sleep(200);
+		// draw
+		core::pollEvents();
+		core::draw();
+		core::sleep(16);
 	}
 
 	if (test)

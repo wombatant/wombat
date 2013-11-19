@@ -30,31 +30,36 @@ SDL_Window *display = 0;
 SDL_Thread *drawThread = 0;
 SDL_Renderer *renderer = 0;
 
-int drawThreadFunc(void *t) {
-	while (1) {
-		for (int i = 0; i < drawers.size(); i++) {
-			drawers[i]->draw(graphicsInstances[i]);
-		}
-		SDL_RenderPresent(renderer);
-		sleep(16);
+int draw(void *t) {
+	for (int i = 0; i < drawers.size(); i++) {
+		drawers[i]->draw(graphicsInstances[i]);
 	}
+	SDL_RenderPresent(renderer);
 	return 0;
 }
 
+int pollEvents(void *t) {
+	// handle events
+	SDL_Event ev;
+	while (SDL_PollEvent(&ev)) {
+	}
+}
+
 int init(bool fullscreen, int w, int h) {
-	if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER))
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) == -1) {
 		return -1;
+	}
 
 	display = SDL_CreateWindow("Wombat", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, SDL_WINDOW_OPENGL);
 	if (!display)
 		return -3;
 	renderer = SDL_CreateRenderer(display, -1, SDL_RENDERER_ACCELERATED);
 
-	drawThread = SDL_CreateThread(drawThreadFunc, "DrawThread", 0);
-	if (!drawThread) {
-		SDL_DestroyWindow(display);
-		return -4;
-	}
+	//drawThread = SDL_CreateThread(draw, "DrawThread", 0);
+	//if (!drawThread) {
+	//	SDL_DestroyWindow(display);
+	//	return -4;
+	//}
 
 	return 0;
 }

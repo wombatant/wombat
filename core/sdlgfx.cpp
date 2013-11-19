@@ -37,7 +37,7 @@ Image::Image(models::Image &img) {
 	printf("Loading image: %s\n", img.toJson().c_str());
 	SDL_Surface *s = IMG_Load(img.path.c_str());
 	m_img = SDL_CreateTextureFromSurface(renderer, s);
-	SDL_FreeSurface(s);
+	//SDL_FreeSurface(s);
 	m_defaultSize.width = img.defaultSize.width;
 	m_defaultSize.height = img.defaultSize.height;
 }
@@ -85,12 +85,12 @@ void Graphics::draw(Image *img, int x, int y, int w, int h) {
 			else
 				h = img->defaultHeight();
 		}
-		//printf("Draw1: %d, %d, %d, %d\n", x, y, w, h);
-		//printf("Draw2: %d, %d, %d, %d\n", img->m_bounds.x, img->m_bounds.y, img->width(), img->height());
 		SDL_SetTextureAlphaMod(img->m_img, 255);
 		SDL_Rect dest;
 		dest.x = x;
 		dest.y = y;
+		dest.w = w;
+		dest.h = h;
 		SDL_RenderCopy(renderer, img->m_img, 0, &dest);
 	}
 }

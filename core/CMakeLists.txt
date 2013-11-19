@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
 
-#add_definitions(-DWITH_ALLEGRO)
 add_definitions(-DWITH_SDL)
 
 add_library(WombatCore sdlcore.cpp core.cpp sdlgfx.cpp gfx.cpp flyweight.cpp)

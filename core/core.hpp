@@ -36,6 +36,10 @@ typedef unsigned long long uint64;
  */
 int init(bool fullscreen = true, int w = 800, int h = 600);
 
+int draw(void *t = 0);
+
+int pollEvents(void *t = 0);
+
 void addDrawer(Drawer*);
 
 void sleep(uint64 ms);
