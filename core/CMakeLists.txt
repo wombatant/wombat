@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
 
-add_definitions(-DWITH_ALLEGRO)
+#add_definitions(-DWITH_ALLEGRO)
+add_definitions(-DWITH_SDL)
 
-add_library(WombatCore alcore.cpp core.cpp algfx.cpp gfx.cpp flyweight.cpp)
+add_library(WombatCore sdlcore.cpp core.cpp sdlgfx.cpp gfx.cpp flyweight.cpp)
 
 install(TARGETS WombatCore DESTINATION lib)
 install(FILES core.hpp DESTINATION include/wombat/core)

@@ -21,6 +21,10 @@
 #ifdef WITH_ALLEGRO
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
+#elif WITH_SDL
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
 #endif
 
 #include "models/enginemodels.hpp"
@@ -37,6 +41,8 @@ class Image: public FlyweightNode {
 	public:
 #ifdef WITH_ALLEGRO
 		ALLEGRO_BITMAP *m_alImg;
+#elif WITH_SDL
+		SDL_Texture *m_img;
 #endif
 	private:
 		models::Size m_defaultSize;

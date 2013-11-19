@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifdef WITH_ALLEGRO
+#ifdef WITH_SDL
 #include <vector>
 
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_image.h>
+#include <SDL.h>
 
-#include "allegro_globs.hpp"
+#include "sdlglobs.hpp"
 #include "core.hpp"
 
 namespace wombat {
@@ -28,41 +27,29 @@ namespace core {
 std::vector<Drawer*> drawers;
 std::vector<Graphics*> graphicsInstances;
 
-static void* drawThreadFunc(ALLEGRO_THREAD *t, void *arg) {
-	al_set_target_backbuffer(display);
+int drawThreadFunc(void *t) {
 	while (1) {
 		for (int i = 0; i < drawers.size(); i++) {
 			drawers[i]->draw(graphicsInstances[i]);
 		}
-		al_flip_display();
+		SDL_RenderPresent(renderer);
 		sleep(16);
 	}
 	return 0;
 }
 
 int init(bool fullscreen, int w, int h) {
-	if (!al_init())
+	if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER))
 		return -1;
-	if (!al_init_image_addon())
-		return -2;
 
-	if (fullscreen) {
-		ALLEGRO_DISPLAY_MODE dispMode;
-		al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
-		al_get_display_mode(al_get_num_display_modes() - 1, &dispMode);
-		w = dispMode.width;
-		h = dispMode.height;
-	}
-
-	display = al_create_display(w, h);
+	display = SDL_CreateWindow("Wombat", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, SDL_WINDOW_OPENGL);
 	if (!display)
 		return -3;
+	renderer = SDL_CreateRenderer(display, -1, SDL_RENDERER_ACCELERATED);
 
-	drawThread = al_create_thread(drawThreadFunc, 0);
-	if (drawThread) {
-		al_start_thread(drawThread);
-	} else {
-		al_destroy_display(display);
+	drawThread = SDL_CreateThread(drawThreadFunc, "DrawThread", 0);
+	if (!drawThread) {
+		SDL_DestroyWindow(display);
 		return -4;
 	}
 
@@ -75,7 +62,7 @@ void addDrawer(Drawer *d) {
 }
 
 void sleep(uint64 ms) {
-	al_rest(ms * 0.001);
+	SDL_Delay(ms);
 }
 
 }

@@ -35,7 +35,7 @@ ImageTest::ImageTest(std::string path) {
 
 void ImageTest::draw(Graphics *g) {
 	if (m_img && m_img->loaded()) {
-		printf("drawing\n");
+		//printf("drawing\n");
 		g->draw(m_img, 42, 42);
 	}
 }

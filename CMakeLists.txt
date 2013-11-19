@@ -10,9 +10,9 @@ find_package(Jansson REQUIRED)
 include_directories(${Jansson_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${JANSSON_LIBRARY})
 
-find_package(Allegro REQUIRED)
-include_directories(${Allegro_INCLUDE_DIRS})
-set(LIBS ${LIBS} ${ALLEGRO_LIBRARIES})
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIR})
+set(LIBS ${LIBS} ${SDL2_LIBRARY})
 
 
 #project packages

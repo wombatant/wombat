@@ -16,12 +16,14 @@
 #ifndef WOMBAT_CORE_ALLEGRO_GLOBS_HPP
 #define WOMBAT_CORE_ALLEGRO_GLOBS_HPP
 
-#include <allegro5/allegro.h>
+#include <SDL.h>
 
 namespace wombat {
 namespace core {
 
+SDL_Window *display = 0;
 SDL_Thread *drawThread = 0;
+SDL_Renderer *renderer = 0;
 
 }
 }

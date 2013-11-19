@@ -1,0 +1,2 @@
+/usr/local/lib/libWombatCore.a
+/usr/local/include/wombat/core.hpp

@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifdef WITH_SDL
 #include "core.hpp"
+#include "sdlglobs.hpp"
 #include "flyweight.hpp"
 
 namespace wombat {
@@ -24,31 +26,40 @@ using std::string;
 //Image
 
 Image::Image(string path) {
-	m_alImg = al_load_bitmap(path.c_str());
+	SDL_Surface *s = IMG_Load(path.c_str());
+	m_img = SDL_CreateTextureFromSurface(renderer, s);
+	SDL_FreeSurface(s);
 	m_defaultSize.width = -1;
 	m_defaultSize.height = -1;
 }
 
 Image::Image(models::Image &img) {
-	m_alImg = al_load_bitmap(img.path.c_str());
+	printf("Loading image: %s\n", img.toJson().c_str());
+	SDL_Surface *s = IMG_Load(img.path.c_str());
+	m_img = SDL_CreateTextureFromSurface(renderer, s);
+	SDL_FreeSurface(s);
 	m_defaultSize.width = img.defaultSize.width;
 	m_defaultSize.height = img.defaultSize.height;
 }
 
 Image::~Image() {
-	al_destroy_bitmap(m_alImg);
+	SDL_DestroyTexture(m_img);
 }
 
 int Image::width() {
-	return al_get_bitmap_width(m_alImg);
+	int out;
+	SDL_QueryTexture(m_img, 0, 0, 0, &out);
+	return out;
 }
 
 int Image::height() {
-	return al_get_bitmap_height(m_alImg);
+	int out;
+	SDL_QueryTexture(m_img, 0, 0, &out, 0);
+	return out;
 }
 
 bool Image::loaded() {
-	return m_alImg;
+	return m_img;
 }
 
 
@@ -74,11 +85,16 @@ void Graphics::draw(Image *img, int x, int y, int w, int h) {
 			else
 				h = img->defaultHeight();
 		}
-		printf("Draw1: %d, %d, %d, %d\n", x, y, w, h);
-		printf("Draw2: %d, %d, %d, %d\n", img->m_bounds.x, img->m_bounds.y, img->width(), img->height());
-		al_draw_scaled_bitmap(img->m_alImg, img->m_bounds.x, img->m_bounds.y, img->width(), img->height(), x, y, w, h, 0);
+		//printf("Draw1: %d, %d, %d, %d\n", x, y, w, h);
+		//printf("Draw2: %d, %d, %d, %d\n", img->m_bounds.x, img->m_bounds.y, img->width(), img->height());
+		SDL_SetTextureAlphaMod(img->m_img, 255);
+		SDL_Rect dest;
+		dest.x = x;
+		dest.y = y;
+		SDL_RenderCopy(renderer, img->m_img, 0, &dest);
 	}
 }
 
 }
 }
+#endif
