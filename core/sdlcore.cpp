@@ -26,6 +26,9 @@ namespace core {
 
 std::vector<Drawer*> drawers;
 std::vector<Graphics*> graphicsInstances;
+SDL_Window *display = 0;
+SDL_Thread *drawThread = 0;
+SDL_Renderer *renderer = 0;
 
 int drawThreadFunc(void *t) {
 	while (1) {

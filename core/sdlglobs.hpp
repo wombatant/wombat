@@ -21,9 +21,9 @@
 namespace wombat {
 namespace core {
 
-SDL_Window *display = 0;
-SDL_Thread *drawThread = 0;
-SDL_Renderer *renderer = 0;
+extern SDL_Window *display;
+extern SDL_Thread *drawThread;
+extern SDL_Renderer *renderer;
 
 }
 }
