@@ -29,19 +29,24 @@ std::vector<Graphics*> graphicsInstances;
 SDL_Window *display = 0;
 SDL_Thread *drawThread = 0;
 SDL_Renderer *renderer = 0;
+extern std::vector<std::function<void(Event)>> eventListeners;
 
-int draw(void *t) {
+void draw() {
 	for (int i = 0; i < drawers.size(); i++) {
 		drawers[i]->draw(graphicsInstances[i]);
 	}
 	SDL_RenderPresent(renderer);
-	return 0;
 }
 
-int pollEvents(void *t) {
+void pollEvents() {
 	// handle events
-	SDL_Event ev;
-	while (SDL_PollEvent(&ev)) {
+	SDL_Event sev;
+	while (SDL_PollEvent(&sev)) {
+		Event ev;
+		ev.type = toEventType(sev.type);
+		for (auto f : eventListeners) {
+			f(ev);
+		}
 	}
 }
 
@@ -54,12 +59,6 @@ int init(bool fullscreen, int w, int h) {
 	if (!display)
 		return -3;
 	renderer = SDL_CreateRenderer(display, -1, SDL_RENDERER_ACCELERATED);
-
-	//drawThread = SDL_CreateThread(draw, "DrawThread", 0);
-	//if (!drawThread) {
-	//	SDL_DestroyWindow(display);
-	//	return -4;
-	//}
 
 	return 0;
 }

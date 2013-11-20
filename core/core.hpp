@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_CORE_CORE_HPP
-#define WOMBAT_CORE_CORE_HPP
+#ifndef WOMBATCORE_CORE_HPP
+#define WOMBATCORE_CORE_HPP
 
 #include <string>
+#include <functional>
+#include "event.hpp"
 #include "gfx.hpp"
 
 namespace wombat {
@@ -36,9 +38,11 @@ typedef unsigned long long uint64;
  */
 int init(bool fullscreen = true, int w = 800, int h = 600);
 
-int draw(void *t = 0);
+void draw();
 
-int pollEvents(void *t = 0);
+void pollEvents();
+
+void addEventListener(std::function<void (Event)> func);
 
 void addDrawer(Drawer*);
 

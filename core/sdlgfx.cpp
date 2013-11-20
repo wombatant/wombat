@@ -34,10 +34,9 @@ Image::Image(string path) {
 }
 
 Image::Image(models::Image &img) {
-	printf("Loading image: %s\n", img.toJson().c_str());
 	SDL_Surface *s = IMG_Load(img.path.c_str());
 	m_img = SDL_CreateTextureFromSurface(renderer, s);
-	//SDL_FreeSurface(s);
+	SDL_FreeSurface(s);
 	m_defaultSize.width = img.defaultSize.width;
 	m_defaultSize.height = img.defaultSize.height;
 }
@@ -48,13 +47,13 @@ Image::~Image() {
 
 int Image::width() {
 	int out;
-	SDL_QueryTexture(m_img, 0, 0, 0, &out);
+	SDL_QueryTexture(m_img, 0, 0, &out, 0);
 	return out;
 }
 
 int Image::height() {
 	int out;
-	SDL_QueryTexture(m_img, 0, 0, &out, 0);
+	SDL_QueryTexture(m_img, 0, 0, 0, &out);
 	return out;
 }
 

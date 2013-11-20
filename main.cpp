@@ -28,7 +28,7 @@ int main(int argc, const char **args) {
 
 	core::Drawer *test = 0;
 
-	if (!strcmp(args[1], "test")) {
+	if (argc > 0 && !strcmp(args[1], "test")) {
 		std::vector<std::string> vargs;
 		for (int i = 0; i < argc; i++) {
 			vargs.push_back(args[i]);
@@ -36,7 +36,13 @@ int main(int argc, const char **args) {
 		tests::test(vargs);
 	}
 
-	while (1) {
+	bool running = true;
+	core::addEventListener([&running](core::Event e) {
+		if (e.type == core::Quit) {
+			running = false;
+		}
+	});
+	while (running) {
 		// draw
 		core::pollEvents();
 		core::draw();

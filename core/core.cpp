@@ -13,11 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "stdio.h"
+#include <stdio.h>
 #include <string>
+#include <functional>
+#include <vector>
+#include "core.hpp"
 
 namespace wombat {
 namespace core {
+
+std::vector<std::function<void(Event)>> eventListeners;
+
+void addEventListener(std::function<void(Event)> el) {
+	eventListeners.push_back(el);
+}
 
 void debug(std::string txt) {
 	printf("%s\n", txt.c_str());
