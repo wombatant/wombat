@@ -67,6 +67,7 @@ class Image: public FlyweightNode {
 class Animation {
 	private:
 		std::vector<Image*> imgs;
+		int interval;
 	public:
 		Animation(models::Animation&);
 		void add(Image*);
