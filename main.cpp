@@ -28,7 +28,7 @@ int main(int argc, const char **args) {
 
 	core::Drawer *test = 0;
 
-	if (argc > 0 && !strcmp(args[1], "test")) {
+	if (argc > 1 && !strcmp(args[1], "test")) {
 		std::vector<std::string> vargs;
 		for (int i = 0; i < argc; i++) {
 			vargs.push_back(args[i]);
