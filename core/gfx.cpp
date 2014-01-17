@@ -65,5 +65,18 @@ int Image::defaultHeight() {
 	return m_defaultSize.height;
 }
 
+Animation::Animation(models::Animation &model) {
+	for (auto img : model.images) {
+		m_imgs.push_back(checkoutImage(img.image));
+	}
+}
+
+Animation::~Animation() {
+}
+
+void Animation::add(Image *img) {
+	m_imgs.push_back(img);
+}
+
 }
 }

@@ -62,12 +62,6 @@ bool Image::loaded() {
 }
 
 
-//Animation
-
-Animation::Animation(models::Animation &anim) {
-}
-
-
 //Graphics
 
 void Graphics::draw(Image *img, int x, int y, int w, int h) {

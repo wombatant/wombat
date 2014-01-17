@@ -66,10 +66,11 @@ class Image: public FlyweightNode {
 
 class Animation {
 	private:
-		std::vector<Image*> imgs;
-		int interval;
+		std::vector<Image*> m_imgs;
+		int m_interval;
 	public:
 		Animation(models::Animation&);
+		~Animation();
 		void add(Image*);
 };
 
