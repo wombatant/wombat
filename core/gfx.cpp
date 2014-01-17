@@ -39,7 +39,7 @@ Flyweight imageCache(loadImage);
 
 Image *checkoutImage(string path) {
 	models::Image img;
-	img.path = path;
+	img.spriteSheet = path;
 	img.defaultSize.width = -1;
 	img.defaultSize.height = -1;
 	return (Image*) imageCache.checkout(img);

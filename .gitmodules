@@ -1,0 +1,3 @@
+[submodule "models/models"]
+	path = models/models
+	url = https://github.com/gtalent/wombatmodels.git

@@ -34,7 +34,7 @@ Image::Image(string path) {
 }
 
 Image::Image(models::Image &img) {
-	SDL_Surface *s = IMG_Load(img.path.c_str());
+	SDL_Surface *s = IMG_Load(img.spriteSheet.c_str());
 	m_img = SDL_CreateTextureFromSurface(renderer, s);
 	SDL_FreeSurface(s);
 	m_defaultSize.width = img.defaultSize.width;
