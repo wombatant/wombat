@@ -40,9 +40,9 @@ Flyweight imageCache(loadImage);
 
 Image *checkoutImage(string path) {
 	models::Image img;
-	img.spriteSheet = path;
-	img.defaultSize.width = -1;
-	img.defaultSize.height = -1;
+	img.SpriteSheet = path;
+	img.DefaultSize.Width = -1;
+	img.DefaultSize.Height = -1;
 	return (Image*) imageCache.checkout(img);
 }
 
@@ -60,11 +60,11 @@ string Image::key() {
 }
 
 int Image::defaultWidth() {
-	return m_defaultSize.width;
+	return m_defaultSize.Width;
 }
 
 int Image::defaultHeight() {
-	return m_defaultSize.height;
+	return m_defaultSize.Height;
 }
 
 
@@ -72,12 +72,12 @@ Animation::Animation(models::Animation &model) {
 	m_slide = 0;
 
 	//for now, just  use a universal interval
-	if (model.images.size()) {
-		m_interval = model.images[0].interval;
+	if (model.Images.size()) {
+		m_interval = model.Images[0].Interval;
 	}
 
-	for (auto img : model.images) {
-		m_imgs.push_back(checkoutImage(img.image));
+	for (auto img : model.Images) {
+		m_imgs.push_back(checkoutImage(img.Image));
 	}
 }
 

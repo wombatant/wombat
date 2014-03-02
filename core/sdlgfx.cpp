@@ -29,16 +29,16 @@ Image::Image(string path) {
 	SDL_Surface *s = IMG_Load(path.c_str());
 	m_img = SDL_CreateTextureFromSurface(renderer, s);
 	SDL_FreeSurface(s);
-	m_defaultSize.width = -1;
-	m_defaultSize.height = -1;
+	m_defaultSize.Width = -1;
+	m_defaultSize.Height = -1;
 }
 
 Image::Image(models::Image &img) {
-	SDL_Surface *s = IMG_Load(img.spriteSheet.c_str());
+	SDL_Surface *s = IMG_Load(img.SpriteSheet.c_str());
 	m_img = SDL_CreateTextureFromSurface(renderer, s);
 	SDL_FreeSurface(s);
-	m_defaultSize.width = img.defaultSize.width;
-	m_defaultSize.height = img.defaultSize.height;
+	m_defaultSize.Width = img.DefaultSize.Width;
+	m_defaultSize.Height = img.DefaultSize.Height;
 }
 
 Image::~Image() {
