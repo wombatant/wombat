@@ -42,12 +42,15 @@ int main(int argc, const char **args) {
 			running = false;
 		}
 	});
-	while (running) {
-		// draw
-		core::pollEvents();
-		core::draw();
-		core::sleep(16);
-	}
+
+	core::startThread([&running]() {
+		while (running) {
+			core::draw();
+			core::sleep(16);
+		}
+	});
+
+	core::main();
 
 	if (test)
 		delete test;

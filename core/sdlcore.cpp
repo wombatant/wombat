@@ -30,22 +30,36 @@ SDL_Window *display = 0;
 SDL_Thread *drawThread = 0;
 SDL_Renderer *renderer = 0;
 extern std::vector<std::function<void(Event)>> eventListeners;
+const auto Event_DrawEvent = SDL_RegisterEvents(1);
 
 void draw() {
-	for (int i = 0; i < drawers.size(); i++) {
-		drawers[i]->draw(graphicsInstances[i]);
-	}
-	SDL_RenderPresent(renderer);
+	SDL_Event ev;
+	SDL_zero(ev);
+	ev.type = Event_DrawEvent;
+	SDL_PushEvent(&ev);
 }
 
-void pollEvents() {
+void main() {
 	// handle events
 	SDL_Event sev;
-	while (SDL_PollEvent(&sev)) {
-		Event ev;
-		ev.type = toEventType(sev.type);
-		for (auto f : eventListeners) {
-			f(ev);
+	for (auto running = true; running;) {
+		SDL_WaitEvent(&sev);
+		const auto t = sev.type;
+		if (t == Event_DrawEvent) {
+			for (int i = 0; i < drawers.size(); i++) {
+				drawers[i]->draw(graphicsInstances[i]);
+			}
+			SDL_RenderPresent(renderer);
+		} else {
+			Event ev;
+			ev.type = toEventType(sev.type);
+			for (auto f : eventListeners) {
+				f(ev);
+			}
+
+			if (ev.type == Quit) {
+				running = false;
+			}
 		}
 	}
 }
@@ -66,6 +80,27 @@ int init(bool fullscreen, int w, int h) {
 void addDrawer(Drawer *d) {
 	graphicsInstances.push_back(new Graphics());
 	drawers.push_back(d);
+}
+
+int thread(void *func) {
+	if (func) {
+		auto f = (std::function<void()>*) func;
+		(*f)();
+		delete f;
+	}
+}
+
+void startThread(std::function<void()> f) {
+	static int threadCount = 0;
+
+	char thrdNm[10];
+	snprintf(thrdNm, 10, "Thread %d", threadCount);
+
+
+	auto fp = new std::function<void()>(f);
+	SDL_CreateThread(thread, thrdNm, (void*) fp);
+
+	threadCount++;
 }
 
 void sleep(uint64 ms) {

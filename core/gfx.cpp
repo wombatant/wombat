@@ -37,6 +37,7 @@ FlyweightNode *loadImage(models::cyborgbear::Model &key) {
 
 Flyweight imageCache(loadImage);
 
+
 Image *checkoutImage(string path) {
 	models::Image img;
 	img.spriteSheet = path;
@@ -48,6 +49,7 @@ Image *checkoutImage(string path) {
 Image *checkoutImage(models::Image &img) {
 	return (Image*) imageCache.checkout(img);
 }
+
 
 void checkinImage(Image &i) {
 	checkinImage(i);
@@ -64,6 +66,7 @@ int Image::defaultWidth() {
 int Image::defaultHeight() {
 	return m_defaultSize.height;
 }
+
 
 Animation::Animation(models::Animation &model) {
 	for (auto img : model.images) {

@@ -40,11 +40,13 @@ int init(bool fullscreen = true, int w = 800, int h = 600);
 
 void draw();
 
-void pollEvents();
+void main();
 
 void addEventListener(std::function<void (Event)> func);
 
 void addDrawer(Drawer*);
+
+void startThread(std::function<void()> f);
 
 void sleep(uint64 ms);
 
