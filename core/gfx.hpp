@@ -29,6 +29,7 @@
 
 #include "models/enginemodels.hpp"
 
+#include "types.hpp"
 #include "flyweight.hpp"
 
 namespace wombat {
@@ -67,11 +68,15 @@ class Image: public FlyweightNode {
 class Animation {
 	private:
 		std::vector<Image*> m_imgs;
-		int m_interval;
+		uint64 m_lastUpdate;
+		uint64 m_interval;
+		int m_slide;
 	public:
 		Animation(models::Animation&);
 		~Animation();
 		void add(Image*);
+	protected:
+		Image *getImage();
 };
 
 class Graphics {

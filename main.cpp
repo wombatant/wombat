@@ -43,6 +43,7 @@ int main(int argc, const char **args) {
 		}
 	});
 
+	// start draw thread
 	core::startThread([&running]() {
 		while (running) {
 			core::draw();

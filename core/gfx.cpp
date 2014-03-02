@@ -69,6 +69,13 @@ int Image::defaultHeight() {
 
 
 Animation::Animation(models::Animation &model) {
+	m_slide = 0;
+
+	//for now, just  use a universal interval
+	if (model.images.size()) {
+		m_interval = model.images[0].interval;
+	}
+
 	for (auto img : model.images) {
 		m_imgs.push_back(checkoutImage(img.image));
 	}
@@ -79,6 +86,15 @@ Animation::~Animation() {
 
 void Animation::add(Image *img) {
 	m_imgs.push_back(img);
+}
+
+Image *Animation::getImage() {
+	auto time = SDL_GetTicks();
+	if (m_lastUpdate <= time - m_interval) {
+		m_slide = (m_slide + 1) % m_imgs.size();
+		m_lastUpdate = time;
+	}
+	return m_imgs[m_slide];
 }
 
 }
