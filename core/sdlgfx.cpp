@@ -66,18 +66,29 @@ bool Image::loaded() {
 
 void Graphics::draw(Image *img, int x, int y, int w, int h) {
 	if (img->loaded()) {
-		if (w == -1) {
-			if (img->defaultWidth() == -1)
-				w = img->width();
-			else
-				w = img->defaultWidth();
-		}
-		if (h == -1) {
-			if (img->defaultHeight() == -1)
-				h = img->height();
-			else
-				h = img->defaultHeight();
-		}
+		SDL_SetTextureAlphaMod(img->m_img, 255);
+		SDL_Rect dest;
+		dest.x = x;
+		dest.y = y;
+		dest.w = w;
+		dest.h = h;
+		SDL_RenderCopy(renderer, img->m_img, 0, &dest);
+	}
+}
+
+void Graphics::draw(Image *img, int x, int y) {
+	if (img->loaded()) {
+		int w, h;
+		if (img->defaultWidth() == -1)
+			w = img->width();
+		else
+			w = img->defaultWidth();
+
+		if (img->defaultHeight() == -1)
+			h = img->height();
+		else
+			h = img->defaultHeight();
+
 		SDL_SetTextureAlphaMod(img->m_img, 255);
 		SDL_Rect dest;
 		dest.x = x;

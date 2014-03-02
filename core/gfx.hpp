@@ -55,13 +55,33 @@ class Image: public FlyweightNode {
 		models::Bounds m_bounds;
 	public:
 		Image(models::Image&);
+
 		Image(string path);
+
 		virtual ~Image();
+
+		/**
+		 * Returns the width of the source image.
+		 */
 		int width();
+
+		/**
+		 * Returns the height of the source image.
+		 */
 		int height();
+
+		/**
+		 * Returns the default draw width.
+		 */
 		int defaultWidth();
+
+		/**
+		 * Returns the default draw width.
+		 */
 		int defaultHeight();
+
 		bool loaded();
+
 		string key();
 };
 
@@ -81,7 +101,8 @@ class Animation {
 
 class Graphics {
 	public:
-		void draw(Image *img, int x, int y, int w = -1, int h = -1);
+		void draw(Image *img, int x, int y, int w, int h);
+		void draw(Image *img, int x, int y);
 };
 
 class Drawer {
