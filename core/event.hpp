@@ -22,9 +22,10 @@ namespace core {
 enum EventType {
 	UnknownEvent = -1,
 	Quit,
+	Key_Escape,
+	Key_A,
 };
 
-EventType toEventType(int);
 
 class Event {
 public:

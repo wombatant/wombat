@@ -19,10 +19,16 @@
 namespace wombat {
 namespace core {
 
-EventType toEventType(int t) {
-	switch (t) {
-	case SDL_QUIT:
+EventType toEventType(SDL_Event t) {
+	if (t.type == SDL_QUIT) {
 		return Quit;
+	} else {
+		switch (t.key.keysym.sym) {
+		case SDLK_a:
+			return Key_A;
+		case SDLK_ESCAPE:
+			return Key_Escape;
+		}
 	}
 	return UnknownEvent;
 }

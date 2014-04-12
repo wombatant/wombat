@@ -52,7 +52,7 @@ Image *checkoutImage(models::Image &img) {
 
 
 void checkinImage(Image &i) {
-	checkinImage(i);
+	imageCache.checkin(i.key());
 }
 
 string Image::key() {
@@ -68,7 +68,7 @@ int Image::defaultHeight() {
 }
 
 
-Animation::Animation(models::Animation &model) {
+Animation::Animation(models::Animation model) {
 	m_slide = 0;
 
 	//for now, just  use a universal interval
@@ -77,7 +77,7 @@ Animation::Animation(models::Animation &model) {
 	}
 
 	for (auto img : model.Images) {
-		m_imgs.push_back(checkoutImage(img.Image));
+		add(checkoutImage(img.Image));
 	}
 }
 

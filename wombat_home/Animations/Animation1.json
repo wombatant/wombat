@@ -1,0 +1,59 @@
+{
+    "Images": [
+        {
+            "Image": {
+                "DefaultSize": {
+                    "Height": 32,
+                    "Width": 32
+                },
+                "ImgId": 0,
+                "SpriteSheet": "Resources/SpriteSheets/SpriteSheet1.json"
+            },
+            "Interval": 1000
+        },
+        {
+            "Image": {
+                "DefaultSize": {
+                    "Height": 32,
+                    "Width": 32
+                },
+                "ImgId": 1,
+                "SpriteSheet": "Resources/SpriteSheets/SpriteSheet1.json"
+            },
+            "Interval": 1000
+        },
+        {
+            "Image": {
+                "DefaultSize": {
+                    "Height": 32,
+                    "Width": 32
+                },
+                "ImgId": 0,
+                "SpriteSheet": "Resources/SpriteSheets/SpriteSheet1.json"
+            },
+            "Interval": 1000
+        },
+        {
+            "Image": {
+                "DefaultSize": {
+                    "Height": 32,
+                    "Width": 32
+                },
+                "ImgId": 2,
+                "SpriteSheet": "Resources/SpriteSheets/SpriteSheet1.json"
+            },
+            "Interval": 1000
+        },
+        {
+            "Image": {
+                "DefaultSize": {
+                    "Height": 32,
+                    "Width": 32
+                },
+                "ImgId": 2,
+                "SpriteSheet": "Resources/SpriteSheets/SpriteSheet1.json"
+            },
+            "Interval": 1000
+        }
+    ]
+}

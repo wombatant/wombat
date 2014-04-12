@@ -23,6 +23,24 @@ namespace wombat {
 namespace core {
 
 std::vector<std::function<void(Event)>> eventListeners;
+std::string home = "wombat_home/";
+bool vrunning = false;
+
+bool running() {
+	return vrunning;
+}
+
+void quit() {
+	vrunning = false;
+}
+
+std::string getHome() {
+	return home;
+}
+
+void setHome(std::string h) {
+	home = h + "/";
+}
 
 void addEventListener(std::function<void(Event)> el) {
 	eventListeners.push_back(el);

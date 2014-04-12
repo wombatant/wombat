@@ -36,16 +36,15 @@ int main(int argc, const char **args) {
 		tests::test(vargs);
 	}
 
-	bool running = true;
-	core::addEventListener([&running](core::Event e) {
-		if (e.type == core::Quit) {
-			running = false;
+	core::addEventListener([](core::Event e) {
+		if (e.type == core::Quit || e.type == core::Key_Escape) {
+			core::quit();
 		}
 	});
 
 	// start draw thread
-	core::startThread([&running]() {
-		while (running) {
+	core::startThread([]() {
+		while (core::running()) {
 			core::draw();
 			core::sleep(16);
 		}

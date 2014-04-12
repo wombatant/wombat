@@ -1,0 +1,40 @@
+{
+    "ImageIdIterator": 3,
+    "Images": {
+        "0": {
+            "SrcBounds": {
+                "Height": 32,
+                "Width": 32,
+                "X": 0,
+                "Y": 0
+            }
+        },
+        "1": {
+            "SrcBounds": {
+                "Height": 32,
+                "Width": 32,
+                "X": 32,
+                "Y": 0
+            }
+        },
+        "2": {
+            "SrcBounds": {
+                "Height": 32,
+                "Width": 32,
+                "X": 64,
+                "Y": 0
+            }
+        }
+    },
+    "RecycledImageIds": [
+    ],
+    "SheetIdx": {
+        "X": 0,
+        "Y": 0
+    },
+    "SrcFile": "Resources/SpriteSheets/SpriteSheet2.png",
+    "TileHeight": 32,
+    "TileWidth": 32,
+    "TilesHigh": 32,
+    "TilesWide": 32
+}

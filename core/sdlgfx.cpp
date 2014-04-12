@@ -33,8 +33,10 @@ Image::Image(string path) {
 	m_defaultSize.Height = -1;
 }
 
-Image::Image(models::Image &img) {
-	SDL_Surface *s = IMG_Load(img.SpriteSheet.c_str());
+Image::Image(models::Image img) {
+	models::SpriteSheet ss;
+	ss.readJsonFile(getHome() + img.SpriteSheet);
+	SDL_Surface *s = IMG_Load((getHome() + ss.SrcFile).c_str());
 	m_img = SDL_CreateTextureFromSurface(renderer, s);
 	SDL_FreeSurface(s);
 	m_defaultSize.Width = img.DefaultSize.Width;
@@ -90,12 +92,18 @@ void Graphics::draw(Image *img, int x, int y) {
 			h = img->defaultHeight();
 
 		SDL_SetTextureAlphaMod(img->m_img, 255);
-		SDL_Rect dest;
+		SDL_Rect dest, src;
 		dest.x = x;
 		dest.y = y;
 		dest.w = w;
 		dest.h = h;
-		SDL_RenderCopy(renderer, img->m_img, 0, &dest);
+
+		src.x = img->m_bounds.X;
+		src.y = img->m_bounds.Y;
+		src.w = img->m_bounds.Width;
+		src.h = img->m_bounds.Height;
+
+		SDL_RenderCopy(renderer, img->m_img, &src, &dest);
 	}
 }
 

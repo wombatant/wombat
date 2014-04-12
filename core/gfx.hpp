@@ -54,7 +54,7 @@ class Image: public FlyweightNode {
 		 */
 		models::Bounds m_bounds;
 	public:
-		Image(models::Image&);
+		Image(models::Image);
 
 		Image(string path);
 
@@ -92,7 +92,7 @@ class Animation {
 		uint64 m_interval;
 		int m_slide;
 	public:
-		Animation(models::Animation&);
+		Animation(models::Animation);
 		~Animation();
 		void add(Image*);
 	protected:

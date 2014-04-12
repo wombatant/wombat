@@ -31,6 +31,8 @@ SDL_Thread *drawThread = 0;
 SDL_Renderer *renderer = 0;
 extern std::vector<std::function<void(Event)>> eventListeners;
 const auto Event_DrawEvent = SDL_RegisterEvents(1);
+extern bool vrunning;
+EventType toEventType(SDL_Event);
 
 void draw() {
 	SDL_Event ev;
@@ -42,7 +44,7 @@ void draw() {
 void main() {
 	// handle events
 	SDL_Event sev;
-	for (auto running = true; running;) {
+	while (vrunning) {
 		SDL_WaitEvent(&sev);
 		const auto t = sev.type;
 		if (t == Event_DrawEvent) {
@@ -52,13 +54,9 @@ void main() {
 			SDL_RenderPresent(renderer);
 		} else {
 			Event ev;
-			ev.type = toEventType(sev.type);
+			ev.type = toEventType(sev);
 			for (auto f : eventListeners) {
 				f(ev);
-			}
-
-			if (ev.type == Quit) {
-				running = false;
 			}
 		}
 	}
@@ -74,6 +72,7 @@ int init(bool fullscreen, int w, int h) {
 		return -3;
 	renderer = SDL_CreateRenderer(display, -1, SDL_RENDERER_ACCELERATED);
 
+	vrunning = true;
 	return 0;
 }
 
