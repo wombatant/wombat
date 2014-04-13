@@ -47,7 +47,7 @@ class Image: public FlyweightNode {
 #endif
 	private:
 		models::Size m_defaultSize;
-		string m_path;
+		string m_key;
 	protected:
 		/**
 		 * The bounds to cut out of the source image.
@@ -55,8 +55,6 @@ class Image: public FlyweightNode {
 		models::Bounds m_bounds;
 	public:
 		Image(models::Image);
-
-		Image(string path);
 
 		virtual ~Image();
 
@@ -85,18 +83,26 @@ class Image: public FlyweightNode {
 		string key();
 };
 
-class Animation {
+class Animation: public FlyweightNode {
 	private:
 		std::vector<Image*> m_imgs;
 		uint64 m_lastUpdate;
 		uint64 m_interval;
 		int m_slide;
+		std::string m_key;
+
 	public:
 		Animation(models::Animation);
+
 		~Animation();
+
 		void add(Image*);
-	protected:
+
 		Image *getImage();
+
+		bool loaded();
+
+		string key();
 };
 
 class Graphics {
@@ -111,6 +117,8 @@ class Drawer {
 		virtual void draw(Graphics*) = 0;
 };
 
+
+Animation *checkoutAnimation(models::Animation & anim);
 
 Image *checkoutImage(models::Image &img);
 

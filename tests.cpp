@@ -27,6 +27,7 @@ Drawer *test(std::vector<std::string> &args) {
 	return test;
 }
 
+//Image Test
 ImageTest::ImageTest(std::string path) {
 	models::Image img;
 	img.readJsonFile(path + ".json");
@@ -42,10 +43,16 @@ void ImageTest::draw(Graphics *g) {
 
 //Animation Test
 AnimationTest::AnimationTest(std::string path) {
-	anim.readJsonFile(path);
+	models::Animation anim;
+	anim.readJsonFile(path + ".json");
 }
 
 void AnimationTest::draw(Graphics *g) {
+	auto img = m_anim->getImage();
+	if (img && img->loaded()) {
+		//printf("drawing\n");
+		g->draw(img, 42, 42);
+	}
 }
 
 }

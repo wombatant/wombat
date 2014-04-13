@@ -41,6 +41,13 @@ void main();
 
 std::string getHome();
 
+/**
+ * Returns the given path with the wombat_home path prepended to it.
+ * @param path the of the file to refer to within wombat_home
+ * @return the given path with the wombat_home path prepended to it.
+ */
+std::string path(std::string path);
+
 void addEventListener(std::function<void (Event)> func);
 
 void addDrawer(Drawer*);

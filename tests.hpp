@@ -36,7 +36,7 @@ class ImageTest: public Drawer {
 
 class AnimationTest: public Drawer {
 	private:
-		models::Animation anim;
+		Animation *m_anim;
 	public:
 		AnimationTest(std::string path);
 		void draw(Graphics*);

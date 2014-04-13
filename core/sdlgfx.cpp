@@ -25,22 +25,15 @@ using std::string;
 
 //Image
 
-Image::Image(string path) {
-	SDL_Surface *s = IMG_Load(path.c_str());
-	m_img = SDL_CreateTextureFromSurface(renderer, s);
-	SDL_FreeSurface(s);
-	m_defaultSize.Width = -1;
-	m_defaultSize.Height = -1;
-}
-
 Image::Image(models::Image img) {
 	models::SpriteSheet ss;
-	ss.readJsonFile(getHome() + img.SpriteSheet);
-	SDL_Surface *s = IMG_Load((getHome() + ss.SrcFile).c_str());
+	ss.readJsonFile(path(img.SpriteSheet));
+	SDL_Surface *s = IMG_Load(path(ss.SrcFile).c_str());
 	m_img = SDL_CreateTextureFromSurface(renderer, s);
 	SDL_FreeSurface(s);
 	m_defaultSize.Width = img.DefaultSize.Width;
 	m_defaultSize.Height = img.DefaultSize.Height;
+	m_key = img.toJson();
 }
 
 Image::~Image() {

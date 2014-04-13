@@ -26,6 +26,8 @@ EventType toEventType(SDL_Event t) {
 		switch (t.key.keysym.sym) {
 		case SDLK_a:
 			return Key_A;
+		case SDLK_q:
+			return Key_Q;
 		case SDLK_ESCAPE:
 			return Key_Escape;
 		}

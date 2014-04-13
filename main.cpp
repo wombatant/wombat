@@ -37,8 +37,12 @@ int main(int argc, const char **args) {
 	}
 
 	core::addEventListener([](core::Event e) {
-		if (e.type == core::Quit || e.type == core::Key_Escape) {
+		switch (e.type) {
+		case core::Quit:
+		case core::Key_Escape:
+		case core::Key_Q:
 			core::quit();
+			break;
 		}
 	});
 

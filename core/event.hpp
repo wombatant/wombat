@@ -24,6 +24,7 @@ enum EventType {
 	Quit,
 	Key_Escape,
 	Key_A,
+	Key_Q,
 };
 
 

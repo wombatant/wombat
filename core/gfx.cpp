@@ -56,7 +56,7 @@ void checkinImage(Image &i) {
 }
 
 string Image::key() {
-	return m_path;
+	return m_key;
 }
 
 int Image::defaultWidth() {
@@ -67,11 +67,29 @@ int Image::defaultHeight() {
 	return m_defaultSize.Height;
 }
 
+//Animation
+
+FlyweightNode *loadAnimation(models::cyborgbear::Model &key) {
+	models::Animation &mod = (models::Animation&) key;
+	Animation *a = new Animation(mod);
+	if (a->loaded()) {
+		return a;
+	} else {
+		delete a;
+		return 0;
+	}
+}
+
+Flyweight animCache(loadAnimation);
+
+Animation *checkoutAnimation(models::Animation &anim) {
+	return (Animation*) imageCache.checkout(anim);
+}
 
 Animation::Animation(models::Animation model) {
 	m_slide = 0;
 
-	//for now, just  use a universal interval
+	//for now, just use a universal interval
 	if (model.Images.size()) {
 		m_interval = model.Images[0].Interval;
 	}
@@ -79,9 +97,14 @@ Animation::Animation(models::Animation model) {
 	for (auto img : model.Images) {
 		add(checkoutImage(img.Image));
 	}
+	m_key = model.toJson();
 }
 
 Animation::~Animation() {
+}
+
+string Animation::key() {
+	return m_key;
 }
 
 void Animation::add(Image *img) {
@@ -95,6 +118,18 @@ Image *Animation::getImage() {
 		m_lastUpdate = time;
 	}
 	return m_imgs[m_slide];
+}
+
+bool Animation::loaded() {
+	bool retval = false;
+	for (auto img : m_imgs) {
+		if (img) {
+			retval = true;
+		} else {
+			return false;
+		}
+	}
+	return retval;
 }
 
 }

@@ -38,6 +38,10 @@ std::string getHome() {
 	return home;
 }
 
+std::string path(std::string path) {
+	return home + path;
+}
+
 void setHome(std::string h) {
 	home = h + "/";
 }
