@@ -34,6 +34,12 @@ int init(bool fullscreen = true, int w = 800, int h = 600);
 
 void draw();
 
+/**
+ * Used for getting the time stamp for when processing for the current event was started.
+ * @return the time stamp for when processing for the current event was started
+ */
+time_t eventTime();
+
 time_t time();
 
 bool running();

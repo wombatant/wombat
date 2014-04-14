@@ -25,6 +25,9 @@ namespace core {
 
 std::vector<std::function<void(Event)>> eventListeners;
 std::string home = "wombat_home/";
+
+// used to track "core time"
+time_t refTime;
 bool vrunning = false;
 
 bool running() {
@@ -33,6 +36,14 @@ bool running() {
 
 void quit() {
 	vrunning = false;
+}
+
+void _updateEventTime() {
+	::time(&refTime);
+}
+
+time_t eventTime() {
+	return refTime;
 }
 
 time_t time() {

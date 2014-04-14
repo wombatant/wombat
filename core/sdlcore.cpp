@@ -34,6 +34,8 @@ const auto Event_DrawEvent = SDL_RegisterEvents(1);
 extern bool vrunning;
 EventType toEventType(SDL_Event);
 
+void _updateEventTime();
+
 void draw() {
 	SDL_Event ev;
 	SDL_zero(ev);
@@ -47,6 +49,7 @@ void main() {
 	while (vrunning) {
 		SDL_WaitEvent(&sev);
 		const auto t = sev.type;
+		_updateEventTime();
 		if (t == Event_DrawEvent) {
 			for (int i = 0; i < drawers.size(); i++) {
 				drawers[i]->draw(graphicsInstances[i]);
