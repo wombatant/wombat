@@ -17,6 +17,7 @@
 #include <string>
 #include <functional>
 #include <vector>
+#include <chrono>
 #include <time.h>
 #include "core.hpp"
 
@@ -26,7 +27,7 @@ namespace core {
 std::vector<std::function<void(Event)>> eventListeners;
 std::string home = "wombat_home/";
 
-// used to track "core time"
+// used to track "event time"
 time_t refTime;
 bool vrunning = false;
 
@@ -39,7 +40,8 @@ void quit() {
 }
 
 void _updateEventTime() {
-	::time(&refTime);
+	auto t = std::chrono::system_clock::now().time_since_epoch();
+	refTime = std::chrono::duration_cast<std::chrono::milliseconds>(t).count();
 }
 
 time_t eventTime() {
@@ -47,9 +49,8 @@ time_t eventTime() {
 }
 
 time_t time() {
-	time_t t;
-	::time(&t);
-	return t;
+	auto t = std::chrono::system_clock::now().time_since_epoch();
+	return std::chrono::duration_cast<std::chrono::milliseconds>(t).count();
 }
 
 std::string getHome() {

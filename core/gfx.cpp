@@ -88,6 +88,7 @@ Animation *checkoutAnimation(models::Animation &anim) {
 
 Animation::Animation(models::Animation model) {
 	m_slide = 0;
+	m_lastUpdate = 0;
 
 	//for now, just use a universal interval
 	if (model.Images.size()) {
