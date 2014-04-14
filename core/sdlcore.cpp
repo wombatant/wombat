@@ -67,7 +67,11 @@ int init(bool fullscreen, int w, int h) {
 		return -1;
 	}
 
-	display = SDL_CreateWindow("Wombat", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, SDL_WINDOW_OPENGL);
+	auto flags = SDL_WINDOW_OPENGL;
+	if (fullscreen) {
+		flags = SDL_WINDOW_FULLSCREEN;
+	}
+	display = SDL_CreateWindow("Wombat", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, flags);
 	if (!display)
 		return -3;
 	renderer = SDL_CreateRenderer(display, -1, SDL_RENDERER_ACCELERATED);

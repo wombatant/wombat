@@ -27,10 +27,11 @@ using std::string;
 
 Image::Image(models::Image img) {
 	models::SpriteSheet ss;
-	ss.readJsonFile(path(img.SpriteSheet));
+	open(ss, img.SpriteSheet);
 	SDL_Surface *s = IMG_Load(path(ss.SrcFile).c_str());
 	m_img = SDL_CreateTextureFromSurface(renderer, s);
 	SDL_FreeSurface(s);
+	m_bounds = ss.Images[img.ImgId].SrcBounds;
 	m_defaultSize.Width = img.DefaultSize.Width;
 	m_defaultSize.Height = img.DefaultSize.Height;
 	m_key = img.toJson();

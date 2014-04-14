@@ -19,9 +19,14 @@ namespace wombat {
 namespace tests {
 
 Drawer *test(std::vector<std::string> &args) {
-	ImageTest *test = 0;
+	Drawer *test = 0;
 	if (args[2] == "image") {
 		test = new ImageTest(args[3]);
+	} else if (args[2] == "animation") {
+		test = new AnimationTest(args[3]);
+	}
+
+	if (test) {
 		core::addDrawer(test);
 	}
 	return test;
@@ -30,13 +35,12 @@ Drawer *test(std::vector<std::string> &args) {
 //Image Test
 ImageTest::ImageTest(std::string path) {
 	models::Image img;
-	img.readJsonFile(path + ".json");
+	core::open(img, path);
 	m_img = core::checkoutImage(img);
 }
 
 void ImageTest::draw(Graphics *g) {
 	if (m_img && m_img->loaded()) {
-		//printf("drawing\n");
 		g->draw(m_img, 42, 42);
 	}
 }
@@ -44,14 +48,16 @@ void ImageTest::draw(Graphics *g) {
 //Animation Test
 AnimationTest::AnimationTest(std::string path) {
 	models::Animation anim;
-	anim.readJsonFile(path + ".json");
+	core::open(anim, path);
+	m_anim = new Animation(anim);
 }
 
 void AnimationTest::draw(Graphics *g) {
-	auto img = m_anim->getImage();
-	if (img && img->loaded()) {
-		//printf("drawing\n");
-		g->draw(img, 42, 42);
+	if (m_anim->loaded()) {
+		auto img = m_anim->getImage();
+		if (img) {
+			g->draw(img, 42, 42);
+		}
 	}
 }
 

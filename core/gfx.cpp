@@ -112,7 +112,7 @@ void Animation::add(Image *img) {
 }
 
 Image *Animation::getImage() {
-	auto time = SDL_GetTicks();
+	auto time = core::time();
 	if (m_lastUpdate <= time - m_interval) {
 		m_slide = (m_slide + 1) % m_imgs.size();
 		m_lastUpdate = time;

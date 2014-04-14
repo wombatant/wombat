@@ -21,6 +21,7 @@
 #include "event.hpp"
 #include "gfx.hpp"
 #include "types.hpp"
+#include "models/enginemodels.hpp"
 
 namespace wombat {
 namespace core {
@@ -33,6 +34,8 @@ int init(bool fullscreen = true, int w = 800, int h = 600);
 
 void draw();
 
+time_t time();
+
 bool running();
 
 void quit();
@@ -40,6 +43,8 @@ void quit();
 void main();
 
 std::string getHome();
+
+int open(models::cyborgbear::Model &m, std::string path);
 
 /**
  * Returns the given path with the wombat_home path prepended to it.

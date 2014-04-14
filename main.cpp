@@ -22,7 +22,7 @@ using namespace models;
 using namespace wombat;
 
 int main(int argc, const char **args) {
-	if (core::init(false) != 0) {
+	if (core::init(false, 1024, 768) != 0) {
 		return 1;
 	}
 

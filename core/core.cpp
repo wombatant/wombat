@@ -17,6 +17,7 @@
 #include <string>
 #include <functional>
 #include <vector>
+#include <time.h>
 #include "core.hpp"
 
 namespace wombat {
@@ -34,8 +35,21 @@ void quit() {
 	vrunning = false;
 }
 
+time_t time() {
+	time_t t;
+	::time(&t);
+	return t;
+}
+
 std::string getHome() {
 	return home;
+}
+
+int open(models::cyborgbear::Model &m, std::string path) {
+	if (path.substr(path.size() - 5) != ".json") {
+		path += ".json";
+	}
+	m.readJsonFile(core::path(path));
 }
 
 std::string path(std::string path) {

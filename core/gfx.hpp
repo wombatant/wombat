@@ -86,8 +86,8 @@ class Image: public FlyweightNode {
 class Animation: public FlyweightNode {
 	private:
 		std::vector<Image*> m_imgs;
-		uint64 m_lastUpdate;
-		uint64 m_interval;
+		time_t m_lastUpdate;
+		time_t m_interval;
 		int m_slide;
 		std::string m_key;
 
