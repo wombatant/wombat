@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "core.hpp"
 #include "flyweight.hpp"
 
 namespace wombat {
-namespace core {
+namespace common {
 
-Flyweight::Flyweight(FlyweightNode *(*build)(models::cyborgbear::Model&)) {
-	m_build = build;
-}
+// FlyweightNode
 
 FlyweightNode::~FlyweightNode() {
 }
 
-FlyweightNode* Flyweight::checkout(models::cyborgbear::Model &key) {
+FlyweightNode* Flyweight::checkout(Model &key) {
 	string keyStr = key.toJson();
 	FlyweightNode *v = m_cache[keyStr];
 	if (!v) {
@@ -36,6 +33,12 @@ FlyweightNode* Flyweight::checkout(models::cyborgbear::Model &key) {
 		v->dependents++;
 	}
 	return v;
+}
+
+// Flyweight
+
+Flyweight::Flyweight(FlyweightNodeBuilder build) {
+	m_build = build;
 }
 
 void Flyweight::checkin(string key) {

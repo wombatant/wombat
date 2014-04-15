@@ -30,12 +30,13 @@
 #include "models/enginemodels.hpp"
 
 #include "types.hpp"
-#include "flyweight.hpp"
+#include "common/flyweight.hpp"
 
 namespace wombat {
 namespace core {
 
 using std::string;
+using common::FlyweightNode;
 
 int displayWidth();
 

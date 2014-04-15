@@ -29,10 +29,16 @@ set(LIBS ${LIBS} ${SDL_IMAGE_LIBRARY})
 include_directories(".")
 
 add_subdirectory(models)
-set(LIBS ${LIBS} WombatModels)
+set(LIBS WombatModels ${LIBS})
+
+add_subdirectory(common)
+set(LIBS WombatCommon ${LIBS})
 
 add_subdirectory(core)
-set(LIBS ${LIBS} WombatCore)
+set(LIBS WombatCore ${LIBS})
+
+add_subdirectory(world)
+set(LIBS WombatWorld ${LIBS})
 
 add_executable(wombat main.cpp tests.cpp)
 target_link_libraries(wombat ${LIBS})

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 #include <iostream>
+#include "common/flyweight.hpp"
 #include "core.hpp"
-#include "flyweight.hpp"
 
 namespace wombat {
 namespace core {
 
+using common::Flyweight;
 using std::string;
 
 //Image

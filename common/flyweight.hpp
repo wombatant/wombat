@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_CORE_FLYWEIGHT_HPP
-#define WOMBAT_CORE_FLYWEIGHT_HPP
+#ifndef WOMBAT_COMMON_FLYWEIGHT_HPP
+#define WOMBAT_COMMON_FLYWEIGHT_HPP
 
 #include <map>
 #include <string>
+#include <functional>
+#include "models/enginemodels.hpp"
 
 namespace wombat {
-namespace core {
+namespace common {
 
 using std::map;
 using std::string;
+using std::function;
+using models::cyborgbear::Model;
 
 class FlyweightNode {
 	friend class Flyweight;
@@ -34,14 +38,16 @@ class FlyweightNode {
 		virtual string key() = 0;
 };
 
+typedef function<FlyweightNode*(Model&)> FlyweightNodeBuilder;
+
 class Flyweight {
 	private:
 		map<string, FlyweightNode*> m_cache;
-		FlyweightNode *(*m_build)(models::cyborgbear::Model&);
+		FlyweightNodeBuilder m_build;
 	public:
-		Flyweight(FlyweightNode *(*build)(models::cyborgbear::Model&));
+		Flyweight(FlyweightNodeBuilder);
 		FlyweightNode* checkout(string key);
-		FlyweightNode* checkout(models::cyborgbear::Model &key);
+		FlyweightNode* checkout(Model &key);
 		void checkin(string key);
 		void checkin(FlyweightNode *val);
 };
