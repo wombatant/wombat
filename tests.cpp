@@ -20,9 +20,7 @@ namespace tests {
 
 Drawer *test(std::vector<std::string> &args) {
 	Drawer *test = 0;
-	if (args[2] == "image") {
-		test = new ImageTest(args[3]);
-	} else if (args[2] == "animation") {
+	if (args[2] == "animation") {
 		test = new AnimationTest(args[3]);
 	}
 
@@ -30,19 +28,6 @@ Drawer *test(std::vector<std::string> &args) {
 		core::addDrawer(test);
 	}
 	return test;
-}
-
-//Image Test
-ImageTest::ImageTest(std::string path) {
-	models::Image img;
-	core::open(img, path);
-	m_img = core::checkoutImage(img);
-}
-
-void ImageTest::draw(Graphics *g) {
-	if (m_img && m_img->loaded()) {
-		g->draw(m_img, 42, 42);
-	}
 }
 
 //Animation Test
