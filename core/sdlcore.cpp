@@ -43,6 +43,14 @@ void draw() {
 	SDL_PushEvent(&ev);
 }
 
+void _draw() {
+	SDL_RenderClear(renderer);
+	for (int i = 0; i < drawers.size(); i++) {
+		drawers[i]->draw(graphicsInstances[i]);
+	}
+	SDL_RenderPresent(renderer);
+}
+
 void main() {
 	// handle events
 	SDL_Event sev;
@@ -51,10 +59,7 @@ void main() {
 		const auto t = sev.type;
 		_updateEventTime();
 		if (t == Event_DrawEvent) {
-			for (int i = 0; i < drawers.size(); i++) {
-				drawers[i]->draw(graphicsInstances[i]);
-			}
-			SDL_RenderPresent(renderer);
+			_draw();
 		} else {
 			Event ev;
 			ev.type = toEventType(sev);

@@ -40,8 +40,7 @@ void quit() {
 }
 
 void _updateEventTime() {
-	auto t = std::chrono::system_clock::now().time_since_epoch();
-	refTime = std::chrono::duration_cast<std::chrono::milliseconds>(t).count();
+	refTime = time();
 }
 
 time_t eventTime() {

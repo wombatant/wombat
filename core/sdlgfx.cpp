@@ -23,6 +23,18 @@ namespace core {
 
 using std::string;
 
+int displayWidth() {
+	int w;
+	SDL_GetWindowSize(display, &w, 0);
+	return w;
+}
+
+int displayHeight() {
+	int h;
+	SDL_GetWindowSize(display, 0, &h);
+	return h;
+}
+
 //Image
 
 Image::Image(models::Image img) {
@@ -99,6 +111,23 @@ void Graphics::draw(Image *img, int x, int y) {
 
 		SDL_RenderCopy(renderer, img->m_img, &src, &dest);
 	}
+}
+
+void Graphics::fillRect(int x, int y, int w, int h) {
+	SDL_Rect rect;
+	rect.x = x;
+	rect.y = y;
+	rect.w = w;
+	rect.h = h;
+	SDL_RenderFillRect(renderer, &rect);
+}
+
+void Graphics::setRGBA(int r, int g, int b, int a) {
+	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+}
+
+void Graphics::setRGB(int r, int g, int b) {
+	SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 }
 
 }

@@ -37,6 +37,11 @@ namespace core {
 
 using std::string;
 
+int displayWidth();
+
+int displayHeight();
+
+
 class Image: public FlyweightNode {
 	friend class Graphics;
 	public:
@@ -108,7 +113,27 @@ class Animation: public FlyweightNode {
 class Graphics {
 	public:
 		void draw(Image *img, int x, int y, int w, int h);
+
 		void draw(Image *img, int x, int y);
+
+		void fillRect(int x, int y, int w, int h);
+
+		/**
+		 * Sets the color for primitives to draw with.
+		 * @param r red value (0-255)
+		 * @param g green value (0-255)
+		 * @param b blue value (0-255)
+		 * @param a alpha value (0-255)
+		 */
+		void setRGBA(int r, int g, int b, int a);
+
+		/**
+		 * Sets the color for primitives to draw with.
+		 * @param r red value (0-255)
+		 * @param g green value (0-255)
+		 * @param b blue value (0-255)
+		 */
+		void setRGB(int r, int g, int b);
 };
 
 class Drawer {
