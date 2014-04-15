@@ -75,12 +75,18 @@ bool Image::loaded() {
 void Graphics::draw(Image *img, int x, int y, int w, int h) {
 	if (img->loaded()) {
 		SDL_SetTextureAlphaMod(img->m_img, 255);
-		SDL_Rect dest;
+		SDL_Rect dest, src;
 		dest.x = x;
 		dest.y = y;
 		dest.w = w;
 		dest.h = h;
-		SDL_RenderCopy(renderer, img->m_img, 0, &dest);
+
+		src.x = img->m_bounds.X;
+		src.y = img->m_bounds.Y;
+		src.w = img->m_bounds.Width;
+		src.h = img->m_bounds.Height;
+
+		SDL_RenderCopy(renderer, img->m_img, &src, &dest);
 	}
 }
 
