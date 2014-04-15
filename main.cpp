@@ -43,6 +43,8 @@ int main(int argc, const char **args) {
 		case core::Key_Q:
 			core::quit();
 			break;
+		default:
+			break;
 		}
 	});
 

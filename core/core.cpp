@@ -61,6 +61,7 @@ int open(models::cyborgbear::Model &m, std::string path) {
 		path += ".json";
 	}
 	m.readJsonFile(core::path(path));
+	return 0;
 }
 
 std::string path(std::string path) {

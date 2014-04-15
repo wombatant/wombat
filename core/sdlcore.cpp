@@ -99,6 +99,7 @@ int thread(void *func) {
 		(*f)();
 		delete f;
 	}
+	return 0;
 }
 
 void startThread(std::function<void()> f) {
