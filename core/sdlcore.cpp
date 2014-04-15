@@ -92,6 +92,7 @@ int init(bool fullscreen, int w, int h) {
 	renderer = SDL_CreateRenderer(display, -1, SDL_RENDERER_ACCELERATED);
 
 	vrunning = true;
+	_updateEventTime();
 	return 0;
 }
 
