@@ -21,7 +21,13 @@ namespace core {
 
 enum EventType {
 	UnknownEvent = -1,
-	Quit,
+	QuitEvent,
+	KeyUpEvent,
+	KeyDownEvent
+};
+
+enum Key {
+	Key_Unknown,
 	Key_Escape,
 	Key_A,
 	Key_Q,
@@ -31,6 +37,7 @@ enum EventType {
 class Event {
 public:
 	EventType type;
+	Key key;
 };
 
 }

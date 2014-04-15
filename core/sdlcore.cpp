@@ -32,7 +32,7 @@ SDL_Renderer *renderer = 0;
 extern std::vector<std::function<void(Event)>> eventListeners;
 const auto Event_DrawEvent = SDL_RegisterEvents(1);
 extern bool vrunning;
-EventType toEventType(SDL_Event);
+Key toEventType(SDL_Event);
 
 void _updateEventTime();
 
@@ -62,7 +62,14 @@ void main() {
 			_draw();
 		} else {
 			Event ev;
-			ev.type = toEventType(sev);
+			if (sev.type == SDL_QUIT) {
+				ev.type = QuitEvent;
+			} else if (sev.type == SDL_KEYUP) {
+				ev.type = KeyUpEvent;
+			} else if (sev.type == SDL_KEYDOWN) {
+				ev.type = KeyDownEvent;
+			}
+			ev.key = toEventType(sev);
 			for (auto f : eventListeners) {
 				f(ev);
 			}

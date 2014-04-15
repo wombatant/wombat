@@ -38,10 +38,18 @@ int main(int argc, const char **args) {
 
 	core::addEventListener([](core::Event e) {
 		switch (e.type) {
-		case core::Quit:
-		case core::Key_Escape:
-		case core::Key_Q:
+		case core::QuitEvent:
 			core::quit();
+			break;
+		case core::KeyDownEvent:
+			switch (e.key) {
+			case core::Key_Escape:
+			case core::Key_Q:
+				core::quit();
+				break;
+			default:
+				break;
+			}
 			break;
 		default:
 			break;
