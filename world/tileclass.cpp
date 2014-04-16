@@ -14,3 +14,19 @@
  * limitations under the License.
  */
 #include "tileclass.hpp"
+
+namespace wombat {
+namespace world {
+
+using models::cyborgbear::Model;
+
+Flyweight<models::TileClass> tileClasses([](Model &model) -> TileClass* {
+	return 0;
+});
+
+TileClass *checkout(models::TileClass model) {
+	return 0;
+}
+
+}
+}

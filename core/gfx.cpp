@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 #include <iostream>
-#include "common/flyweight.hpp"
+#include "core/flyweight.hpp"
 #include "core.hpp"
 
 namespace wombat {
 namespace core {
 
-using common::Flyweight;
+using core::Flyweight;
 using std::string;
 
 //Image
 
-FlyweightNode *loadImage(models::cyborgbear::Model &key) {
+Flyweight<models::Image>::FlyweightNode *loadImage(models::cyborgbear::Model &key) {
 	models::Image &mod = (models::Image&) key;
 	Image *i = new Image(mod);
 	if (i->loaded()) {
@@ -36,7 +36,7 @@ FlyweightNode *loadImage(models::cyborgbear::Model &key) {
 	}
 }
 
-Flyweight imageCache(loadImage);
+Flyweight<models::Image> imageCache(loadImage);
 
 
 Image *checkoutImage(string path) {
@@ -70,7 +70,7 @@ int Image::defaultHeight() {
 
 //Animation
 
-FlyweightNode *loadAnimation(models::cyborgbear::Model &key) {
+Flyweight<models::Animation>::FlyweightNode *loadAnimation(models::cyborgbear::Model &key) {
 	models::Animation &mod = (models::Animation&) key;
 	Animation *a = new Animation(mod);
 	if (a->loaded()) {
@@ -81,10 +81,10 @@ FlyweightNode *loadAnimation(models::cyborgbear::Model &key) {
 	}
 }
 
-Flyweight animCache(loadAnimation);
+Flyweight<models::Animation> animCache(loadAnimation);
 
 Animation *checkoutAnimation(models::Animation &anim) {
-	return (Animation*) imageCache.checkout(anim);
+	return (Animation*) animCache.checkout(anim);
 }
 
 Animation::Animation(models::Animation model) {

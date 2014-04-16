@@ -16,7 +16,7 @@
 #ifdef WITH_SDL
 #include "core.hpp"
 #include "sdlglobs.hpp"
-#include "common/flyweight.hpp"
+#include "core/flyweight.hpp"
 
 namespace wombat {
 namespace core {

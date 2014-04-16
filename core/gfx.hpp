@@ -30,20 +30,19 @@
 #include "models/enginemodels.hpp"
 
 #include "types.hpp"
-#include "common/flyweight.hpp"
+#include "core/flyweight.hpp"
 
 namespace wombat {
 namespace core {
 
 using std::string;
-using common::FlyweightNode;
 
 int displayWidth();
 
 int displayHeight();
 
 
-class Image: public FlyweightNode {
+class Image: public Flyweight<models::Image>::FlyweightNode {
 	friend class Graphics;
 	public:
 #ifdef WITH_ALLEGRO
@@ -89,7 +88,7 @@ class Image: public FlyweightNode {
 		string key();
 };
 
-class Animation: public FlyweightNode {
+class Animation: public Flyweight<models::Animation>::FlyweightNode {
 	private:
 		std::vector<Image*> m_imgs;
 		time_t m_lastUpdate;

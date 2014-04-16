@@ -17,13 +17,20 @@
 #define WOMBAT_WORLD_TILECLASS_HPP
 
 #include <string>
+#include "core/flyweight.hpp"
+#include "models/enginemodels.hpp"
 
 namespace wombat {
 namespace world {
 
-class TileClass {
-	std::string key;
+using core::Flyweight;
+
+class TileClass: public Flyweight<models::TileClass>::FlyweightNode {
+	private:
+		std::string key;
 };
+
+TileClass *checkout(models::TileClass);
 
 }
 }
