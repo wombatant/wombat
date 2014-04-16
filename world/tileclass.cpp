@@ -20,13 +20,13 @@ namespace world {
 
 using models::cyborgbear::Model;
 
-Flyweight<models::TileClass> tileClasses([](Model &model) -> TileClass* {
-	return 0;
-});
+// Static
 
-TileClass *checkout(models::TileClass model) {
-	return 0;
-}
+Flyweight<models::TileClass> TileClass::tileClasses([](models::TileClass &model) -> TileClass* {
+	auto tc = new TileClass();
+	tc->terrainFlags = model.TerrainFlags;
+	return tc;
+});
 
 }
 }

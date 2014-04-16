@@ -27,24 +27,32 @@ namespace core {
 using std::map;
 using std::string;
 using std::function;
-using models::cyborgbear::Model;
-
 
 template <class Model>
 class Flyweight {
 	public:
-		class FlyweightNode {
+		class Value {
 			friend class Flyweight;
 			protected:
 				int dependents;
 			public:
-				virtual ~FlyweightNode() {};
+				virtual ~Value() {};
 				virtual string key() = 0;
 		};
-		typedef function<FlyweightNode*(Model&)> FlyweightNodeBuilder;
+		class GenericValue: public Value {
+			friend class Flyweight;
+			protected:
+				string m_key;
+			public:
+				virtual ~GenericValue() {};
+				virtual string key() {
+					return m_key;
+				};
+		};
+		typedef function<Value*(Model&)> FlyweightNodeBuilder;
 
 	private:
-		map<string, FlyweightNode*> m_cache;
+		map<string, Value*> m_cache;
 		FlyweightNodeBuilder m_build;
 
 	public:
@@ -57,8 +65,8 @@ class Flyweight {
 		 * @param modelPath the path to the model
 		 * @return the value associated with the given key
 		 */
-		FlyweightNode* checkout(std::string modelPath) {
-			FlyweightNode *v = m_cache[modelPath];
+		Value* checkout(std::string modelPath) {
+			Value *v = m_cache[modelPath];
 			if (!v) {
 				Model key;
 				open(key, modelPath);
@@ -70,9 +78,9 @@ class Flyweight {
 			return v;
 		}
 
-		FlyweightNode* checkout(Model &key) {
+		Value* checkout(Model &key) {
 			string keyStr = key.toJson();
-			FlyweightNode *v = m_cache[keyStr];
+			Value *v = m_cache[keyStr];
 			if (!v) {
 				m_cache[keyStr] = v = m_build(key);
 			}
@@ -83,11 +91,11 @@ class Flyweight {
 		}
 
 		void checkin(string key) {
-			FlyweightNode *v = m_cache[key];
+			Value *v = m_cache[key];
 			checkin(v);
 		}
 
-		void checkin(FlyweightNode *v) {
+		void checkin(Value *v) {
 			v->dependents--;
 			if (!v->dependents) {
 				m_cache.erase(v->key());

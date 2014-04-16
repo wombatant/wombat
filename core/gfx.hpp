@@ -42,7 +42,7 @@ int displayWidth();
 int displayHeight();
 
 
-class Image: public Flyweight<models::Image>::FlyweightNode {
+class Image: public Flyweight<models::Image>::Value {
 	friend class Graphics;
 	public:
 #ifdef WITH_ALLEGRO
@@ -88,7 +88,7 @@ class Image: public Flyweight<models::Image>::FlyweightNode {
 		string key();
 };
 
-class Animation: public Flyweight<models::Animation>::FlyweightNode {
+class Animation: public Flyweight<models::Animation>::Value {
 	private:
 		std::vector<Image*> m_imgs;
 		time_t m_lastUpdate;

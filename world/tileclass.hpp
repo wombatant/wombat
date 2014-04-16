@@ -23,14 +23,18 @@
 namespace wombat {
 namespace world {
 
+using std::string;
 using core::Flyweight;
+using models::cyborgbear::Model;
 
-class TileClass: public Flyweight<models::TileClass>::FlyweightNode {
+class TileClass: public Flyweight<models::TileClass>::GenericValue {
 	private:
-		std::string key;
-};
+		static Flyweight<models::TileClass> tileClasses;
+		int terrainFlags;
 
-TileClass *checkout(models::TileClass);
+	public:
+		string key();
+};
 
 }
 }

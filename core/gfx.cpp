@@ -25,7 +25,7 @@ using std::string;
 
 //Image
 
-Flyweight<models::Image>::FlyweightNode *loadImage(models::cyborgbear::Model &key) {
+Flyweight<models::Image>::Value *loadImage(models::cyborgbear::Model &key) {
 	models::Image &mod = (models::Image&) key;
 	Image *i = new Image(mod);
 	if (i->loaded()) {
@@ -70,7 +70,7 @@ int Image::defaultHeight() {
 
 //Animation
 
-Flyweight<models::Animation>::FlyweightNode *loadAnimation(models::cyborgbear::Model &key) {
+Flyweight<models::Animation>::Value *loadAnimation(models::cyborgbear::Model &key) {
 	models::Animation &mod = (models::Animation&) key;
 	Animation *a = new Animation(mod);
 	if (a->loaded()) {
