@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBATCORE_CORE_HPP
-#define WOMBATCORE_CORE_HPP
+#ifndef WOMBAT_WORLD_ANIMLAYER_HPP
+#define WOMBAT_WORLD_ANIMLAYER_HPP
 
-#include "event.hpp"
-#include "gfx.hpp"
-#include "misc.hpp"
-#include "types.hpp"
-#include "modelio.hpp"
-#include "models/enginemodels.hpp"
+#include "core/core.hpp"
+
+namespace wombat {
+namespace world {
+
+class AnimLayer {
+	public:
+		core::Animation *animation;
+		models::Point point;
+};
+
+}
+}
 
 #endif

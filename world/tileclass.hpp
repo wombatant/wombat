@@ -17,23 +17,37 @@
 #define WOMBAT_WORLD_TILECLASS_HPP
 
 #include <string>
-#include "core/flyweight.hpp"
-#include "models/enginemodels.hpp"
+#include "core/core.hpp"
+#include "animlayer.hpp"
 
 namespace wombat {
 namespace world {
 
 using std::string;
+using std::vector;
 using core::Flyweight;
-using models::cyborgbear::Model;
 
 class TileClass: public Flyweight<models::TileClass>::GenericValue {
 	private:
 		static Flyweight<models::TileClass> tileClasses;
-		int terrainFlags;
+
+	private:
+		int m_terrainFlags;
+		vector<world::AnimLayer> m_upperAnims;
+		vector<world::AnimLayer> m_lowerAnims;
 
 	public:
-		string key();
+		/**
+		 * Checks out the TileClass object stored at the given path.
+		 * @param path path of the TileClass to checkout
+		 */
+		static TileClass *checkout(string path);
+
+		/**
+		 * Checks in the given TileClass object.
+		 * @param tc TileClass object to checkin
+		 */
+		static void checkin(TileClass*);
 };
 
 }

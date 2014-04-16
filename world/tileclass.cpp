@@ -18,15 +18,33 @@
 namespace wombat {
 namespace world {
 
-using models::cyborgbear::Model;
-
 // Static
 
-Flyweight<models::TileClass> TileClass::tileClasses([](models::TileClass &model) -> TileClass* {
+Flyweight<models::TileClass> TileClass::tileClasses([](models::TileClass &model) {
 	auto tc = new TileClass();
-	tc->terrainFlags = model.TerrainFlags;
+	tc->m_terrainFlags = model.TerrainFlags;
+	for (auto alm : model.UpperAnims) {
+		AnimLayer al;
+		al.animation = core::checkoutAnimation(alm.Animation);
+		al.point = alm.Point;
+		tc->m_upperAnims.push_back(al);
+	}
+	for (auto alm : model.LowerAnims) {
+		AnimLayer al;
+		al.animation = core::checkoutAnimation(alm.Animation);
+		al.point = alm.Point;
+		tc->m_lowerAnims.push_back(al);
+	}
 	return tc;
 });
+
+TileClass *TileClass::checkout(string path) {
+	return dynamic_cast<TileClass*>(tileClasses.checkout(path));
+}
+
+void TileClass::checkin(TileClass *tc) {
+	tileClasses.checkin(tc);
+}
 
 }
 }

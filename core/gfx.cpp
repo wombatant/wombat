@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 #include <iostream>
-#include "core/flyweight.hpp"
+#include "core/modelio.hpp"
 #include "core.hpp"
 
 namespace wombat {

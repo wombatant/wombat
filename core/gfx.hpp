@@ -29,8 +29,8 @@
 
 #include "models/enginemodels.hpp"
 
-#include "types.hpp"
-#include "core/flyweight.hpp"
+#include "modelio.hpp"
+#include "core.hpp"
 
 namespace wombat {
 namespace core {

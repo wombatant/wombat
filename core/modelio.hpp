@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_CORE_FLYWEIGHT_HPP
-#define WOMBAT_CORE_FLYWEIGHT_HPP
+#ifndef WOMBAT_CORE_MODELIO_HPP
+#define WOMBAT_CORE_MODELIO_HPP
 
 #include <map>
 #include <string>
@@ -28,6 +28,35 @@ using std::map;
 using std::string;
 using std::function;
 
+/**
+ * Gets the home path to load models from.
+ * @return the new home path
+ */
+std::string getHome();
+
+/**
+ * Sets the home path to load models from.
+ * @param path the new home path
+ */
+void setHome(std::string path);
+
+/**
+ * Returns the given path with the wombat_home path prepended to it.
+ * @param path the of the file to refer to within wombat_home
+ * @return the given path with the wombat_home path prepended to it.
+ */
+std::string path(std::string path);
+
+/**
+ * Reads the file at the given path within the home path into the given model.
+ * @param model the model to load the file into
+ * @prarm path the path within the home path to read from
+ */
+int open(models::cyborgbear::Model &model, std::string path);
+
+/**
+ * Manages Model IO, preventing redundancies in memory.
+ */
 template <class Model>
 class Flyweight {
 	public:

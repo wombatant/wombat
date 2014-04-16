@@ -19,13 +19,12 @@
 #include <vector>
 #include <chrono>
 #include <time.h>
-#include "core.hpp"
+#include "misc.hpp"
 
 namespace wombat {
 namespace core {
 
 std::vector<std::function<void(Event)>> eventListeners;
-std::string home = "wombat_home/";
 
 // used to track "event time"
 time_t refTime;
@@ -50,26 +49,6 @@ time_t eventTime() {
 time_t time() {
 	auto t = std::chrono::system_clock::now().time_since_epoch();
 	return std::chrono::duration_cast<std::chrono::milliseconds>(t).count();
-}
-
-std::string getHome() {
-	return home;
-}
-
-int open(models::cyborgbear::Model &m, std::string path) {
-	if (path.substr(path.size() - 5) != ".json") {
-		path += ".json";
-	}
-	m.readJsonFile(core::path(path));
-	return 0;
-}
-
-std::string path(std::string path) {
-	return home + path;
-}
-
-void setHome(std::string h) {
-	home = h + "/";
 }
 
 void addEventListener(std::function<void(Event)> el) {
