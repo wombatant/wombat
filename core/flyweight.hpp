@@ -42,18 +42,32 @@ class Flyweight {
 				virtual string key() = 0;
 		};
 		typedef function<FlyweightNode*(Model&)> FlyweightNodeBuilder;
+
 	private:
 		map<string, FlyweightNode*> m_cache;
 		FlyweightNodeBuilder m_build;
+
 	public:
 		Flyweight(FlyweightNodeBuilder build) {
 			m_build = build;
 		}
 
+		/**
+		 * Takes a Model's path as the key.
+		 * @param modelPath the path to the model
+		 * @return the value associated with the given key
+		 */
 		FlyweightNode* checkout(std::string modelPath) {
-			Model m;
-			open(m, modelPath);
-			return checkout(m);
+			FlyweightNode *v = m_cache[modelPath];
+			if (!v) {
+				Model key;
+				open(key, modelPath);
+				m_cache[modelPath] = v = m_build(key);
+			}
+			if (v) {	
+				v->dependents++;
+			}
+			return v;
 		}
 
 		FlyweightNode* checkout(Model &key) {
