@@ -13,16 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_WORLD_WORLD_HPP
-#define WOMBAT_WORLD_WORLD_HPP
+#include "zone.hpp"
 
 namespace wombat {
 namespace world {
 
-class World {
-};
+
+Zone::TileGrid::TileGrid() {
+	m_tiles = 0;
+	m_width = m_height = m_layers = 0;
+}
+
+Zone::TileGrid::~TileGrid() {
+	if (m_tiles) {
+		for (int l = 0; l < m_layers; l++) {
+			for (int y = 0; y < m_height; y++) {
+				delete m_tiles[l][y];
+			}
+			delete m_tiles[l];
+		}
+		delete m_tiles;
+	}
+}
+
+void Zone::TileGrid::allocate(int w, int h, int layers) {
+	m_width = w;
+	m_height = h;
+	m_layers = layers;
+
+	m_tiles = new Tile**[layers];
+	for (int l = 0; l < layers; l++) {
+		m_tiles[l] = new Tile*[h];
+		for (int y = 0; y < h; y++) {
+			m_tiles[l][y] = new Tile[w];
+		}
+	}
+}
+
+Zone::Zone() {
+}
 
 }
 }
-
-#endif
