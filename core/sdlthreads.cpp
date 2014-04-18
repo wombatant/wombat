@@ -49,6 +49,14 @@ void sleep(uint64 ms) {
 
 // Mutex
 
+Mutex::Mutex() {
+	m_mutex = SDL_CreateMutex();
+}
+
+Mutex::~Mutex() {
+	SDL_DestroyMutex(m_mutex);
+}
+
 int Mutex::lock() {
 	return SDL_LockMutex(m_mutex);
 }

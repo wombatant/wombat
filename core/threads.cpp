@@ -4,9 +4,13 @@
 namespace wombat {
 namespace core {
 
-SemaphorePost::SemaphorePost() {
+SemaphorePost::SemaphorePost(SemaphorePost::Reason reason) {
 	m_task = 0;
-	m_reason = GenericPost;
+	m_reason = reason;
+}
+
+SemaphorePost::Reason SemaphorePost::reason() {
+	return m_reason;
 }
 
 bool Semaphore::hasPosts() {

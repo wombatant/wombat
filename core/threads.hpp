@@ -43,6 +43,16 @@ class Mutex {
 #endif
 
 		/**
+		 * Constructor
+		 */
+		Mutex();
+
+		/**
+		 * Destructor
+		 */
+		~Mutex();
+
+		/**
 		 * Locks this Mutex.
 		 * @return 0 on success
 		 */
@@ -76,8 +86,15 @@ class SemaphorePost {
 	public:
 		/**
 		 * Constructor
+		 * @param reason optional reason parameter, defaults to GenericPost
 		 */
-		SemaphorePost();
+		SemaphorePost(Reason reason = GenericPost);
+
+		/**
+		 *	Gets the reason for the wake up.
+		 * @return the reason for the post
+		 */
+		Reason reason();
 };
 
 class Semaphore {
@@ -131,10 +148,6 @@ class Semaphore {
 		bool hasPosts();
 };
 
-template <typename T>
-class Channel {
-};
-
 class TaskProcessor {
 	private:
 		bool m_running;
@@ -149,6 +162,78 @@ class TaskProcessor {
 void startThread(std::function<void()> f);
 
 void sleep(uint64 ms);
+
+
+template <typename T>
+class Channel {
+	private:
+		Semaphore *m_sem;
+		Mutex m_mutex;
+		std::queue<T> m_msgs;
+
+	public:
+		/**
+		 * Constructor
+		 * @param sem the Semaphore for this Channel to listen on
+		 */
+		Channel(Semaphore *sem = new Semaphore()) {
+			m_sem = sem;
+		}
+
+		/**
+		 * Destructor
+		 */
+		~Channel() {
+			delete m_sem();
+		}
+
+		/**
+		 * Read will wait until a message is received, then write it to the given
+		 * destination.
+		 * @param msg reference to the message to write to
+		 * @return reason for the wake up
+		 */
+		SemaphorePost::Reason read(T &msg) {
+			auto reason = m_sem->wait().reason();
+			if (reason == SemaphorePost::ReceivedMessage) {
+				m_mutex.lock();
+				msg = m_msgs.front();
+				m_msgs.pop();
+				m_mutex.unlock();
+			}
+			return reason;
+		}
+
+		/**
+		 * Read will wait until a message is received, then write it to the given
+		 * destination.
+		 * @param msg reference to the message to write to
+		 * @param timeout timeout duration to give up on
+		 * @return reason for the wake up
+		 */
+		SemaphorePost::Reason read(T &msg, uint64 timeout) {
+			auto reason = m_sem->wait(timeout).reason();
+			if (reason == SemaphorePost::ReceivedMessage) {
+				m_mutex.lock();
+				msg = m_msgs.front();
+				m_msgs.pop();
+				m_mutex.unlock();
+			}
+			return reason;
+		}
+
+		/**
+		 * Writes the given message to the message queue and wakes up any thread
+		 * waiting for a message.
+		 * @param msg the message to write
+		 */
+		void write(T msg) {
+			m_mutex.lock();
+			m_msgs.push(msg);
+			m_mutex.unlock();
+			m_sem->post(SemaphorePost::ReceivedMessage);
+		}
+};
 
 }
 }
