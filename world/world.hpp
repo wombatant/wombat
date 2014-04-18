@@ -16,10 +16,18 @@
 #ifndef WOMBAT_WORLD_WORLD_HPP
 #define WOMBAT_WORLD_WORLD_HPP
 
+#include "zone.hpp"
+
 namespace wombat {
 namespace world {
 
 class World {
+	private:
+		std::vector<Zone*> m_zones;
+
+	public:
+		World();
+		~World();
 };
 
 }

@@ -53,5 +53,8 @@ void Zone::TileGrid::allocate(int w, int h, int layers) {
 Zone::Zone() {
 }
 
+Zone::~Zone() {
+}
+
 }
 }

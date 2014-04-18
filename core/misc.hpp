@@ -53,10 +53,6 @@ void addEventListener(std::function<void (Event)> func);
 
 void addDrawer(Drawer*);
 
-void startThread(std::function<void()> f);
-
-void sleep(uint64 ms);
-
 void debug(std::string);
 
 }

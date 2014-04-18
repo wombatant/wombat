@@ -16,11 +16,12 @@
 #ifndef WOMBATCORE_CORE_HPP
 #define WOMBATCORE_CORE_HPP
 
+#include "models/enginemodels.hpp"
 #include "event.hpp"
 #include "gfx.hpp"
 #include "misc.hpp"
 #include "types.hpp"
 #include "modelio.hpp"
-#include "models/enginemodels.hpp"
+#include "threads.hpp"
 
 #endif
