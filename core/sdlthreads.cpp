@@ -47,6 +47,16 @@ void sleep(uint64 ms) {
 	SDL_Delay(ms);
 }
 
+// Mutex
+
+int Mutex::lock() {
+	return SDL_LockMutex(m_mutex);
+}
+
+int Mutex::unlock() {
+	return SDL_UnlockMutex(m_mutex);
+}
+
 // Semaphore
 
 Semaphore::Semaphore() {

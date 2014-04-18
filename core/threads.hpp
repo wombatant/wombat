@@ -36,6 +36,25 @@ class Task {
 		virtual int64 run() = 0;
 };
 
+class Mutex {
+	public:
+#ifdef WITH_SDL
+		SDL_mutex *m_mutex;
+#endif
+
+		/**
+		 * Locks this Mutex.
+		 * @return 0 on success
+		 */
+		int lock();
+
+		/**
+		 * Unlocks this Mutex.
+		 * @return 0 on success
+		 */
+		int unlock();
+};
+
 class SemaphorePost {
 	friend Semaphore;
 	friend TaskProcessor;
@@ -45,13 +64,14 @@ class SemaphorePost {
 			GenericPost,
 			Timeout,
 			ReceivedMessage
-		} m_reason;
+		};
 
 	protected:
 		/**
 		 * Used to specify the Task that received a message.
 		 */
 		Task *m_task;
+		Reason m_reason;
 
 	public:
 		/**
