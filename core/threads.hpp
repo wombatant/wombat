@@ -47,6 +47,7 @@ class Mutex {
 		 */
 		Mutex();
 
+
 		/**
 		 * Destructor
 		 */
@@ -63,6 +64,10 @@ class Mutex {
 		 * @return 0 on success
 		 */
 		int unlock();
+
+	private:
+		Mutex(const Mutex&);
+		Mutex &operator=(const Mutex&);
 };
 
 class SemaphorePost {
@@ -146,6 +151,11 @@ class Semaphore {
 		 * @return indicator of whether or not there are any pending posts
 		 */
 		bool hasPosts();
+
+	// disallow copying
+	private:
+		Semaphore(const Semaphore&);
+		Semaphore &operator=(const Semaphore&);
 };
 
 class TaskProcessor {
@@ -233,6 +243,11 @@ class Channel {
 			m_mutex.unlock();
 			m_sem->post(SemaphorePost::ReceivedMessage);
 		}
+
+	// disallow copying
+	private:
+		Channel(const Channel&);
+		Channel &operator=(const Channel&);
 };
 
 }
