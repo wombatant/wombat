@@ -18,6 +18,8 @@
 namespace wombat {
 namespace core {
 
+using namespace models::cyborgbear;
+
 std::string home = "wombat_home/";
 
 
@@ -33,11 +35,22 @@ void setHome(std::string h) {
 	home = h + "/";
 }
 
-int open(models::cyborgbear::Model &m, std::string path) {
-	if (path.substr(path.size() - 5) != ".json") {
-		path += ".json";
+/**
+ * Adds the given suffix to the given string if it is not already there.
+ */
+string _suffix(string path, string suffix) {
+	if (path.substr(path.size() - suffix.size()) != suffix) {
+		path += suffix;
 	}
-	m.readJsonFile(core::path(path));
+	return path;
+}
+
+int open(models::cyborgbear::Model &m, std::string path) {
+	auto retval = m.readJsonFile(core::path(_suffix(path, ".json")));
+	if (retval == Error_CouldNotAccessFile) {
+		// see if it is in "hidden" model file
+		retval = m.readJsonFile(core::path(_suffix(path, ".hjson")));
+	};
 	return 0;
 }
 
