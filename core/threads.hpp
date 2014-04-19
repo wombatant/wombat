@@ -42,7 +42,8 @@ class TaskState {
 	public:
 		enum {
 			Running,
-			Waiting
+			Waiting,
+			Done
 		} state;
 
 		/**
@@ -52,6 +53,8 @@ class TaskState {
 };
 
 class Task {
+	protected:
+		TaskProcessor *m_taskProcessor;
 	public:
 		virtual TaskState run(WakeupReason) = 0;
 };
@@ -209,6 +212,24 @@ class Channel {
 			}
 		}
 
+	private:
+		/**
+		 *
+		 * @return indicates whether or not a message was retrieved
+		 */
+		bool getMessage(T &msg) {
+			bool retval = false;
+			m_mutex.lock();
+			if (!m_msgs.empty) {
+				msg = m_msgs.front();
+				m_msgs.pop();
+				retval = true;
+			}
+			m_mutex.unlock();
+			return retval;
+		}
+
+	public:
 		/**
 		 * Waits until a message is received, then discards the message.
 		 * @return reason for the wake up
@@ -230,14 +251,16 @@ class Channel {
 		 * @return reason for the wake up
 		 */
 		WakeupReason read(T &msg) {
-			auto reason = m_sem->wait().reason();
-			if (reason == ReceivedMessage) {
-				m_mutex.lock();
-				msg = m_msgs.front();
-				m_msgs.pop();
-				m_mutex.unlock();
+			while (1) {
+				auto reason = m_sem->wait().reason();
+				if (reason == ReceivedMessage) {
+					if (getMessage(msg)) {
+						return reason;
+					}
+				} else {
+					return reason;
+				}
 			}
-			return reason;
 		}
 
 		/**
@@ -248,14 +271,16 @@ class Channel {
 		 * @return reason for the wake up
 		 */
 		WakeupReason read(T &msg, uint64 timeout) {
-			auto reason = m_sem->wait(timeout).reason();
-			if (reason == ReceivedMessage) {
-				m_mutex.lock();
-				msg = m_msgs.front();
-				m_msgs.pop();
-				m_mutex.unlock();
+			while (1) {
+				auto reason = m_sem->wait(timeout).reason();
+				if (reason == ReceivedMessage) {
+					if (getMessage(msg)) {
+						return reason;
+					}
+				} else {
+					return reason;
+				}
 			}
-			return reason;
 		}
 
 		/**
