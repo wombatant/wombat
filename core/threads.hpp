@@ -194,7 +194,9 @@ class Channel {
 		 * Destructor
 		 */
 		~Channel() {
-			delete m_sem();
+			if (m_sem) {
+				delete m_sem;
+			}
 		}
 
 		/**
