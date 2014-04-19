@@ -24,6 +24,7 @@
 #include <SDL.h>
 #endif
 
+#include "misc.hpp"
 #include "types.hpp"
 
 namespace wombat {
@@ -271,8 +272,10 @@ class Channel {
 		 * @return reason for the wake up
 		 */
 		WakeupReason read(T &msg, uint64 timeout) {
+			auto startTime = core::time();
+			auto currentTimeout = timeout;
 			while (1) {
-				auto reason = m_sem->wait(timeout).reason();
+				auto reason = m_sem->wait(currentTimeout).reason();
 				if (reason == ReceivedMessage) {
 					if (getMessage(msg)) {
 						return reason;
@@ -280,6 +283,7 @@ class Channel {
 				} else {
 					return reason;
 				}
+				currentTimeout = timeout - (time() - startTime);
 			}
 		}
 

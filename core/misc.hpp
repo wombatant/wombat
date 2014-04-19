@@ -19,9 +19,6 @@
 #include <string>
 #include <functional>
 
-#include "event.hpp"
-#include "types.hpp"
-#include "gfx.hpp"
 #include "models/enginemodels.hpp"
 
 namespace wombat {
@@ -48,10 +45,6 @@ bool running();
 void quit();
 
 void main();
-
-void addEventListener(std::function<void (Event)> func);
-
-void addDrawer(Drawer*);
 
 void debug(std::string);
 

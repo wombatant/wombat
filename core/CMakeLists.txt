@@ -2,7 +2,18 @@ cmake_minimum_required(VERSION 2.6)
 
 add_definitions(-DWITH_SDL)
 
-add_library(WombatCore sdlcore.cpp misc.cpp sdlgfx.cpp gfx.cpp sdlevent.cpp sdlthreads.cpp modelio.cpp threads.cpp)
+add_library(
+	WombatCore
+		event.cpp
+		gfx.cpp
+		misc.cpp
+		modelio.cpp
+		threads.cpp
+		sdlcore.cpp
+		sdlevent.cpp
+		sdlgfx.cpp
+		sdlthreads.cpp
+)
 
 install(TARGETS WombatCore DESTINATION lib)
 install(

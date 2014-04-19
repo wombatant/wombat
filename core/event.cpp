@@ -13,38 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBATCORE_EVENT_HPP
-#define WOMBATCORE_EVENT_HPP
-
-#include <functional>
+#include <vector>
+#include "event.hpp"
 
 namespace wombat {
 namespace core {
 
-enum EventType {
-	UnknownEvent = -1,
-	QuitEvent,
-	KeyUpEvent,
-	KeyDownEvent
-};
+std::vector<std::function<void(Event)>> eventListeners;
 
-enum Key {
-	Key_Unknown,
-	Key_Escape,
-	Key_A,
-	Key_Q,
-};
-
-
-class Event {
-public:
-	EventType type;
-	Key key;
-};
-
-void addEventListener(std::function<void (Event)> func);
+void addEventListener(std::function<void(Event)> el) {
+	eventListeners.push_back(el);
+}
 
 }
 }
-
-#endif

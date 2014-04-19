@@ -19,12 +19,11 @@
 #include <vector>
 #include <chrono>
 #include <time.h>
+#include "event.hpp"
 #include "misc.hpp"
 
 namespace wombat {
 namespace core {
-
-std::vector<std::function<void(Event)>> eventListeners;
 
 // used to track "event time"
 time_t refTime;
@@ -49,10 +48,6 @@ time_t eventTime() {
 time_t time() {
 	auto t = std::chrono::system_clock::now().time_since_epoch();
 	return std::chrono::duration_cast<std::chrono::milliseconds>(t).count();
-}
-
-void addEventListener(std::function<void(Event)> el) {
-	eventListeners.push_back(el);
 }
 
 void debug(std::string txt) {

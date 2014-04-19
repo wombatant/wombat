@@ -142,6 +142,7 @@ class Drawer {
 		virtual void draw(Graphics*) = 0;
 };
 
+void addDrawer(Drawer*);
 
 Animation *checkoutAnimation(models::Animation & anim);
 
