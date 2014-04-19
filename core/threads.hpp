@@ -17,6 +17,7 @@
 #define WOMBAT_CORE_THREADS_HPP
 
 #include <functional>
+#include <map>
 #include <queue>
 
 #ifdef WITH_SDL
@@ -28,12 +29,31 @@
 namespace wombat {
 namespace core {
 
+enum WakeupReason {
+	SemaphorePost,
+	Timeout,
+	ReceivedMessage
+};
+
 class Semaphore;
 class TaskProcessor;
 
+class TaskState {
+	public:
+		enum {
+			Running,
+			Waiting
+		} state;
+
+		/**
+		 * Time (milliseconds) til the Task wants to run again.
+		 */
+		uint64 sleepDuration;
+};
+
 class Task {
 	public:
-		virtual int64 run() = 0;
+		virtual TaskState run(WakeupReason) = 0;
 };
 
 class Mutex {
@@ -70,45 +90,46 @@ class Mutex {
 		Mutex &operator=(const Mutex&);
 };
 
-class SemaphorePost {
-	friend Semaphore;
-	friend TaskProcessor;
-
+class Semaphore {
 	public:
-		enum Reason {
-			GenericPost,
-			Timeout,
-			ReceivedMessage
+		class Post {
+			friend Semaphore;
+			friend TaskProcessor;
+
+			protected:
+				/**
+				 * Used to specify the Task that received a message.
+				 */
+				Task *m_task;
+				WakeupReason m_reason;
+
+			public:
+				/**
+				 * Constructor
+				 * @param reason optional reason parameter, defaults to SemaphorePost
+				 */
+				Post(WakeupReason reason = SemaphorePost);
+
+				/**
+				 *	Gets the reason for the wake up.
+				 * @return the reason for the post
+				 */
+				WakeupReason reason();
+
+			protected:
+				/**
+				 * Gets the Task that the wake up is for.
+				 * @return the Task that the wake up is for
+				 */
+				Task *task();
 		};
 
-	protected:
-		/**
-		 * Used to specify the Task that received a message.
-		 */
-		Task *m_task;
-		Reason m_reason;
-
-	public:
-		/**
-		 * Constructor
-		 * @param reason optional reason parameter, defaults to GenericPost
-		 */
-		SemaphorePost(Reason reason = GenericPost);
-
-		/**
-		 *	Gets the reason for the wake up.
-		 * @return the reason for the post
-		 */
-		Reason reason();
-};
-
-class Semaphore {
 	private:
 #ifdef WITH_SDL
 		SDL_sem *m_semaphore;
 		SDL_mutex *m_mutex;
 #endif
-		std::queue<SemaphorePost> m_posts;
+		std::queue<Post> m_posts;
 
 	public:
 		/**
@@ -123,28 +144,28 @@ class Semaphore {
 
 		/**
 		 * Waits until there is a post to process.
-		 * @return a SemaphorePost with the reason for the wake up
+		 * @return a Post with the reason for the wake up
 		 */
-		SemaphorePost wait();
+		Post wait();
 
 		/**
 		 * Waits until there is a post to process or the given timeout has expired.
 		 * @param timeout the desired timeout period in milliseconds
-		 * @return a SemaphorePost with the reason for the wake up
+		 * @return a Post with the reason for the wake up
 		 */
-		SemaphorePost wait(uint64 timeout);
+		Post wait(uint64 timeout);
 
 		/**
 		 * Posts the the Semaphore to wake up.
 		 * @param wakeup optional parameter used to specify the reason for the wake up
 		 */
-		void post(SemaphorePost wakeup = SemaphorePost());
+		void post(Post wakeup = Post());
 
 		/**
 		 * Gets the oldest post available.
 		 * @return the oldest post available
 		 */
-		SemaphorePost popPost();
+		Post popPost();
 
 		/**
 		 * Indicates whether or not there are any pending posts.
@@ -156,17 +177,6 @@ class Semaphore {
 	private:
 		Semaphore(const Semaphore&);
 		Semaphore &operator=(const Semaphore&);
-};
-
-class TaskProcessor {
-	private:
-		bool m_running;
-
-	public:
-		/**
-		 * Starts the thread for this TaskProcessor.
-		 */
-		void start();
 };
 
 void startThread(std::function<void()> f);
@@ -200,14 +210,28 @@ class Channel {
 		}
 
 		/**
+		 * Waits until a message is received, then discards the message.
+		 * @return reason for the wake up
+		 */
+		WakeupReason read() {
+			auto reason = m_sem->wait().reason();
+			if (reason == ReceivedMessage) {
+				m_mutex.lock();
+				m_msgs.pop();
+				m_mutex.unlock();
+			}
+			return reason;
+		}
+
+		/**
 		 * Read will wait until a message is received, then write it to the given
 		 * destination.
 		 * @param msg reference to the message to write to
 		 * @return reason for the wake up
 		 */
-		SemaphorePost::Reason read(T &msg) {
+		WakeupReason read(T &msg) {
 			auto reason = m_sem->wait().reason();
-			if (reason == SemaphorePost::ReceivedMessage) {
+			if (reason == ReceivedMessage) {
 				m_mutex.lock();
 				msg = m_msgs.front();
 				m_msgs.pop();
@@ -223,9 +247,9 @@ class Channel {
 		 * @param timeout timeout duration to give up on
 		 * @return reason for the wake up
 		 */
-		SemaphorePost::Reason read(T &msg, uint64 timeout) {
+		WakeupReason read(T &msg, uint64 timeout) {
 			auto reason = m_sem->wait(timeout).reason();
-			if (reason == SemaphorePost::ReceivedMessage) {
+			if (reason == ReceivedMessage) {
 				m_mutex.lock();
 				msg = m_msgs.front();
 				m_msgs.pop();
@@ -243,13 +267,49 @@ class Channel {
 			m_mutex.lock();
 			m_msgs.push(msg);
 			m_mutex.unlock();
-			m_sem->post(SemaphorePost::ReceivedMessage);
+			m_sem->post(ReceivedMessage);
 		}
 
 	// disallow copying
 	private:
 		Channel(const Channel&);
 		Channel &operator=(const Channel&);
+};
+
+class TaskProcessor {
+	private:
+		bool m_running;
+		Semaphore m_sem;
+		Channel<bool> m_done;
+		std::vector<std::pair<Task*, uint64>> m_schedule;
+		//This map seems kind of silly, but it is used to make sure
+		// the TaskProcessor owns the given Task.
+		std::map<Task*, Task*> m_taskMap;
+
+	public:
+		/**
+		 * Starts the thread for this TaskProcessor.
+		 */
+		void start();
+
+		/**
+		 * Stop the thread for this TaskProcessor.
+		 */
+		void stop();
+
+		/**
+		 * Blocks until this TaskProcessor has stopped.
+		 */
+		void done();
+
+	private:
+		/**
+		 * Gets the next Task to execute.
+		 * @return the next task scheduled to execute
+		 */
+		std::pair<Task*, uint64> nextTask();
+
+		void schedule(Task *task, TaskState state);
 };
 
 }

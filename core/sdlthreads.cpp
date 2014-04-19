@@ -77,28 +77,28 @@ Semaphore::~Semaphore() {
 	SDL_DestroyMutex(m_mutex);
 }
 
-SemaphorePost Semaphore::wait() {
+Semaphore::Post Semaphore::wait() {
 	if (m_posts.empty()) {
 		SDL_SemWait(m_semaphore);
 	}
 	return popPost();
 }
 
-SemaphorePost Semaphore::wait(uint64 timeout) {
+Semaphore::Post Semaphore::wait(uint64 timeout) {
 	if (m_posts.empty()) {
 		SDL_SemWaitTimeout(m_semaphore, timeout);
 	}
 	return popPost();
 }
 
-void Semaphore::post(SemaphorePost wakeup) {
+void Semaphore::post(Semaphore::Post wakeup) {
 	m_posts.push(wakeup);
 	SDL_LockMutex(m_mutex);
 	SDL_SemPost(m_semaphore);
 	SDL_UnlockMutex(m_mutex);
 }
 
-SemaphorePost Semaphore::popPost() {
+Semaphore::Post Semaphore::popPost() {
 	SDL_LockMutex(m_mutex);
 	auto post = m_posts.front();
 	m_posts.pop();
