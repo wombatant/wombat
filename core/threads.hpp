@@ -339,6 +339,8 @@ class TaskProcessor {
 		std::pair<Task*, uint64> nextTask();
 
 		void schedule(Task *task, TaskState state);
+
+		void runTask(Task *task, WakeupReason reason);
 };
 
 }
