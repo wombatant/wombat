@@ -51,6 +51,8 @@ class TaskState {
 		 * Time (milliseconds) til the Task wants to run again.
 		 */
 		uint64 sleepDuration;
+
+		TaskState();
 };
 
 class Task {
@@ -308,14 +310,21 @@ class Channel {
 class TaskProcessor {
 	private:
 		bool m_running;
+		Mutex m_mutex;
 		Semaphore m_sem;
 		Channel<bool> m_done;
 		std::vector<std::pair<Task*, uint64>> m_schedule;
 		//This map seems kind of silly, but it is used to make sure
 		// the TaskProcessor owns the given Task.
-		std::map<Task*, Task*> m_taskMap;
+		std::map<Task*, TaskState> m_taskMap;
 
 	public:
+		/**
+		 * Adds the given Task to this TaskProcessor.
+		 * @param task the Task to add to this TaskProcessor
+		 */
+		void addTask(Task *task);
+
 		/**
 		 * Starts the thread for this TaskProcessor.
 		 */
@@ -333,13 +342,30 @@ class TaskProcessor {
 
 	private:
 		/**
+		 * Gets the currently active Task if there is one. If there is no active
+		 * Task, it returns null.
+		 * @return the currently active Task, if there is one, null otherwise
+		 */
+		Task *activeTask();
+
+		/**
 		 * Gets the next Task to execute.
 		 * @return the next task scheduled to execute
 		 */
 		std::pair<Task*, uint64> nextTask();
 
-		void schedule(Task *task, TaskState state);
+		/**
+		 * Sets the state of the task and schedules it appropriately.
+		 * @param task the Task to update the state of
+		 * @param state the state to give the task
+		 */
+		void processTaskState(Task *task, TaskState state);
 
+		/**
+		 * Runs the given Task.
+		 * @param task the Task to run
+		 * @param reason the reson the Task is being run
+		 */
 		void runTask(Task *task, WakeupReason reason);
 };
 

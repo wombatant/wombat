@@ -19,6 +19,15 @@
 namespace wombat {
 namespace core {
 
+// TaskState
+
+TaskState::TaskState() {
+	state = Running;
+	sleepDuration = 0;
+}
+
+// Semaphore
+
 Semaphore::Post::Post(WakeupReason reason) {
 	m_task = 0;
 	m_reason = reason;
@@ -33,6 +42,13 @@ bool Semaphore::hasPosts() {
 }
 
 // TaskProcessor
+
+void TaskProcessor::addTask(Task *task) {
+	processTaskState(task, TaskState());
+
+	// post to the semaphore to refresh the sleep time
+	m_sem.post();
+}
 
 void TaskProcessor::start() {
 	if (!m_running) {
@@ -54,12 +70,13 @@ void TaskProcessor::start() {
 					case Timeout:
 						// Timeout means something wants to run
 						{
-							auto time = core::time();
 							while (1) {
-								auto nt = nextTask();
-								if (time >= nt.second) {
+								auto nt = activeTask();
+								if (nt) {
+									m_mutex.lock();
 									m_schedule.pop_back();
-									runTask(nt.first, Timeout);
+									m_mutex.unlock();
+									runTask(nt, Timeout);
 								} else {
 									break;
 								}
@@ -69,6 +86,9 @@ void TaskProcessor::start() {
 					case ReceivedMessage:
 						runTask(post.task(), ReceivedMessage);
 						break;
+					case SemaphorePost:
+						// SemaphorePost is already designated for use only as a
+						//  sleep refresh in this switch
 					default:
 						break;
 					}
@@ -101,33 +121,57 @@ void TaskProcessor::done() {
 	m_done.read();
 }
 
+Task *TaskProcessor::activeTask() {
+	auto nt = nextTask();
+	auto time = core::time();
+	if (time >= nt.second) {
+		return nt.first;
+	}
+	return 0;
+}
+
 std::pair<Task*, uint64> TaskProcessor::nextTask() {
+	m_mutex.lock();
 	auto t = m_schedule.back();
+	m_mutex.unlock();
 	return t;
 }
 
-void TaskProcessor::schedule(Task *task, TaskState state) {
-	if (state.state == TaskState::Running) {
-		const auto wakeup = time() - state.sleepDuration;
-		const auto val = std::pair<Task*, uint64>(task, wakeup);
+void TaskProcessor::processTaskState(Task *task, TaskState state) {
+	m_mutex.lock();
+	m_taskMap[task] = state;
+	switch (state.state) {
+	case TaskState::Running:
+		{
+			const auto wakeup = time() - state.sleepDuration;
+			const auto val = std::pair<Task*, uint64>(task, wakeup);
 
-		bool inserted = false;
-		for (auto i = m_schedule.begin(); i < m_schedule.end(); i++) {
-			if (wakeup > i->second) {
-				m_schedule.insert(i, val);
-				inserted = true;
+			bool inserted = false;
+			for (auto i = m_schedule.begin(); i < m_schedule.end(); i++) {
+				if (wakeup > i->second) {
+					m_schedule.insert(i, val);
+					inserted = true;
+				}
+			}
+
+			if (!inserted) {
+				m_schedule.push_back(val);
 			}
 		}
-
-		if (!inserted) {
-			m_schedule.push_back(val);
+	case TaskState::Done:
+		{
+			m_taskMap.erase(task);
 		}
+	default:
+		// do nothing
+		break;
 	}
+	m_mutex.unlock();
 }
 
 void TaskProcessor::runTask(Task *task, WakeupReason reason) {
 	auto state = task->run(reason);
-	schedule(task, state);
+	processTaskState(task, state);
 }
 
 }
