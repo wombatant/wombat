@@ -139,7 +139,6 @@ std::pair<Task*, uint64> TaskProcessor::nextTask() {
 
 void TaskProcessor::processTaskState(Task *task, TaskState state) {
 	m_mutex.lock();
-	m_taskMap[task] = state;
 	switch (state.state) {
 	case TaskState::Running:
 		{
@@ -159,9 +158,6 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 			}
 		}
 	case TaskState::Done:
-		{
-			m_taskMap.erase(task);
-		}
 	default:
 		// do nothing
 		break;

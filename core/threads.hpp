@@ -314,9 +314,6 @@ class TaskProcessor {
 		Semaphore m_sem;
 		Channel<bool> m_done;
 		std::vector<std::pair<Task*, uint64>> m_schedule;
-		//This map seems kind of silly, but it is used to make sure
-		// the TaskProcessor owns the given Task.
-		std::map<Task*, TaskState> m_taskMap;
 
 	public:
 		/**
