@@ -28,7 +28,7 @@ std::vector<Drawer*> drawers;
 std::vector<Graphics*> graphicsInstances;
 SDL_Window *display = 0;
 SDL_Renderer *renderer = 0;
-extern std::vector<std::function<void(Event)>> eventListeners;
+extern std::vector<EventHandler> eventHandlers;
 const auto Event_DrawEvent = SDL_RegisterEvents(1);
 extern bool vrunning;
 Key toEventType(SDL_Event);
@@ -69,7 +69,7 @@ void main() {
 				ev.type = KeyDownEvent;
 			}
 			ev.key = toEventType(sev);
-			for (auto f : eventListeners) {
+			for (auto f : eventHandlers) {
 				f(ev);
 			}
 		}

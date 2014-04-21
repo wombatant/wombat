@@ -19,10 +19,10 @@
 namespace wombat {
 namespace core {
 
-std::vector<std::function<void(Event)>> eventListeners;
+std::vector<EventHandler> eventHandlers;
 
-void addEventListener(std::function<void(Event)> el) {
-	eventListeners.push_back(el);
+void addEventHandler(EventHandler el) {
+	eventHandlers.push_back(el);
 }
 
 }

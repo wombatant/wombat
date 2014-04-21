@@ -42,7 +42,9 @@ public:
 	Key key;
 };
 
-void addEventListener(std::function<void (Event)> func);
+typedef std::function<void(Event)> EventHandler;
+
+void addEventHandler(EventHandler func);
 
 }
 }
