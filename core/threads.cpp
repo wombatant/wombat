@@ -57,7 +57,7 @@ void TaskProcessor::start() {
 							auto time = core::time();
 							while (1) {
 								auto nt = nextTask();
-								if (time > nt.second) {
+								if (time >= nt.second) {
 									m_schedule.pop_back();
 									runTask(nt.first, Timeout);
 								} else {
