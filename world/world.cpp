@@ -14,3 +14,13 @@
  * limitations under the License.
  */
 #include "world.hpp"
+
+namespace wombat {
+namespace world {
+
+core::TaskState World::run(core::WakeupReason) {
+	return 1000;
+}
+
+}
+}

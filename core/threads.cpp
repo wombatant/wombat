@@ -21,8 +21,13 @@ namespace core {
 
 // TaskState
 
-TaskState::TaskState() {
+TaskState::TaskState(uint64 sleep) {
 	state = Running;
+	sleepDuration = sleep;
+}
+
+TaskState::TaskState(TaskState::State state) {
+	this->state = state;
 	sleepDuration = 0;
 }
 
@@ -44,7 +49,7 @@ bool Semaphore::hasPosts() {
 // TaskProcessor
 
 void TaskProcessor::addTask(Task *task) {
-	processTaskState(task, TaskState());
+	processTaskState(task, TaskState(TaskState::Running));
 
 	// post to the semaphore to refresh the sleep time
 	m_sem.post();

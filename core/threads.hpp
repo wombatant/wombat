@@ -41,7 +41,7 @@ class TaskProcessor;
 
 class TaskState {
 	public:
-		enum {
+		enum State {
 			Running,
 			Waiting,
 			Done
@@ -52,7 +52,18 @@ class TaskState {
 		 */
 		uint64 sleepDuration;
 
-		TaskState();
+		/**
+		 * Constructor
+		 * @param state state of task, defaults to Waiting
+		 */
+		TaskState(State state = Waiting);
+
+		/**
+		 * Constructor
+		 * State is set to Running.
+		 * @param sleep time to sleep in milliseconds
+		 */
+		TaskState(uint64 sleep);
 };
 
 class Task {

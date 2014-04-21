@@ -16,18 +16,20 @@
 #ifndef WOMBAT_WORLD_WORLD_HPP
 #define WOMBAT_WORLD_WORLD_HPP
 
+#include "core/core.hpp"
 #include "zone.hpp"
 
 namespace wombat {
 namespace world {
 
-class World {
+class World: public core::Task {
 	private:
 		std::vector<Zone*> m_zones;
 
 	public:
 		World();
 		~World();
+		core::TaskState run(core::WakeupReason);
 };
 
 }
