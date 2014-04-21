@@ -71,11 +71,8 @@ void TaskProcessor::start() {
 						// Timeout means something wants to run
 						{
 							while (1) {
-								auto nt = activeTask();
+								auto nt = popActiveTask();
 								if (nt) {
-									m_mutex.lock();
-									m_schedule.pop_back();
-									m_mutex.unlock();
 									runTask(nt, Timeout);
 								} else {
 									break;
@@ -121,10 +118,13 @@ void TaskProcessor::done() {
 	m_done.read();
 }
 
-Task *TaskProcessor::activeTask() {
+Task *TaskProcessor::popActiveTask() {
 	auto nt = nextTask();
 	auto time = core::time();
 	if (time >= nt.second) {
+		m_mutex.lock();
+		m_schedule.pop_back();
+		m_mutex.unlock();
 		return nt.first;
 	}
 	return 0;

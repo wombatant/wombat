@@ -339,11 +339,11 @@ class TaskProcessor {
 
 	private:
 		/**
-		 * Gets the currently active Task if there is one. If there is no active
+		 * Pops the currently active Task if there is one. If there is no active
 		 * Task, it returns null.
 		 * @return the currently active Task, if there is one, null otherwise
 		 */
-		Task *activeTask();
+		Task *popActiveTask();
 
 		/**
 		 * Gets the next Task to execute.
