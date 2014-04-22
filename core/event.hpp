@@ -22,13 +22,13 @@ namespace wombat {
 namespace core {
 
 enum EventType {
-	UnknownEvent = -1,
-	SemaphorePost,
-	Timeout,
-	ChannelMessage,
-	QuitEvent,
-	KeyUpEvent,
-	KeyDownEvent
+	UnknownEvent   = 1,
+	SemaphorePost  = 2 * UnknownEvent,
+	Timeout        = 2 * SemaphorePost,
+	ChannelMessage = 2 * Timeout,
+	QuitEvent      = 2 * ChannelMessage,
+	KeyUpEvent     = 2 * QuitEvent,
+	KeyDownEvent   = 2 * KeyUpEvent
 };
 
 enum Key {

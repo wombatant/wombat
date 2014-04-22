@@ -32,11 +32,43 @@ TaskState::TaskState(TaskState::State state) {
 	sleepDuration = 0;
 }
 
+// Task
+
+Task::Task() {
+	m_autoDelete = false;
+}
+
+Task::~Task() {
+}
+
+void Task::setAutoDelete(bool autoDelete) {
+	m_autoDelete = true;
+}
+
+bool Task::autoDelete() {
+	return m_autoDelete;
+}
+
+// FunctionTask
+
+FunctionTask::FunctionTask(std::function<TaskState(Event)> func) {
+	m_task = func;
+	setAutoDelete(true);
+}
+
+TaskState FunctionTask::run(Event e) {
+	return m_task(e);
+}
+
 // Semaphore
 
 Semaphore::Post::Post(EventType reason) {
 	m_task = 0;
 	m_reason = reason;
+}
+
+Task *Semaphore::Post::task() {
+	return m_task;
 }
 
 EventType Semaphore::Post::reason() {
@@ -48,6 +80,10 @@ bool Semaphore::hasPosts() {
 }
 
 // TaskProcessor
+
+void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState state) {
+	addTask(new FunctionTask(task), state);
+}
 
 void TaskProcessor::addTask(Task *task, TaskState state) {
 	processTaskState(task, state);
@@ -164,6 +200,9 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 			}
 		}
 	case TaskState::Done:
+		if (task->autoDelete()) {
+			delete task;
+		}
 	default:
 		// do nothing
 		break;

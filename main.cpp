@@ -36,6 +36,11 @@ int main(int argc, const char **args) {
 		tests::test(vargs);
 	}
 
+	core::TaskProcessor tp;
+	tp.addTask([](core::Event e) {
+		return 1000;
+	});
+
 	core::addEventHandler([](core::Event &e) {
 		switch (e.type) {
 		case core::QuitEvent:

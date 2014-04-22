@@ -62,10 +62,47 @@ class TaskState {
 };
 
 class Task {
+	friend TaskProcessor;
 	protected:
 		TaskProcessor *m_taskProcessor;
+	private:
+		bool m_autoDelete;
 	public:
+		/**
+		 * Constructor
+		 */
+		Task();
+
+		virtual ~Task();
+
 		virtual TaskState run(Event) = 0;
+
+	protected:
+		/**
+		 * Sets whether or not the Task should be auto-deleted when it completes.
+		 * @param autoDelete whether or not the Task should be auto-deleted when it completes
+		 */
+		void setAutoDelete(bool autoDelete);
+
+		/**
+		 * Indicates whether or not the Task should be auto-deleted when it completes.
+		 * @return value indicating whether or not the Task should be auto-deleted when it completes
+		 */
+		bool autoDelete();
+};
+
+class FunctionTask: public Task {
+	private:
+		std::function<TaskState(Event)> m_task;
+
+	public:
+		/**
+		 * Constructor
+		 * @param func the function to be called as Task::run(Event)
+		 */
+		FunctionTask(std::function<TaskState(Event)> func);
+
+		TaskState run(Event);
 };
 
 class Mutex {
@@ -321,6 +358,13 @@ class TaskProcessor {
 		std::vector<std::pair<Task*, uint64>> m_schedule;
 
 	public:
+		/**
+		 * Adds the given Task to this TaskProcessor.
+		 * @param task the lambda for Task to add to this TaskProcessor
+		 * @param state the initial state of the Task, defaults to Running
+		 */
+		void addTask(std::function<TaskState(Event)> task, TaskState state = TaskState::Running);
+
 		/**
 		 * Adds the given Task to this TaskProcessor.
 		 * @param task the Task to add to this TaskProcessor
