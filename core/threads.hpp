@@ -173,11 +173,11 @@ class Semaphore {
 		};
 
 	private:
+		std::queue<Post> m_posts;
 #ifdef WITH_SDL
 		SDL_sem *m_semaphore;
-		SDL_mutex *m_mutex;
 #endif
-		std::queue<Post> m_posts;
+		Mutex m_mutex;
 
 	public:
 		/**
@@ -245,7 +245,7 @@ class Channel {
 		 * @param sem the Semaphore for this Channel to listen on
 		 */
 		Channel(Semaphore *sem = new Semaphore()) {
-			m_sem = sem;
+			m_sem = new Semaphore();
 		}
 
 		/**

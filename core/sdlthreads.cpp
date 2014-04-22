@@ -21,7 +21,7 @@
 namespace wombat {
 namespace core {
 
-int thread(void *func) {
+int _sdlthread(void *func) {
 	if (func) {
 		auto f = (std::function<void()>*) func;
 		(*f)();
@@ -38,7 +38,7 @@ void startThread(std::function<void()> f) {
 
 
 	auto fp = new std::function<void()>(f);
-	SDL_CreateThread(thread, thrdNm, (void*) fp);
+	SDL_CreateThread(_sdlthread, thrdNm, (void*) fp);
 
 	threadCount++;
 }
@@ -54,7 +54,9 @@ Mutex::Mutex() {
 }
 
 Mutex::~Mutex() {
-	SDL_DestroyMutex(m_mutex);
+	if (m_mutex) {
+		SDL_DestroyMutex(m_mutex);
+	}
 }
 
 int Mutex::lock() {
@@ -69,12 +71,10 @@ int Mutex::unlock() {
 
 Semaphore::Semaphore() {
 	m_semaphore = SDL_CreateSemaphore(0);
-	m_mutex = SDL_CreateMutex();
 }
 
 Semaphore::~Semaphore() {
 	SDL_DestroySemaphore(m_semaphore);
-	SDL_DestroyMutex(m_mutex);
 }
 
 Semaphore::Post Semaphore::wait() {
@@ -93,16 +93,16 @@ Semaphore::Post Semaphore::wait(uint64 timeout) {
 
 void Semaphore::post(Semaphore::Post wakeup) {
 	m_posts.push(wakeup);
-	SDL_LockMutex(m_mutex);
+	m_mutex.lock();
 	SDL_SemPost(m_semaphore);
-	SDL_UnlockMutex(m_mutex);
+	m_mutex.unlock();
 }
 
 Semaphore::Post Semaphore::popPost() {
-	SDL_LockMutex(m_mutex);
+	m_mutex.lock();
 	auto post = m_posts.front();
 	m_posts.pop();
-	SDL_UnlockMutex(m_mutex);
+	m_mutex.unlock();
 	return post;
 }
 
