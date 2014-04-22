@@ -65,7 +65,7 @@ class Task {
 	protected:
 		TaskProcessor *m_taskProcessor;
 	public:
-		virtual TaskState run(EventType) = 0;
+		virtual TaskState run(Event) = 0;
 };
 
 class Mutex {
@@ -324,8 +324,9 @@ class TaskProcessor {
 		/**
 		 * Adds the given Task to this TaskProcessor.
 		 * @param task the Task to add to this TaskProcessor
+		 * @param state the initial state of the Task, defaults to Running
 		 */
-		void addTask(Task *task);
+		void addTask(Task *task, TaskState state = TaskState::Running);
 
 		/**
 		 * Starts the thread for this TaskProcessor.
@@ -366,9 +367,9 @@ class TaskProcessor {
 		/**
 		 * Runs the given Task.
 		 * @param task the Task to run
-		 * @param reason the reson the Task is being run
+		 * @param event the Event that this Task is waking up to process
 		 */
-		void runTask(Task *task, EventType reason);
+		void runTask(Task *task, Event event);
 };
 
 }

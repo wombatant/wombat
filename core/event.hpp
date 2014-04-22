@@ -56,7 +56,7 @@ class Event {
 		Event(EventType type);
 };
 
-typedef std::function<void(Event)> EventHandler;
+typedef std::function<void(Event&)> EventHandler;
 
 void addEventHandler(EventHandler func);
 

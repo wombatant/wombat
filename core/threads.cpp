@@ -49,8 +49,8 @@ bool Semaphore::hasPosts() {
 
 // TaskProcessor
 
-void TaskProcessor::addTask(Task *task) {
-	processTaskState(task, TaskState(TaskState::Running));
+void TaskProcessor::addTask(Task *task, TaskState state) {
+	processTaskState(task, state);
 
 	// post to the semaphore to refresh the sleep time
 	m_sem.post();
@@ -171,8 +171,8 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 	m_mutex.unlock();
 }
 
-void TaskProcessor::runTask(Task *task, EventType reason) {
-	auto state = task->run(reason);
+void TaskProcessor::runTask(Task *task, Event event) {
+	auto state = task->run(event);
 	processTaskState(task, state);
 }
 

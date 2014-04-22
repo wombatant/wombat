@@ -18,7 +18,7 @@
 namespace wombat {
 namespace world {
 
-core::TaskState World::run(core::EventType) {
+core::TaskState World::run(core::Event) {
 	return 1000;
 }
 

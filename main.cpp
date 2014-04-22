@@ -36,7 +36,7 @@ int main(int argc, const char **args) {
 		tests::test(vargs);
 	}
 
-	core::addEventHandler([](core::Event e) {
+	core::addEventHandler([](core::Event &e) {
 		switch (e.type) {
 		case core::QuitEvent:
 			core::quit();

@@ -25,6 +25,7 @@ std::vector<EventHandler> eventHandlers;
 // Event
 
 Event::Event() {
+	this->type = UnknownEvent;
 }
 
 Event::Event(EventType type) {
@@ -32,8 +33,10 @@ Event::Event(EventType type) {
 }
 
 
-void addEventHandler(EventHandler el) {
-	eventHandlers.push_back(el);
+// functions
+
+void addEventHandler(EventHandler handler) {
+	eventHandlers.push_back(handler);
 }
 
 }
