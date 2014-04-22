@@ -23,6 +23,9 @@ namespace core {
 
 enum EventType {
 	UnknownEvent = -1,
+	SemaphorePost,
+	Timeout,
+	ChannelMessage,
 	QuitEvent,
 	KeyUpEvent,
 	KeyDownEvent
@@ -37,9 +40,20 @@ enum Key {
 
 
 class Event {
-public:
-	EventType type;
-	Key key;
+	public:
+		EventType type;
+		Key key;
+
+		/**
+		 * Constructor
+		 */
+		Event();
+
+		/**
+		 * Constructor
+		 * @param type the value for the type value of the Event
+		 */
+		Event(EventType type);
 };
 
 typedef std::function<void(Event)> EventHandler;

@@ -21,6 +21,17 @@ namespace core {
 
 std::vector<EventHandler> eventHandlers;
 
+
+// Event
+
+Event::Event() {
+}
+
+Event::Event(EventType type) {
+	this->type = type;
+}
+
+
 void addEventHandler(EventHandler el) {
 	eventHandlers.push_back(el);
 }

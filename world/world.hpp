@@ -29,7 +29,7 @@ class World: public core::Task {
 	public:
 		World();
 		~World();
-		core::TaskState run(core::WakeupReason);
+		core::TaskState run(core::EventType);
 };
 
 }

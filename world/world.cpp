@@ -18,7 +18,7 @@
 namespace wombat {
 namespace world {
 
-core::TaskState World::run(core::WakeupReason) {
+core::TaskState World::run(core::EventType) {
 	return 1000;
 }
 

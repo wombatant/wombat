@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include "core.hpp"
+#include "event.hpp"
 #include "threads.hpp"
 
 namespace wombat {
@@ -33,12 +34,12 @@ TaskState::TaskState(TaskState::State state) {
 
 // Semaphore
 
-Semaphore::Post::Post(WakeupReason reason) {
+Semaphore::Post::Post(EventType reason) {
 	m_task = 0;
 	m_reason = reason;
 }
 
-WakeupReason Semaphore::Post::reason() {
+EventType Semaphore::Post::reason() {
 	return m_reason;
 }
 
@@ -85,8 +86,8 @@ void TaskProcessor::start() {
 							}
 						}
 						break;
-					case ReceivedMessage:
-						runTask(post.task(), ReceivedMessage);
+					case ChannelMessage:
+						runTask(post.task(), ChannelMessage);
 						break;
 					case SemaphorePost:
 						// SemaphorePost is already designated for use only as a
@@ -170,7 +171,7 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 	m_mutex.unlock();
 }
 
-void TaskProcessor::runTask(Task *task, WakeupReason reason) {
+void TaskProcessor::runTask(Task *task, EventType reason) {
 	auto state = task->run(reason);
 	processTaskState(task, state);
 }

@@ -24,17 +24,12 @@
 #include <SDL.h>
 #endif
 
+#include "event.hpp"
 #include "misc.hpp"
 #include "types.hpp"
 
 namespace wombat {
 namespace core {
-
-enum WakeupReason {
-	SemaphorePost,
-	Timeout,
-	ReceivedMessage
-};
 
 class Semaphore;
 class TaskProcessor;
@@ -70,7 +65,7 @@ class Task {
 	protected:
 		TaskProcessor *m_taskProcessor;
 	public:
-		virtual TaskState run(WakeupReason) = 0;
+		virtual TaskState run(EventType) = 0;
 };
 
 class Mutex {
@@ -83,7 +78,6 @@ class Mutex {
 		 * Constructor
 		 */
 		Mutex();
-
 
 		/**
 		 * Destructor
@@ -118,20 +112,20 @@ class Semaphore {
 				 * Used to specify the Task that received a message.
 				 */
 				Task *m_task;
-				WakeupReason m_reason;
+				EventType m_reason;
 
 			public:
 				/**
 				 * Constructor
 				 * @param reason optional reason parameter, defaults to SemaphorePost
 				 */
-				Post(WakeupReason reason = SemaphorePost);
+				Post(EventType reason = SemaphorePost);
 
 				/**
 				 *	Gets the reason for the wake up.
 				 * @return the reason for the post
 				 */
-				WakeupReason reason();
+				EventType reason();
 
 			protected:
 				/**
@@ -248,9 +242,9 @@ class Channel {
 		 * Waits until a message is received, then discards the message.
 		 * @return reason for the wake up
 		 */
-		WakeupReason read() {
+		EventType read() {
 			auto reason = m_sem->wait().reason();
-			if (reason == ReceivedMessage) {
+			if (reason == ChannelMessage) {
 				m_mutex.lock();
 				m_msgs.pop();
 				m_mutex.unlock();
@@ -264,10 +258,10 @@ class Channel {
 		 * @param msg reference to the message to write to
 		 * @return reason for the wake up
 		 */
-		WakeupReason read(T &msg) {
+		EventType read(T &msg) {
 			while (1) {
 				auto reason = m_sem->wait().reason();
-				if (reason == ReceivedMessage) {
+				if (reason == ChannelMessage) {
 					if (getMessage(msg)) {
 						return reason;
 					}
@@ -284,12 +278,12 @@ class Channel {
 		 * @param timeout timeout duration to give up on
 		 * @return reason for the wake up
 		 */
-		WakeupReason read(T &msg, uint64 timeout) {
+		EventType read(T &msg, uint64 timeout) {
 			auto startTime = core::time();
 			auto currentTimeout = timeout;
 			while (1) {
 				auto reason = m_sem->wait(currentTimeout).reason();
-				if (reason == ReceivedMessage) {
+				if (reason == ChannelMessage) {
 					if (getMessage(msg)) {
 						return reason;
 					}
@@ -309,7 +303,7 @@ class Channel {
 			m_mutex.lock();
 			m_msgs.push(msg);
 			m_mutex.unlock();
-			m_sem->post(ReceivedMessage);
+			m_sem->post(ChannelMessage);
 		}
 
 	// disallow copying
@@ -374,7 +368,7 @@ class TaskProcessor {
 		 * @param task the Task to run
 		 * @param reason the reson the Task is being run
 		 */
-		void runTask(Task *task, WakeupReason reason);
+		void runTask(Task *task, EventType reason);
 };
 
 }
