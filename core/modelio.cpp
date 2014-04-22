@@ -51,7 +51,7 @@ int open(models::cyborgbear::Model &m, std::string path) {
 		// see if it is in "hidden" model file
 		retval = m.readJsonFile(core::path(_suffix(path, ".hjson")));
 	};
-	return 0;
+	return retval;
 }
 
 }
