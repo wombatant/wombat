@@ -81,6 +81,9 @@ bool Semaphore::hasPosts() {
 
 // TaskProcessor
 
+TaskProcessor::TaskProcessor() {
+}
+
 void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState state) {
 	addTask(new FunctionTask(task), state);
 }

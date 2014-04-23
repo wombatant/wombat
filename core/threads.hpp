@@ -359,6 +359,11 @@ class TaskProcessor {
 
 	public:
 		/**
+		 * Constructor
+		 */
+		TaskProcessor();
+
+		/**
 		 * Adds the given Task to this TaskProcessor.
 		 * @param task the lambda for Task to add to this TaskProcessor
 		 * @param state the initial state of the Task, defaults to Running
