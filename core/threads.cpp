@@ -97,6 +97,7 @@ int Semaphore::popPost(Semaphore::Post &post) {
 // TaskProcessor
 
 TaskProcessor::TaskProcessor() {
+	m_running = false;
 }
 
 void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState state) {

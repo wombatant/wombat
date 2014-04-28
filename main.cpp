@@ -25,6 +25,7 @@ core::TaskProcessor *tp;
 
 void quit() {
 	tp->stop();
+	tp->done();
 	delete tp;
 	core::quit();
 }
