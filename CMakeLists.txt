@@ -13,7 +13,7 @@ add_definitions(
 #setup libraries
 
 find_package(Jansson REQUIRED)
-include_directories(${Jansson_INCLUDE_DIRS})
+include_directories(${JANSSON_INCLUDE_DIR})
 set(LIBS ${LIBS} ${JANSSON_LIBRARY})
 
 find_package(SDL REQUIRED)
