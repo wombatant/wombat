@@ -96,18 +96,22 @@ Semaphore::Post Semaphore::wait(uint64 timeout) {
 	const auto startTime = core::time();
 
 	while (m_posts.empty()) {
-		SDL_SemWaitTimeout(m_semaphore, timeout);
+		auto wakeup = SDL_SemWaitTimeout(m_semaphore, timeout);
 
-		if (popPost(post) == 0) {
-			break;
-		}
-
-		auto time = core::time();
-		if (time > startTime + origTimeout) {
+		if (wakeup == SDL_MUTEX_TIMEDOUT) {
 			return Timeout;
+		} else if (popPost(post) == 0) {
+			break;
 		} else {
-			// adjust timeout
-			timeout = origTimeout - (time - startTime);
+			// no timeout, but another thread got the post
+			auto time = core::time();
+			// recheck timeout based on current time
+			if (time > startTime + origTimeout) {
+				return Timeout;
+			} else {
+				// adjust timeout
+				timeout = origTimeout - (time - startTime);
+			}
 		}
 	}
 	return post;
