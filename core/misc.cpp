@@ -41,11 +41,11 @@ void _updateEventTime() {
 	refTime = time();
 }
 
-time_t eventTime() {
+uint64 eventTime() {
 	return refTime;
 }
 
-time_t time() {
+uint64 time() {
 	auto t = std::chrono::system_clock::now().time_since_epoch();
 	return std::chrono::duration_cast<std::chrono::milliseconds>(t).count();
 }

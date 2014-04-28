@@ -20,6 +20,7 @@
 #include <functional>
 
 #include "models/enginemodels.hpp"
+#include "types.hpp"
 
 namespace wombat {
 namespace core {
@@ -36,9 +37,9 @@ void draw();
  * Used for getting the time stamp for when processing for the current event was started.
  * @return the time stamp for when processing for the current event was started
  */
-time_t eventTime();
+uint64 eventTime();
 
-time_t time();
+uint64 time();
 
 bool running();
 
