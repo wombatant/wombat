@@ -78,17 +78,39 @@ Semaphore::~Semaphore() {
 }
 
 Semaphore::Post Semaphore::wait() {
-	if (m_posts.empty()) {
+	Semaphore::Post post;
+
+	while (m_posts.empty()) {
 		SDL_SemWait(m_semaphore);
+
+		if (popPost(post) == 0) {
+			break;
+		}
 	}
-	return popPost();
+	return post;
 }
 
 Semaphore::Post Semaphore::wait(uint64 timeout) {
-	if (m_posts.empty()) {
+	Semaphore::Post post;
+	const auto origTimeout = timeout;
+	const auto startTime = core::time();
+
+	while (m_posts.empty()) {
 		SDL_SemWaitTimeout(m_semaphore, timeout);
+
+		if (popPost(post) == 0) {
+			break;
+		}
+
+		auto time = core::time();
+		if (time > startTime + origTimeout) {
+			return Timeout;
+		} else {
+			// adjust timeout
+			timeout = origTimeout - (time - startTime);
+		}
 	}
-	return popPost();
+	return post;
 }
 
 void Semaphore::post(Semaphore::Post wakeup) {
@@ -96,14 +118,6 @@ void Semaphore::post(Semaphore::Post wakeup) {
 	m_mutex.lock();
 	SDL_SemPost(m_semaphore);
 	m_mutex.unlock();
-}
-
-Semaphore::Post Semaphore::popPost() {
-	m_mutex.lock();
-	auto post = m_posts.front();
-	m_posts.pop();
-	m_mutex.unlock();
-	return post;
 }
 
 }

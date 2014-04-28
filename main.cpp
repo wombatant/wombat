@@ -36,10 +36,12 @@ int main(int argc, const char **args) {
 		tests::test(vargs);
 	}
 
-	core::TaskProcessor tp;
-	tp.addTask([](core::Event e) {
-		return 1000;
+	core::TaskProcessor *tp = new core::TaskProcessor();
+	tp->addTask([](core::Event e) {
+		core::draw();
+		return core::running() ? 16 : core::TaskState::Done;
 	});
+	tp->start();
 
 	core::addEventHandler([](core::Event &e) {
 		switch (e.type) {
@@ -58,14 +60,6 @@ int main(int argc, const char **args) {
 			break;
 		default:
 			break;
-		}
-	});
-
-	// start draw thread
-	core::startThread([]() {
-		while (core::running()) {
-			core::draw();
-			core::sleep(16);
 		}
 	});
 

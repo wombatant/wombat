@@ -65,8 +65,10 @@ class Task {
 	friend TaskProcessor;
 	protected:
 		TaskProcessor *m_taskProcessor;
+
 	private:
 		bool m_autoDelete;
+
 	public:
 		/**
 		 * Constructor
@@ -101,6 +103,11 @@ class FunctionTask: public Task {
 		 * @param func the function to be called as Task::run(Event)
 		 */
 		FunctionTask(std::function<TaskState(Event)> func);
+
+		/**
+		 * Destructor
+		 */
+		~FunctionTask();
 
 		TaskState run(Event);
 };
@@ -211,9 +218,10 @@ class Semaphore {
 
 		/**
 		 * Gets the oldest post available.
-		 * @return the oldest post available
+		 * @param post Post that the popped Post will be read into
+		 * @return 0 if success, 1 if there are no posts
 		 */
-		Post popPost();
+		int popPost(Semaphore::Post &post);
 
 		/**
 		 * Indicates whether or not there are any pending posts.

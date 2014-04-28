@@ -53,7 +53,10 @@ bool Task::autoDelete() {
 
 FunctionTask::FunctionTask(std::function<TaskState(Event)> func) {
 	m_task = func;
-	setAutoDelete(true);
+	setAutoDelete(false);
+}
+
+FunctionTask::~FunctionTask() {
 }
 
 TaskState FunctionTask::run(Event e) {
@@ -77,6 +80,18 @@ EventType Semaphore::Post::reason() {
 
 bool Semaphore::hasPosts() {
 	return !m_posts.empty();
+}
+
+int Semaphore::popPost(Semaphore::Post &post) {
+	m_mutex.lock();
+	if (hasPosts()) {
+		post = m_posts.front();
+		m_posts.pop();
+		m_mutex.unlock();
+		return 0;
+	}
+	m_mutex.unlock();
+	return 1;
 }
 
 // TaskProcessor
@@ -135,19 +150,19 @@ void TaskProcessor::start() {
 						break;
 					}
 
-					if (m_sem.hasPosts()) {
-						post = m_sem.popPost();
-					} else {
+					if (m_sem.popPost(post) != 0) {
 						break;
 					}
 				}
 
-				auto time = core::time();
-				auto nt = nextTask();
-				if (time > nt.second) {
-					sleepTime = time - nt.second;
-				} else {
-					sleepTime = 0;
+				if (m_schedule.size()) {
+					auto time = core::time();
+					auto nt = nextTask();
+					if (time < nt.second) {
+						sleepTime = nt.second - time;
+					} else {
+						sleepTime = 0;
+					}
 				}
 			}
 			m_done.write(true);
@@ -187,7 +202,7 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 	switch (state.state) {
 	case TaskState::Running:
 		{
-			const auto wakeup = time() - state.sleepDuration;
+			const auto wakeup = time() + state.sleepDuration;
 			const auto val = std::pair<Task*, uint64>(task, wakeup);
 
 			bool inserted = false;
@@ -202,10 +217,20 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 				m_schedule.push_back(val);
 			}
 		}
+		break;
 	case TaskState::Done:
 		if (task->autoDelete()) {
+			// remove from schedule
+			for (auto i = 0; i < m_schedule.size(); i++) {
+				if (m_schedule[i].first == task) {
+					m_schedule.erase(m_schedule.begin() + i);
+				}
+			}
+
+			// actually delete the Task
 			delete task;
 		}
+		break;
 	default:
 		// do nothing
 		break;
