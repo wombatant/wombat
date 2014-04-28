@@ -410,9 +410,10 @@ class TaskProcessor {
 
 		/**
 		 * Gets the next Task to execute.
-		 * @return the next task scheduled to execute
+		 * @param t the next task will be read into this value
+		 * @return 0 if success, 1 if there is no next task
 		 */
-		std::pair<Task*, uint64> nextTask();
+		int nextTask(std::pair<Task*, uint64> &t);
 
 		/**
 		 * Sets the state of the task and schedules it appropriately.

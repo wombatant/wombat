@@ -156,9 +156,9 @@ void TaskProcessor::start() {
 					}
 				}
 
-				if (m_schedule.size()) {
+				std::pair<Task*, uint64> nt;
+				if (nextTask(nt) == 0) {
 					auto time = core::time();
-					auto nt = nextTask();
 					if (time < nt.second) {
 						sleepTime = nt.second - time;
 					} else {
@@ -180,22 +180,29 @@ void TaskProcessor::done() {
 }
 
 Task *TaskProcessor::popActiveTask() {
-	auto nt = nextTask();
-	auto time = core::time();
-	if (time >= nt.second) {
-		m_mutex.lock();
-		m_schedule.pop_back();
-		m_mutex.unlock();
-		return nt.first;
+	std::pair<Task*, uint64> nt;
+	m_mutex.lock();
+	if (nextTask(nt) == 0) {
+		auto time = core::time();
+		if (time >= nt.second) {
+			m_schedule.pop_back();
+			m_mutex.unlock();
+			return nt.first;
+		}
 	}
 	return 0;
 }
 
-std::pair<Task*, uint64> TaskProcessor::nextTask() {
+int TaskProcessor::nextTask(std::pair<Task*, uint64> &t) {
+	int retval = 0;
 	m_mutex.lock();
-	auto t = m_schedule.back();
+	if (m_schedule.empty()) {
+		retval = 1;
+	} else {
+		t = m_schedule.back();
+	}
 	m_mutex.unlock();
-	return t;
+	return retval;
 }
 
 void TaskProcessor::processTaskState(Task *task, TaskState state) {
