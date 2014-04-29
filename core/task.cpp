@@ -51,7 +51,7 @@ bool Task::autoDelete() {
 
 FunctionTask::FunctionTask(std::function<TaskState(Event)> func) {
 	m_task = func;
-	setAutoDelete(false);
+	setAutoDelete(true);
 }
 
 FunctionTask::~FunctionTask() {
