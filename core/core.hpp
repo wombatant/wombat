@@ -23,6 +23,7 @@
 #include "types.hpp"
 #include "modelio.hpp"
 #include "task.hpp"
+#include "types.hpp"
 #include "threads.hpp"
 
 #endif

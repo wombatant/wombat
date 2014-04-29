@@ -24,14 +24,18 @@
 namespace wombat {
 namespace core {
 
+const auto Event_DrawEvent = SDL_RegisterEvents(1);
+const auto Event_SemaporePost = SDL_RegisterEvents(1);
+const auto Event_SemaporeTimeout = SDL_RegisterEvents(1);
+
 std::vector<Drawer*> drawers;
 std::vector<Graphics*> graphicsInstances;
 SDL_Window *display = 0;
 SDL_Renderer *renderer = 0;
+TaskProcessor _taskProcessor;
+
 extern std::vector<EventHandler> eventHandlers;
-const auto Event_DrawEvent = SDL_RegisterEvents(1);
-const auto Event_SemaporePost = SDL_RegisterEvents(1);
-extern bool vrunning;
+extern bool _running;
 
 
 Key toWombatKey(SDL_Event);
@@ -41,7 +45,6 @@ void main();
 class EventQueueSemaphore: public BaseSemaphore {
 	private:
 		std::queue<Event> m_posts;
-		void *m_semaphore;
 		Mutex m_mutex;
 
 	public:
@@ -111,6 +114,16 @@ bool EventQueueSemaphore::hasPosts() {
 	return m_posts.size();
 }
 
+void addTask(std::function<TaskState(Event)> task, TaskState state) {
+	_taskProcessor.addTask(task, state);
+	_mainSemaphore.post();
+}
+
+void addTask(Task *task, TaskState state) {
+	_taskProcessor.addTask(task, state);
+	_mainSemaphore.post();
+}
+
 void draw() {
 	SDL_Event ev;
 	SDL_zero(ev);
@@ -127,36 +140,42 @@ void _draw() {
 }
 
 void main() {
-	TaskProcessor tp;
 	// handle events
 	SDL_Event sev;
-	while (vrunning) {
-		TaskState taskState;
+	TaskState taskState = TaskState::Waiting;
+	while (_running) {
 		if (taskState.state == TaskState::Running) {
-			SDL_WaitEventTimeout(&sev, taskState.sleepDuration);
+			if (SDL_WaitEventTimeout(&sev, taskState.sleepDuration) == 0) {
+				// yes... SDL_WaitEventTimeout uses 0 indicate failure...
+				sev.type = Event_SemaporeTimeout;
+			}
 		} else {
 			SDL_WaitEvent(&sev);
 		}
 
 		const auto t = sev.type;
+		Event ev;
 		_updateEventTime();
 		if (t == Event_DrawEvent) {
 			_draw();
+		} else if (sev.type == Event_SemaporeTimeout) {
+			ev.m_type = Timeout;
+			taskState = _taskProcessor.run(ev);
+		} else if (sev.type == Event_SemaporePost) {
+			if (_mainSemaphore.popPost(ev) == 0) {
+				taskState = _taskProcessor.run(ev);
+			}
 		} else {
-			Event ev;
-			if (sev.type == Event_SemaporePost) {
-				if (_mainSemaphore.popPost(ev) == 0) {
-					taskState = tp.run(ev);
-				}
-			} else if (sev.type == SDL_QUIT) {
+			if (t == SDL_QUIT) {
 				ev.m_type = QuitEvent;
-			} else if (sev.type == SDL_KEYUP) {
+			} else if (t == SDL_KEYUP) {
 				ev.m_type = KeyUpEvent;
 				ev.m_body.key = toWombatKey(sev);
-			} else if (sev.type == SDL_KEYDOWN) {
+			} else if (t == SDL_KEYDOWN) {
 				ev.m_type = KeyDownEvent;
 				ev.m_body.key = toWombatKey(sev);
 			}
+
 			for (auto f : eventHandlers) {
 				f(ev);
 			}
@@ -178,8 +197,7 @@ int init(bool fullscreen, int w, int h) {
 		return -3;
 	renderer = SDL_CreateRenderer(display, -1, SDL_RENDERER_ACCELERATED);
 
-	vrunning = true;
-	_updateEventTime();
+	_running = true; _updateEventTime();
 	return 0;
 }
 

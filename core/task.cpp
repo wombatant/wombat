@@ -1,3 +1,18 @@
+/*
+ * Copyright 2013-2014 gtalent2@gmail.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "task.hpp"
 
 namespace wombat {
@@ -72,7 +87,7 @@ TaskState TaskProcessor::run(Event post) {
 		break;
 	case SemaphorePost:
 		// SemaphorePost is already designated for use only as a
-		//  sleep refresh in this switch
+		//  sleep refresh in this switch or exit the thread loop
 		break;
 	default:
 		break;
@@ -109,10 +124,10 @@ void TaskProcessor::start() {
 			TaskState taskState;
 			while (m_running) {
 				Event post;
-				if (m_schedule.empty()) {
-					post = m_sem.wait();
-				} else {
+				if (taskState.state == TaskState::Running) {
 					post = m_sem.wait(taskState.sleepDuration);
+				} else {
+					post = m_sem.wait();
 				}
 				taskState = run(post);
 			}
@@ -122,6 +137,7 @@ void TaskProcessor::start() {
 }
 
 void TaskProcessor::stop() {
+	m_sem.post();
 	m_running = false;
 }
 

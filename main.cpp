@@ -49,7 +49,7 @@ int main(int argc, const char **args) {
 	}
 
 	tp = new core::TaskProcessor();
-	tp->addTask([](core::Event e) {
+	core::addTask([](core::Event e) {
 		if (e.type() == core::Timeout) {
 			core::draw();
 		}

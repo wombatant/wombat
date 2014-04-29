@@ -27,14 +27,14 @@ namespace core {
 
 // used to track "event time"
 time_t refTime;
-bool vrunning = false;
+bool _running = false;
 
 bool running() {
-	return vrunning;
+	return _running;
 }
 
 void quit() {
-	vrunning = false;
+	_running = false;
 }
 
 void _updateEventTime() {
