@@ -118,8 +118,8 @@ Semaphore::Post Semaphore::wait(uint64 timeout) {
 }
 
 void Semaphore::post(Semaphore::Post wakeup) {
-	m_posts.push(wakeup);
 	m_mutex.lock();
+	m_posts.push(wakeup);
 	SDL_SemPost((SDL_sem*) m_semaphore);
 	m_mutex.unlock();
 }
