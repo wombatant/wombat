@@ -20,6 +20,9 @@
 namespace wombat {
 namespace core {
 
+BaseSemaphore::~BaseSemaphore() {
+}
+
 bool Semaphore::hasPosts() {
 	return !m_posts.empty();
 }

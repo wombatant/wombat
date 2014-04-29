@@ -112,15 +112,22 @@ class TaskProcessor: public Task {
 	private:
 		std::vector<std::pair<Task*, uint64>> m_schedule;
 		bool m_running;
+		bool m_semInternal;
 		Mutex m_mutex;
-		Semaphore m_sem;
+		BaseSemaphore *m_sem;
 		Channel<bool> m_done;
 
 	public:
 		/**
 		 * Constructor
+		 * @param sem allows specifying an external Semaphore for this TaskProcessor
 		 */
-		TaskProcessor();
+		TaskProcessor(BaseSemaphore *sem = 0);
+
+		/**
+		 * Destructor
+		 */
+		virtual ~TaskProcessor();
 
 		TaskState run(Event);
 

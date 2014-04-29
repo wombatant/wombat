@@ -24,24 +24,6 @@
 namespace wombat {
 namespace core {
 
-const auto Event_DrawEvent = SDL_RegisterEvents(1);
-const auto Event_SemaporePost = SDL_RegisterEvents(1);
-const auto Event_SemaporeTimeout = SDL_RegisterEvents(1);
-
-std::vector<Drawer*> drawers;
-std::vector<Graphics*> graphicsInstances;
-SDL_Window *display = 0;
-SDL_Renderer *renderer = 0;
-TaskProcessor _taskProcessor;
-
-extern std::vector<EventHandler> eventHandlers;
-extern bool _running;
-
-
-Key toWombatKey(SDL_Event);
-void _updateEventTime();
-void main();
-
 class EventQueueSemaphore: public BaseSemaphore {
 	private:
 		std::queue<Event> m_posts;
@@ -73,6 +55,26 @@ class EventQueueSemaphore: public BaseSemaphore {
 		EventQueueSemaphore(const EventQueueSemaphore&);
 		EventQueueSemaphore &operator=(const EventQueueSemaphore&);
 } _mainSemaphore;
+
+TaskProcessor _taskProcessor(&_mainSemaphore);
+
+const auto Event_DrawEvent = SDL_RegisterEvents(1);
+const auto Event_SemaporePost = SDL_RegisterEvents(1);
+const auto Event_SemaporeTimeout = SDL_RegisterEvents(1);
+
+std::vector<Drawer*> drawers;
+std::vector<Graphics*> graphicsInstances;
+SDL_Window *display = 0;
+SDL_Renderer *renderer = 0;
+
+extern std::vector<EventHandler> eventHandlers;
+extern bool _running;
+
+
+Key toWombatKey(SDL_Event);
+void _updateEventTime();
+
+// EventQueueSemaphore Implementation
 
 EventQueueSemaphore::EventQueueSemaphore() {
 }
@@ -114,14 +116,14 @@ bool EventQueueSemaphore::hasPosts() {
 	return m_posts.size();
 }
 
+// Main TaskProcessor modifiers
+
 void addTask(std::function<TaskState(Event)> task, TaskState state) {
 	_taskProcessor.addTask(task, state);
-	_mainSemaphore.post();
 }
 
 void addTask(Task *task, TaskState state) {
 	_taskProcessor.addTask(task, state);
-	_mainSemaphore.post();
 }
 
 void draw() {

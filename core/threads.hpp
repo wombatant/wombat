@@ -65,6 +65,11 @@ class Mutex {
 class BaseSemaphore {
 	public:
 		/**
+		 * Destructor
+		 */
+		virtual ~BaseSemaphore();
+
+		/**
 		 * Waits until there is a post to process.
 		 * @return a Event with the reason for the wake up
 		 */

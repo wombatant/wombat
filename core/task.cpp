@@ -63,8 +63,21 @@ TaskState FunctionTask::run(Event e) {
 
 // TaskProcessor
 
-TaskProcessor::TaskProcessor() {
+TaskProcessor::TaskProcessor(BaseSemaphore *sem) {
 	m_running = false;
+	if (sem) {
+		m_sem = sem;
+		m_semInternal = false;
+	} else {
+		m_sem = new Semaphore();
+		m_semInternal = true;
+	}
+}
+
+TaskProcessor::~TaskProcessor() {
+	if (m_semInternal) {
+		delete m_sem;
+	}
 }
 
 TaskState TaskProcessor::run(Event post) {
@@ -114,7 +127,7 @@ void TaskProcessor::addTask(Task *task, TaskState state) {
 	processTaskState(task, state);
 
 	// post to the semaphore to refresh the sleep time
-	m_sem.post();
+	m_sem->post();
 }
 
 void TaskProcessor::start() {
@@ -125,9 +138,9 @@ void TaskProcessor::start() {
 			while (m_running) {
 				Event post;
 				if (taskState.state == TaskState::Running) {
-					post = m_sem.wait(taskState.sleepDuration);
+					post = m_sem->wait(taskState.sleepDuration);
 				} else {
-					post = m_sem.wait();
+					post = m_sem->wait();
 				}
 				taskState = run(post);
 			}
@@ -137,7 +150,7 @@ void TaskProcessor::start() {
 }
 
 void TaskProcessor::stop() {
-	m_sem.post();
+	m_sem->post();
 	m_running = false;
 }
 
