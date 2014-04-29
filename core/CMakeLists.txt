@@ -8,6 +8,7 @@ add_library(
 		gfx.cpp
 		misc.cpp
 		modelio.cpp
+		task.cpp
 		threads.cpp
 		sdlcore.cpp
 		sdlevent.cpp
@@ -22,6 +23,7 @@ install(
 		event.hpp
 		gfx.hpp
 		modelio.hpp
+		task.hpp
 		threads.hpp
 		types.hpp
 	DESTINATION
