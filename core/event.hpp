@@ -38,25 +38,57 @@ enum Key {
 	Key_Q,
 };
 
+class Task;
+
+void main();
 
 class Event {
+	friend void main();
+	protected:
+		EventType m_type;
+		union {
+			/**
+			 * Used to specify the Task that received a message.
+			 */
+			Task *task;
+			Key key;
+		} m_body;
+
 	public:
-		EventType type;
-		Key key;
-
-		/**
-		 * Constructor
-		 */
-		Event();
-
 		/**
 		 * Constructor
 		 * @param type the value for the type value of the Event
 		 */
-		Event(EventType type);
+		Event(EventType type = UnknownEvent);
+
+		/**
+		 * Gets the EventType describing this Event.
+		 * @return the EventType describing this Event
+		 */
+		inline EventType type() const {
+			return m_type;
+		}
+
+		/**
+		 * Gets the Key associated with this Event.
+		 * This method assumes type() returns KeyUpEvent or KeyDownEvent.
+		 * @return the EventType describing this Event
+		 */
+		inline Key key() const {
+			return m_body.key;
+		}
+
+		/**
+		 * Gets the Task this Event is for.
+		 * This method assumes type() returns KeyUpEvent or KeyDownEvent.
+		 * @return the EventType describing this Event
+		 */
+		inline Task *task() const {
+			return m_body.task;
+		}
 };
 
-typedef std::function<void(Event&)> EventHandler;
+typedef std::function<void(const Event&)> EventHandler;
 
 void addEventHandler(EventHandler func);
 

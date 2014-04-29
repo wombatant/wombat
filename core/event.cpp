@@ -24,12 +24,8 @@ std::vector<EventHandler> eventHandlers;
 
 // Event
 
-Event::Event() {
-	this->type = UnknownEvent;
-}
-
 Event::Event(EventType type) {
-	this->type = type;
+	this->m_type = type;
 }
 
 

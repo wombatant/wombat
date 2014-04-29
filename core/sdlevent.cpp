@@ -19,7 +19,7 @@
 namespace wombat {
 namespace core {
 
-Key toEventType(SDL_Event t) {
+Key toWombatKey(SDL_Event t) {
 	switch (t.key.keysym.sym) {
 	case SDLK_a:
 		return Key_A;

@@ -50,23 +50,25 @@ int main(int argc, const char **args) {
 
 	tp = new core::TaskProcessor();
 	tp->addTask([](core::Event e) {
-		if (e.type == core::Timeout) {
+		if (e.type() == core::Timeout) {
+			printf("Trigger Draw Event\n");
 			core::draw();
 		}
 		return core::running() ? 16 : core::TaskState::Done;
 	});
 	tp->start();
 
-	core::addEventHandler([](core::Event &e) {
-		switch (e.type) {
+	core::addEventHandler([](const core::Event &e) {
+		//printf("Got Event\n");
+		switch (e.type()) {
 		case core::QuitEvent:
 			quit();
 			break;
 		case core::KeyDownEvent:
-			switch (e.key) {
+			switch (e.key()) {
 			case core::Key_Escape:
 			case core::Key_Q:
-				core::quit();
+				quit();
 				break;
 			default:
 				break;

@@ -30,10 +30,86 @@ SDL_Window *display = 0;
 SDL_Renderer *renderer = 0;
 extern std::vector<EventHandler> eventHandlers;
 const auto Event_DrawEvent = SDL_RegisterEvents(1);
+const auto Event_SemaporePost = SDL_RegisterEvents(1);
 extern bool vrunning;
-Key toEventType(SDL_Event);
 
+
+Key toWombatKey(SDL_Event);
 void _updateEventTime();
+void main();
+
+class EventQueueSemaphore: public BaseSemaphore {
+	private:
+		std::queue<Event> m_posts;
+		void *m_semaphore;
+		Mutex m_mutex;
+
+	public:
+		/**
+		 * Constructor
+		 */
+		EventQueueSemaphore();
+
+		/**
+		 * Destructor
+		 */
+		~EventQueueSemaphore();
+
+		Event wait();
+
+		Event wait(uint64 timeout);
+
+		void post(Event wakeup = SemaphorePost);
+
+		int popPost(Event &post);
+
+		bool hasPosts();
+
+	// disallow copying
+	private:
+		EventQueueSemaphore(const EventQueueSemaphore&);
+		EventQueueSemaphore &operator=(const EventQueueSemaphore&);
+} _mainSemaphore;
+
+EventQueueSemaphore::EventQueueSemaphore() {
+}
+
+EventQueueSemaphore::~EventQueueSemaphore() {
+}
+
+Event EventQueueSemaphore::wait() {
+	return UnknownEvent;
+}
+
+Event EventQueueSemaphore::wait(uint64 timeout) {
+	return UnknownEvent;
+}
+
+void EventQueueSemaphore::post(Event post) {
+	m_mutex.lock();
+	m_posts.push(post);
+	SDL_Event ev;
+	SDL_zero(ev);
+	ev.type = Event_SemaporePost;
+	SDL_PushEvent(&ev);
+	m_mutex.unlock();
+}
+
+int EventQueueSemaphore::popPost(Event &post) {
+	m_mutex.lock();
+	if (hasPosts()) {
+		post = m_posts.front();
+		m_posts.pop();
+		m_mutex.unlock();
+		return 0;
+	}
+	m_mutex.unlock();
+	return 1;
+}
+
+bool EventQueueSemaphore::hasPosts() {
+	return m_posts.size();
+}
 
 void draw() {
 	SDL_Event ev;
@@ -51,24 +127,38 @@ void _draw() {
 }
 
 void main() {
+	TaskProcessor tp;
 	// handle events
 	SDL_Event sev;
 	while (vrunning) {
-		SDL_WaitEvent(&sev);
+		TaskState taskState;
+		if (taskState.state == TaskState::Running) {
+			printf("SDL_WaitEventTimeout\n");
+			SDL_WaitEventTimeout(&sev, taskState.sleepDuration);
+		} else {
+			printf("SDL_WaitEvent\n");
+			SDL_WaitEvent(&sev);
+		}
+		//printf("Got SDL_Event\n");
 		const auto t = sev.type;
 		_updateEventTime();
 		if (t == Event_DrawEvent) {
 			_draw();
 		} else {
 			Event ev;
-			if (sev.type == SDL_QUIT) {
-				ev.type = QuitEvent;
+			if (sev.type == Event_SemaporePost) {
+				if (_mainSemaphore.popPost(ev) == 0) {
+					taskState = tp.run(ev);
+				}
+			} else if (sev.type == SDL_QUIT) {
+				ev.m_type = QuitEvent;
 			} else if (sev.type == SDL_KEYUP) {
-				ev.type = KeyUpEvent;
+				ev.m_type = KeyUpEvent;
+				ev.m_body.key = toWombatKey(sev);
 			} else if (sev.type == SDL_KEYDOWN) {
-				ev.type = KeyDownEvent;
+				ev.m_type = KeyDownEvent;
+				ev.m_body.key = toWombatKey(sev);
 			}
-			ev.key = toEventType(sev);
 			for (auto f : eventHandlers) {
 				f(ev);
 			}

@@ -77,10 +77,10 @@ Semaphore::~Semaphore() {
 	SDL_DestroySemaphore((SDL_sem*) m_semaphore);
 }
 
-Semaphore::Post Semaphore::wait() {
-	Semaphore::Post post;
+Event Semaphore::wait() {
+	Event post;
 
-	while (m_posts.empty()) {
+	while (1) {
 		SDL_SemWait((SDL_sem*) m_semaphore);
 
 		if (popPost(post) == 0) {
@@ -90,12 +90,12 @@ Semaphore::Post Semaphore::wait() {
 	return post;
 }
 
-Semaphore::Post Semaphore::wait(uint64 timeout) {
-	Semaphore::Post post;
+Event Semaphore::wait(uint64 timeout) {
+	Event post;
 	const auto origTimeout = timeout;
 	const auto startTime = core::time();
 
-	while (m_posts.empty()) {
+	while (1) {
 		auto wakeup = SDL_SemWaitTimeout((SDL_sem*) m_semaphore, timeout);
 
 		if (wakeup == SDL_MUTEX_TIMEDOUT) {
@@ -107,7 +107,8 @@ Semaphore::Post Semaphore::wait(uint64 timeout) {
 			auto time = core::time();
 			// recheck timeout based on current time
 			if (time > startTime + origTimeout) {
-				return Timeout;
+				post = Timeout;
+				break;
 			} else {
 				// adjust timeout
 				timeout = origTimeout - (time - startTime);
@@ -117,7 +118,7 @@ Semaphore::Post Semaphore::wait(uint64 timeout) {
 	return post;
 }
 
-void Semaphore::post(Semaphore::Post wakeup) {
+void Semaphore::post(Event wakeup) {
 	m_mutex.lock();
 	m_posts.push(wakeup);
 	SDL_SemPost((SDL_sem*) m_semaphore);

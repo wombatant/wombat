@@ -51,7 +51,12 @@ class Task {
 		 */
 		Task();
 
+		/**
+		 * Destructor
+		 */
 		virtual ~Task();
+
+		virtual void init() {};
 
 		virtual TaskState run(Event) = 0;
 
@@ -88,7 +93,7 @@ class FunctionTask: public Task {
 		TaskState run(Event);
 };
 
-class TaskProcessor {
+class TaskProcessor: public Task {
 	private:
 		std::vector<std::pair<Task*, uint64>> m_schedule;
 		bool m_running;
@@ -101,6 +106,8 @@ class TaskProcessor {
 		 * Constructor
 		 */
 		TaskProcessor();
+
+		TaskState run(Event);
 
 		/**
 		 * Adds the given Task to this TaskProcessor.
