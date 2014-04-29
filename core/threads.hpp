@@ -20,10 +20,6 @@
 #include <map>
 #include <queue>
 
-#ifdef WITH_SDL
-#include <SDL.h>
-#endif
-
 #include "event.hpp"
 #include "misc.hpp"
 #include "types.hpp"
@@ -114,9 +110,7 @@ class FunctionTask: public Task {
 
 class Mutex {
 	public:
-#ifdef WITH_SDL
-		SDL_mutex *m_mutex;
-#endif
+		void *m_mutex;
 
 		/**
 		 * Constructor
@@ -181,9 +175,7 @@ class Semaphore {
 
 	private:
 		std::queue<Post> m_posts;
-#ifdef WITH_SDL
-		SDL_sem *m_semaphore;
-#endif
+		void *m_semaphore;
 		Mutex m_mutex;
 
 	public:
@@ -253,7 +245,7 @@ class Channel {
 		 * @param sem the Semaphore for this Channel to listen on
 		 */
 		Channel(Semaphore *sem = new Semaphore()) {
-			m_sem = new Semaphore();
+			m_sem = sem;
 		}
 
 		/**
@@ -359,11 +351,11 @@ class Channel {
 
 class TaskProcessor {
 	private:
+		std::vector<std::pair<Task*, uint64>> m_schedule;
 		bool m_running;
 		Mutex m_mutex;
 		Semaphore m_sem;
 		Channel<bool> m_done;
-		std::vector<std::pair<Task*, uint64>> m_schedule;
 
 	public:
 		/**

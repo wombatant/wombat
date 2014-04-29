@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 #ifdef WITH_SDL
+
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+
 #include "core.hpp"
-#include "sdlglobs.hpp"
+#include "_sdlglobs.hpp"
 #include "core/modelio.hpp"
 
 namespace wombat {
@@ -50,18 +55,18 @@ Image::Image(models::Image img) {
 }
 
 Image::~Image() {
-	SDL_DestroyTexture(m_img);
+	SDL_DestroyTexture((SDL_Texture*) m_img);
 }
 
 int Image::width() {
 	int out;
-	SDL_QueryTexture(m_img, 0, 0, &out, 0);
+	SDL_QueryTexture((SDL_Texture*) m_img, 0, 0, &out, 0);
 	return out;
 }
 
 int Image::height() {
 	int out;
-	SDL_QueryTexture(m_img, 0, 0, 0, &out);
+	SDL_QueryTexture((SDL_Texture*) m_img, 0, 0, 0, &out);
 	return out;
 }
 
@@ -74,7 +79,7 @@ bool Image::loaded() {
 
 void Graphics::draw(Image *img, int x, int y, int w, int h) {
 	if (img->loaded()) {
-		SDL_SetTextureAlphaMod(img->m_img, 255);
+		SDL_SetTextureAlphaMod((SDL_Texture*) img->m_img, 255);
 		SDL_Rect dest, src;
 		dest.x = x;
 		dest.y = y;
@@ -86,7 +91,7 @@ void Graphics::draw(Image *img, int x, int y, int w, int h) {
 		src.w = img->m_bounds.Width;
 		src.h = img->m_bounds.Height;
 
-		SDL_RenderCopy(renderer, img->m_img, &src, &dest);
+		SDL_RenderCopy(renderer, (SDL_Texture*) img->m_img, &src, &dest);
 	}
 }
 
@@ -103,7 +108,7 @@ void Graphics::draw(Image *img, int x, int y) {
 		else
 			h = img->defaultHeight();
 
-		SDL_SetTextureAlphaMod(img->m_img, 255);
+		SDL_SetTextureAlphaMod((SDL_Texture*) img->m_img, 255);
 		SDL_Rect dest, src;
 		dest.x = x;
 		dest.y = y;
@@ -115,7 +120,7 @@ void Graphics::draw(Image *img, int x, int y) {
 		src.w = img->m_bounds.Width;
 		src.h = img->m_bounds.Height;
 
-		SDL_RenderCopy(renderer, img->m_img, &src, &dest);
+		SDL_RenderCopy(renderer, (SDL_Texture*) img->m_img, &src, &dest);
 	}
 }
 

@@ -21,12 +21,15 @@
 using namespace models;
 using namespace wombat;
 
-core::TaskProcessor *tp;
+core::TaskProcessor *tp = 0;
 
 void quit() {
-	tp->stop();
-	tp->done();
-	delete tp;
+	if (tp) {
+		tp->stop();
+		tp->done();
+		delete tp;
+		tp = 0;
+	}
 	core::quit();
 }
 
@@ -47,7 +50,9 @@ int main(int argc, const char **args) {
 
 	tp = new core::TaskProcessor();
 	tp->addTask([](core::Event e) {
-		core::draw();
+		if (e.type == core::Timeout) {
+			core::draw();
+		}
 		return core::running() ? 16 : core::TaskState::Done;
 	});
 	tp->start();

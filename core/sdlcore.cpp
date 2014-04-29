@@ -18,7 +18,7 @@
 
 #include <SDL.h>
 
-#include "sdlglobs.hpp"
+#include "_sdlglobs.hpp"
 #include "core.hpp"
 
 namespace wombat {

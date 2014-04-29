@@ -55,16 +55,16 @@ Mutex::Mutex() {
 
 Mutex::~Mutex() {
 	if (m_mutex) {
-		SDL_DestroyMutex(m_mutex);
+		SDL_DestroyMutex((SDL_mutex*) m_mutex);
 	}
 }
 
 int Mutex::lock() {
-	return SDL_LockMutex(m_mutex);
+	return SDL_LockMutex((SDL_mutex*) m_mutex);
 }
 
 int Mutex::unlock() {
-	return SDL_UnlockMutex(m_mutex);
+	return SDL_UnlockMutex((SDL_mutex*) m_mutex);
 }
 
 // Semaphore
@@ -74,14 +74,14 @@ Semaphore::Semaphore() {
 }
 
 Semaphore::~Semaphore() {
-	SDL_DestroySemaphore(m_semaphore);
+	SDL_DestroySemaphore((SDL_sem*) m_semaphore);
 }
 
 Semaphore::Post Semaphore::wait() {
 	Semaphore::Post post;
 
 	while (m_posts.empty()) {
-		SDL_SemWait(m_semaphore);
+		SDL_SemWait((SDL_sem*) m_semaphore);
 
 		if (popPost(post) == 0) {
 			break;
@@ -96,7 +96,7 @@ Semaphore::Post Semaphore::wait(uint64 timeout) {
 	const auto startTime = core::time();
 
 	while (m_posts.empty()) {
-		auto wakeup = SDL_SemWaitTimeout(m_semaphore, timeout);
+		auto wakeup = SDL_SemWaitTimeout((SDL_sem*) m_semaphore, timeout);
 
 		if (wakeup == SDL_MUTEX_TIMEDOUT) {
 			return Timeout;
@@ -120,7 +120,7 @@ Semaphore::Post Semaphore::wait(uint64 timeout) {
 void Semaphore::post(Semaphore::Post wakeup) {
 	m_posts.push(wakeup);
 	m_mutex.lock();
-	SDL_SemPost(m_semaphore);
+	SDL_SemPost((SDL_sem*) m_semaphore);
 	m_mutex.unlock();
 }
 
