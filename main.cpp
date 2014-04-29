@@ -34,7 +34,7 @@ void quit() {
 }
 
 int main(int argc, const char **args) {
-	if (core::init(false, 1024, 768) != 0) {
+	if (core::init(false, 800, 600) != 0) {
 		return 1;
 	}
 
@@ -51,7 +51,6 @@ int main(int argc, const char **args) {
 	tp = new core::TaskProcessor();
 	tp->addTask([](core::Event e) {
 		if (e.type() == core::Timeout) {
-			printf("Trigger Draw Event\n");
 			core::draw();
 		}
 		return core::running() ? 16 : core::TaskState::Done;
@@ -59,7 +58,6 @@ int main(int argc, const char **args) {
 	tp->start();
 
 	core::addEventHandler([](const core::Event &e) {
-		//printf("Got Event\n");
 		switch (e.type()) {
 		case core::QuitEvent:
 			quit();
