@@ -20,25 +20,11 @@
 namespace wombat {
 namespace core {
 
-// Semaphore
-
-Semaphore::Post::Post(EventType reason) {
-	m_reason = reason;
-}
-
-Task *Semaphore::Post::task() {
-	return m_task;
-}
-
-EventType Semaphore::Post::reason() {
-	return m_reason;
-}
-
 bool Semaphore::hasPosts() {
 	return !m_posts.empty();
 }
 
-int Semaphore::popPost(Semaphore::Post &post) {
+int Semaphore::popPost(Event &post) {
 	m_mutex.lock();
 	if (hasPosts()) {
 		post = m_posts.front();

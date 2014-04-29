@@ -52,6 +52,45 @@ TaskProcessor::TaskProcessor() {
 	m_running = false;
 }
 
+TaskState TaskProcessor::run(Event post) {
+	switch (post.type()) {
+	case Timeout:
+		// Timeout means something wants to run
+		{
+			while (1) {
+				auto nt = popActiveTask();
+				if (nt) {
+					runTask(nt, Timeout);
+				} else {
+					break;
+				}
+			}
+		}
+		break;
+	case ChannelMessage:
+		runTask(post.task(), ChannelMessage);
+		break;
+	case SemaphorePost:
+		// SemaphorePost is already designated for use only as a
+		//  sleep refresh in this switch
+		break;
+	default:
+		break;
+	}
+
+	std::pair<Task*, uint64> nt;
+	if (nextTask(nt) == 0) {
+		auto time = core::time();
+		if (time < nt.second) {
+			return nt.second - time;
+		} else {
+			return 0;
+		}
+	} else {
+		return TaskState::Waiting;
+	}
+}
+
 void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState state) {
 	addTask(new FunctionTask(task), state);
 }
@@ -67,56 +106,15 @@ void TaskProcessor::start() {
 	if (!m_running) {
 		m_running = true;
 		startThread([this]() {
-
-			uint64 sleepTime = 0;
-
+			TaskState taskState;
 			while (m_running) {
-				Semaphore::Post post;
+				Event post;
 				if (m_schedule.empty()) {
 					post = m_sem.wait();
 				} else {
-					post = m_sem.wait(sleepTime);
+					post = m_sem.wait(taskState.sleepDuration);
 				}
-
-				while (1) {
-					switch (post.reason()) {
-					case Timeout:
-						// Timeout means something wants to run
-						{
-							while (1) {
-								auto nt = popActiveTask();
-								if (nt) {
-									runTask(nt, Timeout);
-								} else {
-									break;
-								}
-							}
-						}
-						break;
-					case ChannelMessage:
-						runTask(post.task(), ChannelMessage);
-						break;
-					case SemaphorePost:
-						// SemaphorePost is already designated for use only as a
-						//  sleep refresh in this switch
-					default:
-						break;
-					}
-
-					if (m_sem.popPost(post) != 0) {
-						break;
-					}
-				}
-
-				std::pair<Task*, uint64> nt;
-				if (nextTask(nt) == 0) {
-					auto time = core::time();
-					if (time < nt.second) {
-						sleepTime = nt.second - time;
-					} else {
-						sleepTime = 0;
-					}
-				}
+				taskState = run(post);
 			}
 			m_done.write(true);
 		});

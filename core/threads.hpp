@@ -62,42 +62,44 @@ class Mutex {
 		Mutex &operator=(const Mutex&);
 }; 
 
-class Semaphore {
+class BaseSemaphore {
 	public:
-		class Post {
-			friend Semaphore;
-			friend TaskProcessor;
+		/**
+		 * Waits until there is a post to process.
+		 * @return a Event with the reason for the wake up
+		 */
+		virtual Event wait() = 0;
 
-			protected:
-				/**
-				 * Used to specify the Task that received a message.
-				 */
-				Task *m_task;
-				EventType m_reason;
+		/**
+		 * Waits until there is a post to process or the given timeout has expired.
+		 * @param timeout the desired timeout period in milliseconds
+		 * @return a Event with the reason for the wake up
+		 */
+		virtual Event wait(uint64 timeout) = 0;
 
-			public:
-				/**
-				 * Constructor
-				 * @param reason optional reason parameter, defaults to SemaphorePost
-				 */
-				Post(EventType reason = SemaphorePost);
+		/**
+		 * Posts the the Semaphore to wake up.
+		 * @param wakeup optional parameter used to specify the reason for the wake up
+		 */
+		virtual void post(Event wakeup = Event()) = 0;
 
-				/**
-				 *	Gets the reason for the wake up.
-				 * @return the reason for the post
-				 */
-				EventType reason();
+		/**
+		 * Gets the oldest post available.
+		 * @param post Event that the popped Event will be read into
+		 * @return 0 if success, 1 if there are no posts
+		 */
+		virtual int popPost(Event &post) = 0;
 
-			protected:
-				/**
-				 * Gets the Task that the wake up is for.
-				 * @return the Task that the wake up is for
-				 */
-				Task *task();
-		};
+		/**
+		 * Indicates whether or not there are any pending posts.
+		 * @return indicator of whether or not there are any pending posts
+		 */
+		virtual bool hasPosts() = 0;
+};
 
+class Semaphore: public BaseSemaphore {
 	private:
-		std::queue<Post> m_posts;
+		std::queue<Event> m_posts;
 		void *m_semaphore;
 		Mutex m_mutex;
 
@@ -112,36 +114,14 @@ class Semaphore {
 		 */
 		~Semaphore();
 
-		/**
-		 * Waits until there is a post to process.
-		 * @return a Post with the reason for the wake up
-		 */
-		Post wait();
+		Event wait();
 
-		/**
-		 * Waits until there is a post to process or the given timeout has expired.
-		 * @param timeout the desired timeout period in milliseconds
-		 * @return a Post with the reason for the wake up
-		 */
-		Post wait(uint64 timeout);
+		Event wait(uint64 timeout);
 
-		/**
-		 * Posts the the Semaphore to wake up.
-		 * @param wakeup optional parameter used to specify the reason for the wake up
-		 */
-		void post(Post wakeup = Post());
+		void post(Event wakeup = SemaphorePost);
 
-		/**
-		 * Gets the oldest post available.
-		 * @param post Post that the popped Post will be read into
-		 * @return 0 if success, 1 if there are no posts
-		 */
-		int popPost(Semaphore::Post &post);
+		int popPost(Event &post);
 
-		/**
-		 * Indicates whether or not there are any pending posts.
-		 * @return indicator of whether or not there are any pending posts
-		 */
 		bool hasPosts();
 
 	// disallow copying
@@ -203,7 +183,7 @@ class Channel {
 		 * @return reason for the wake up
 		 */
 		EventType read() {
-			auto reason = m_sem->wait().reason();
+			auto reason = m_sem->wait().type();
 			if (reason == ChannelMessage) {
 				m_mutex.lock();
 				m_msgs.pop();
@@ -220,7 +200,7 @@ class Channel {
 		 */
 		EventType read(T &msg) {
 			while (1) {
-				auto reason = m_sem->wait().reason();
+				auto reason = m_sem->wait().type();
 				if (reason == ChannelMessage) {
 					if (getMessage(msg)) {
 						return reason;
@@ -242,7 +222,7 @@ class Channel {
 			auto startTime = core::time();
 			auto currentTimeout = timeout;
 			while (1) {
-				auto reason = m_sem->wait(currentTimeout).reason();
+				auto reason = m_sem->wait(currentTimeout).type();
 				if (reason == ChannelMessage) {
 					if (getMessage(msg)) {
 						return reason;
