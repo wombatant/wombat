@@ -26,7 +26,13 @@ void quit() {
 }
 
 int main(int argc, const char **args) {
-	if (core::init(false, 800, 600) != 0) {
+	models::Settings settings;
+	if (settings.readJsonFile("settings.json") != 0) {
+		settings.Width = 800;
+		settings.Height = 600;
+	}
+
+	if (core::init(false, settings.Width, settings.Height) != 0) {
 		return 1;
 	}
 
