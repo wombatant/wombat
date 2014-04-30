@@ -20,6 +20,7 @@
 
 using namespace models;
 using namespace wombat;
+using core::TaskState;
 
 const auto SettingsPath = "settings.json";
 
@@ -36,7 +37,7 @@ int main(int argc, const char **args) {
 		settings.writeJsonFile(SettingsPath, models::cyborgbear::Readable);
 	}
 
-	if (core::init(settings.Fullscreen, settings.Width, settings.Height) != 0) {
+	if (core::init(settings) != 0) {
 		return 1;
 	}
 
@@ -50,12 +51,12 @@ int main(int argc, const char **args) {
 		tests::test(vargs);
 	}
 
-	core::addTask([](core::Event e) -> core::TaskState {
+	core::addTask([](core::Event e) -> TaskState {
 		if (e.type() == core::Timeout) {
 			core::draw();
 			return 16;
 		}
-		return core::TaskState::Continue;
+		return TaskState::Continue;
 	});
 
 	core::addEventHandler([](core::Event e) {

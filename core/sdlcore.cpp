@@ -191,7 +191,11 @@ void main() {
 	}
 }
 
-int init(bool fullscreen, int w, int h) {
+int init(models::Settings settings) {
+	auto fullscreen = settings.Fullscreen;
+	auto w = settings.Width;
+	auto h = settings.Height;
+
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) == -1) {
 		return -1;
 	}

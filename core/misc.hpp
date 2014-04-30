@@ -29,7 +29,7 @@ namespace core {
  * Initializes graphics, user input, and audio
  * @return 0 if successful
  */
-int init(bool fullscreen = true, int w = 800, int h = 600);
+int init(models::Settings settings);
 
 void draw();
 
