@@ -189,6 +189,9 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 	switch (state.state) {
 	case TaskState::Running:
 		{
+			// remove old wake up time
+			deschedule(task);
+
 			const auto wakeup = time() + state.sleepDuration;
 			const auto val = std::pair<Task*, uint64>(task, wakeup);
 
@@ -205,18 +208,19 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 			}
 		}
 		break;
+	case TaskState::Waiting:
+		// make sure the Task is not in the schedule
+		deschedule(task);
+		break;
 	case TaskState::Done:
 		if (task->autoDelete()) {
-			// remove from schedule
-			for (auto i = 0; i < m_schedule.size(); i++) {
-				if (m_schedule[i].first == task) {
-					m_schedule.erase(m_schedule.begin() + i);
-				}
-			}
-
+			deschedule(task);
 			// actually delete the Task
 			delete task;
 		}
+		break;
+	case TaskState::Continue:
+		// continue exits to do nothing
 		break;
 	default:
 		// do nothing
@@ -228,6 +232,15 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 void TaskProcessor::runTask(Task *task, Event event) {
 	auto state = task->run(event);
 	processTaskState(task, state);
+}
+
+void TaskProcessor::deschedule(Task *task) {
+	// remove from schedule
+	for (auto i = 0; i < m_schedule.size(); i++) {
+		if (m_schedule[i].first == task) {
+			m_schedule.erase(m_schedule.begin() + i);
+		}
+	}
 }
 
 }

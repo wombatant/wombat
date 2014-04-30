@@ -28,6 +28,10 @@ class TaskProcessor;
 class TaskState {
 	public:
 		enum State {
+			/**
+			 * This option tell the TaskProcessor not to change any thing about the Task's state.
+			 */
+			Continue,
 			Running,
 			Waiting,
 			Done
@@ -42,7 +46,7 @@ class TaskState {
 		 * Constructor
 		 * @param state state of task, defaults to Waiting
 		 */
-		TaskState(State state = Waiting);
+		TaskState(State state = Continue);
 
 		/**
 		 * Constructor
@@ -188,6 +192,12 @@ class TaskProcessor: public Task {
 		 * @param event the Event that this Task is waking up to process
 		 */
 		void runTask(Task *task, Event event);
+
+		/**
+		 * Removes the given Task from the schedule;
+		 * @param task the Task to deschedule
+		 */
+		void deschedule(Task *task);
 };
 
 /**

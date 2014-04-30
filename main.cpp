@@ -21,17 +21,19 @@
 using namespace models;
 using namespace wombat;
 
+const auto SettingsPath = "settings.json";
+
 void quit() {
 	core::quit();
 }
 
 int main(int argc, const char **args) {
 	models::Settings settings;
-	if (settings.readJsonFile("settings.json") != 0) {
+	if (settings.readJsonFile(SettingsPath) != 0) {
 		settings.Fullscreen = false;
 		settings.Width = 800;
 		settings.Height = 600;
-		settings.writeJsonFile("settings.json", models::cyborgbear::Readable);
+		settings.writeJsonFile(SettingsPath, models::cyborgbear::Readable);
 	}
 
 	if (core::init(settings.Fullscreen, settings.Width, settings.Height) != 0) {
@@ -48,14 +50,15 @@ int main(int argc, const char **args) {
 		tests::test(vargs);
 	}
 
-	core::addTask([](core::Event e) {
+	core::addTask([](core::Event e) -> core::TaskState {
 		if (e.type() == core::Timeout) {
 			core::draw();
+			return 16;
 		}
-		return core::running() ? 16 : core::TaskState::Done;
+		return core::TaskState::Continue;
 	});
 
-	core::addEventHandler([](const core::Event &e) {
+	core::addEventHandler([](core::Event e) {
 		switch (e.type()) {
 		case core::QuitEvent:
 			quit();
@@ -79,6 +82,8 @@ int main(int argc, const char **args) {
 
 	if (test)
 		delete test;
+
+	settings.writeJsonFile(SettingsPath, models::cyborgbear::Readable);
 
 	return 0;
 }
