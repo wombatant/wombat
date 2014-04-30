@@ -192,7 +192,9 @@ int init(bool fullscreen, int w, int h) {
 
 	auto flags = SDL_WINDOW_OPENGL;
 	if (fullscreen) {
-		flags = SDL_WINDOW_FULLSCREEN;
+		flags = (SDL_WindowFlags) (flags | SDL_WINDOW_FULLSCREEN_DESKTOP);
+	} else {
+		flags = (SDL_WindowFlags) (flags | SDL_WINDOW_RESIZABLE);
 	}
 	display = SDL_CreateWindow("Wombat", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, flags);
 	if (!display)

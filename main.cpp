@@ -28,11 +28,13 @@ void quit() {
 int main(int argc, const char **args) {
 	models::Settings settings;
 	if (settings.readJsonFile("settings.json") != 0) {
+		settings.Fullscreen = false;
 		settings.Width = 800;
 		settings.Height = 600;
+		settings.writeJsonFile("settings.json");
 	}
 
-	if (core::init(false, settings.Width, settings.Height) != 0) {
+	if (core::init(settings.Fullscreen, settings.Width, settings.Height) != 0) {
 		return 1;
 	}
 
