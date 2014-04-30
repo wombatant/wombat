@@ -31,7 +31,7 @@ int main(int argc, const char **args) {
 		settings.Fullscreen = false;
 		settings.Width = 800;
 		settings.Height = 600;
-		settings.writeJsonFile("settings.json");
+		settings.writeJsonFile("settings.json", models::cyborgbear::Readable);
 	}
 
 	if (core::init(settings.Fullscreen, settings.Width, settings.Height) != 0) {
