@@ -85,13 +85,11 @@ TaskState TaskProcessor::run(Event post) {
 	case Timeout:
 		// Timeout means something wants to run
 		{
-			while (1) {
-				auto nt = popActiveTask();
-				if (nt) {
-					runTask(nt, Timeout);
-				} else {
-					break;
-				}
+			auto nt = popActiveTask();
+			if (nt) {
+				runTask(nt, Timeout);
+			} else {
+				break;
 			}
 		}
 		break;
