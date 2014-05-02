@@ -14,6 +14,7 @@ add_library(
 		sdlevent.cpp
 		sdlgfx.cpp
 		sdlthreads.cpp
+		_sdltls.cpp
 )
 
 install(TARGETS WombatCore DESTINATION lib)

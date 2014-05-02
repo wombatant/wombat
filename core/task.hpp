@@ -114,7 +114,30 @@ class FunctionTask: public Task {
 
 class TaskProcessor: public Task {
 	private:
-		std::vector<std::pair<Task*, uint64>> m_schedule;
+		struct ScheduleItem {
+			Task *task;
+			uint64 wakeupTime;
+
+			/**
+			 * Constructor
+			 */
+			ScheduleItem() {
+			}
+
+			/**
+			 * Constructor
+			 * @param task the Task scheduled
+			 * @param task the time the Task is scheduled to wake up
+			 */
+			ScheduleItem(Task *task, uint8 wakeupTime) {
+				this->task = task;
+				this->wakeupTime = wakeupTime;
+			}
+		};
+
+		// this will loop back around in short order, that's ok
+		//  this will be incremented on every call of run
+		std::vector<ScheduleItem> m_schedule;
 		bool m_running;
 		bool m_semInternal;
 		Mutex m_mutex;
@@ -177,7 +200,7 @@ class TaskProcessor: public Task {
 		 * @param t the next task will be read into this value
 		 * @return 0 if success, 1 if there is no next task
 		 */
-		int nextTask(std::pair<Task*, uint64> &t);
+		int nextTask(ScheduleItem &t);
 
 		/**
 		 * Sets the state of the task and schedules it appropriately.

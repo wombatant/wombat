@@ -167,6 +167,10 @@ void main() {
 			if (_mainSemaphore.popPost(ev) == 0) {
 				taskState = _taskProcessor.run(ev);
 			}
+		} else if (t == SDL_WINDOWEVENT) {
+			if (sev.window.event == SDL_WINDOWEVENT_RESIZED) {
+				_draw();
+			}
 		} else if (t == SDL_QUIT) {
 			ev.m_type = QuitEvent;
 

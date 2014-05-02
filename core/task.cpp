@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "_tls.hpp"
 #include "task.hpp"
 
 namespace wombat {
@@ -81,15 +82,24 @@ TaskProcessor::~TaskProcessor() {
 }
 
 TaskState TaskProcessor::run(Event post) {
+	// preserve previous task processor and restore, this allows for
+	//  TaskProcessor nesting
+	const auto prevTp = activeTaskProcessor();
+
+	setActiveTaskProcessor(this);
+
 	switch (post.type()) {
 	case Timeout:
 		// Timeout means something wants to run
 		{
-			auto nt = popActiveTask();
-			if (nt) {
-				runTask(nt, Timeout);
-			} else {
-				break;
+			// put a limit on the number of Tasks processed in a single iteration
+			for (int i = 0; i < 100; i++) {
+				auto nt = popActiveTask();
+				if (nt) {
+					runTask(nt, Timeout);
+				} else {
+					break;
+				}
 			}
 		}
 		break;
@@ -104,17 +114,19 @@ TaskState TaskProcessor::run(Event post) {
 		break;
 	}
 
-	std::pair<Task*, uint64> nt;
+	TaskProcessor::ScheduleItem nt;
 	if (nextTask(nt) == 0) {
 		auto time = core::time();
-		if (time < nt.second) {
-			return nt.second - time;
+		if (time < nt.wakeupTime) {
+			return nt.wakeupTime - time;
 		} else {
 			return 0;
 		}
 	} else {
 		return TaskState::Waiting;
 	}
+
+	setActiveTaskProcessor(prevTp);
 }
 
 void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState state) {
@@ -157,20 +169,20 @@ void TaskProcessor::done() {
 }
 
 Task *TaskProcessor::popActiveTask() {
-	std::pair<Task*, uint64> nt;
+	TaskProcessor::ScheduleItem nt;
 	m_mutex.lock();
 	if (nextTask(nt) == 0) {
 		auto time = core::time();
-		if (time >= nt.second) {
+		if (time >= nt.wakeupTime) {
 			m_schedule.pop_back();
 			m_mutex.unlock();
-			return nt.first;
+			return nt.task;
 		}
 	}
 	return 0;
 }
 
-int TaskProcessor::nextTask(std::pair<Task*, uint64> &t) {
+int TaskProcessor::nextTask(TaskProcessor::ScheduleItem &t) {
 	int retval = 0;
 	m_mutex.lock();
 	if (m_schedule.empty()) {
@@ -191,11 +203,11 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 			deschedule(task);
 
 			const auto wakeup = time() + state.sleepDuration;
-			const auto val = std::pair<Task*, uint64>(task, wakeup);
+			const auto val = TaskProcessor::ScheduleItem(task, wakeup);
 
 			bool inserted = false;
 			for (auto i = m_schedule.begin(); i < m_schedule.end(); i++) {
-				if (wakeup > i->second) {
+				if (wakeup > i->wakeupTime) {
 					m_schedule.insert(i, val);
 					inserted = true;
 				}
@@ -235,7 +247,7 @@ void TaskProcessor::runTask(Task *task, Event event) {
 void TaskProcessor::deschedule(Task *task) {
 	// remove from schedule
 	for (auto i = 0; i < m_schedule.size(); i++) {
-		if (m_schedule[i].first == task) {
+		if (m_schedule[i].task == task) {
 			m_schedule.erase(m_schedule.begin() + i);
 		}
 	}

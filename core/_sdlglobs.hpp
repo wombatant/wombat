@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_CORE_ALLEGRO_GLOBS_HPP
-#define WOMBAT_CORE_ALLEGRO_GLOBS_HPP
+#ifndef WOMBAT_CORE_SDLGLOBS_HPP
+#define WOMBAT_CORE_SDLGLOBS_HPP
 
 #include <SDL.h>
 

@@ -38,7 +38,8 @@ void startThread(std::function<void()> f) {
 
 
 	auto fp = new std::function<void()>(f);
-	SDL_CreateThread(_sdlthread, thrdNm, (void*) fp);
+	auto thread = SDL_CreateThread(_sdlthread, thrdNm, (void*) fp);
+	SDL_DetachThread(thread);
 
 	threadCount++;
 }
