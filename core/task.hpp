@@ -16,6 +16,7 @@
 #ifndef WOMBAT_CORE_TASK_HPP
 #define WOMBAT_CORE_TASK_HPP
 
+#include"_submgr.hpp"
 #include "event.hpp"
 #include "threads.hpp"
 #include "types.hpp"
@@ -58,9 +59,6 @@ class TaskState {
 
 class Task {
 	friend TaskProcessor;
-	protected:
-		TaskProcessor *m_taskProcessor;
-
 	private:
 		bool m_autoDelete;
 
@@ -80,6 +78,14 @@ class Task {
 		virtual TaskState run(Event) = 0;
 
 	protected:
+		/**
+		 * Subscribes to events of the given type. This must be run from within
+		 * the Task it is called for.
+		 * @param et the EventType to subscribe to
+		 * @return 0 if success
+		 */
+		int subscribe(EventType);
+		
 		/**
 		 * Sets whether or not the Task should be auto-deleted when it completes.
 		 * @param autoDelete whether or not the Task should be auto-deleted when it completes
@@ -113,6 +119,7 @@ class FunctionTask: public Task {
 };
 
 class TaskProcessor: public Task {
+	friend Task;
 	private:
 		struct ScheduleItem {
 			Task *task;
@@ -138,6 +145,7 @@ class TaskProcessor: public Task {
 		// this will loop back around in short order, that's ok
 		//  this will be incremented on every call of run
 		std::vector<ScheduleItem> m_schedule;
+		SubscriptionManager m_submgr;
 		bool m_running;
 		bool m_semInternal;
 		Mutex m_mutex;
@@ -186,6 +194,20 @@ class TaskProcessor: public Task {
 		 * Blocks until this TaskProcessor has stopped.
 		 */
 		void done();
+
+		/**
+		 * Posts the given Event to this TaskProcessor's semaphore.
+		 * @param event the Event to post to the semaphore
+		 */
+		void post(Event event);
+
+	protected:
+		/**
+		 * Adds the given Task to the subscription list of the given EventType.
+		 * @param et the EventType that the Task is subscribing to
+		 * @param task the Task to add to the subscription list
+		 */
+		void addSubscription(EventType et, Task *task);
 
 	private:
 		/**

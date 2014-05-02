@@ -17,20 +17,28 @@
 #define WOMBATCORE_EVENT_HPP
 
 #include <functional>
+#include "types.hpp"
 
 namespace wombat {
 namespace core {
 
 enum EventType {
-	UnknownEvent,
-	SemaphorePost,
-	Timeout,
+	UnknownEvent = 1 << 48,
 	ChannelMessage,
-	QuitEvent,
-	KeyUpEvent,
-	KeyDownEvent,
-	ResolutionChange
+	SemaphorePost,
+
+	// Optional EventTypes
+	OptionalEventTypeStart = 0,
+	Timeout                = 1 << 0,
+	QuitEvent              = 1 << 1,
+	KeyUpEvent             = 1 << 2,
+	KeyDownEvent           = 1 << 3,
+	ResolutionChange       = 1 << 4,
+	OptionalEventTypeStop  = 5 // be sure to update this value when adding to this enum
 };
+
+// This should be updated inline with the range of the optional EventTypes
+typedef uint8 EventTypeMask;
 
 enum Key {
 	Key_Unknown,

@@ -24,6 +24,8 @@
 namespace wombat {
 namespace core {
 
+extern SubscriptionManager _submgr;
+
 class EventQueueSemaphore: public BaseSemaphore {
 	private:
 		std::queue<Event> m_posts;
@@ -173,6 +175,7 @@ void main() {
 			}
 		} else if (t == SDL_QUIT) {
 			ev.m_type = QuitEvent;
+			_submgr.post(ev);
 
 			for (auto f : eventHandlers) {
 				f(ev);
@@ -180,6 +183,7 @@ void main() {
 		} else if (t == SDL_KEYUP) {
 			ev.m_type = KeyUpEvent;
 			ev.m_body.key = toWombatKey(sev);
+			_submgr.post(ev);
 
 			for (auto f : eventHandlers) {
 				f(ev);
@@ -187,6 +191,7 @@ void main() {
 		} else if (t == SDL_KEYDOWN) {
 			ev.m_type = KeyDownEvent;
 			ev.m_body.key = toWombatKey(sev);
+			_submgr.post(ev);
 
 			for (auto f : eventHandlers) {
 				f(ev);

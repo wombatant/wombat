@@ -19,6 +19,8 @@
 namespace wombat {
 namespace core {
 
+SubscriptionManager _submgr;
+
 // TaskState
 
 TaskState::TaskState(uint64 sleep) {
@@ -38,6 +40,17 @@ Task::Task() {
 }
 
 Task::~Task() {
+}
+
+int Task::subscribe(EventType et) {
+	int retval = 0;
+	auto tp = activeTaskProcessor();
+	if (tp) {
+		tp->addSubscription(et, this);
+	} else {
+		retval = 1;
+	}
+	return retval;
 }
 
 void Task::setAutoDelete(bool autoDelete) {
@@ -81,14 +94,19 @@ TaskProcessor::~TaskProcessor() {
 	}
 }
 
-TaskState TaskProcessor::run(Event post) {
+TaskState TaskProcessor::run(Event event) {
 	// preserve previous task processor and restore, this allows for
 	//  TaskProcessor nesting
 	const auto prevTp = activeTaskProcessor();
 
 	setActiveTaskProcessor(this);
 
-	switch (post.type()) {
+	if (event.type() > OptionalEventTypeStart &&
+		 event.type() < OptionalEventTypeStop) {
+		m_submgr.run(event);
+	}
+
+	switch (event.type()) {
 	case Timeout:
 		// Timeout means something wants to run
 		{
@@ -104,7 +122,7 @@ TaskState TaskProcessor::run(Event post) {
 		}
 		break;
 	case ChannelMessage:
-		runTask(post.task(), ChannelMessage);
+		runTask(event.task(), ChannelMessage);
 		break;
 	case SemaphorePost:
 		// SemaphorePost is already designated for use only as a
@@ -166,6 +184,18 @@ void TaskProcessor::stop() {
 
 void TaskProcessor::done() {
 	m_done.read();
+}
+
+void TaskProcessor::post(Event event) {
+	m_sem->post(event);
+}
+
+void TaskProcessor::addSubscription(EventType et, Task *task) {
+	if (m_submgr.subs(et) == 0) {
+		_submgr.addSubscription(et, this);
+	}
+
+	m_submgr.addSubscription(et, task);
 }
 
 Task *TaskProcessor::popActiveTask() {

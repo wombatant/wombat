@@ -15,6 +15,7 @@ add_library(
 		sdlgfx.cpp
 		sdlthreads.cpp
 		_sdltls.cpp
+		_submgr.cpp
 )
 
 install(TARGETS WombatCore DESTINATION lib)
@@ -27,6 +28,7 @@ install(
 		task.hpp
 		threads.hpp
 		types.hpp
+		_submgr.hpp
 	DESTINATION
 		include/wombat/core
 )
