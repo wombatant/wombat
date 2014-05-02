@@ -47,36 +47,8 @@ int main(int argc, const char **args) {
 		tests::test(vargs);
 	}
 
-	App *app = new App();
-	core::addTask(app);
-
-	core::addTask([](core::Event e) -> TaskState {
-		if (e.type() == core::Timeout) {
-			core::draw();
-			return 16;
-		}
-		return TaskState::Continue;
-	});
-
-	core::addEventHandler([](core::Event e) {
-		switch (e.type()) {
-		case core::QuitEvent:
-			core::quit();
-			break;
-		case core::KeyDownEvent:
-			switch (e.key()) {
-			case core::Key_Escape:
-			case core::Key_Q:
-				core::quit();
-				break;
-			default:
-				break;
-			}
-			break;
-		default:
-			break;
-		}
-	});
+	App app;
+	core::addTask(&app);
 
 	core::main();
 

@@ -69,7 +69,6 @@ std::vector<Graphics*> graphicsInstances;
 SDL_Window *display = 0;
 SDL_Renderer *renderer = 0;
 
-extern std::vector<EventHandler> eventHandlers;
 extern bool _running;
 
 

@@ -19,9 +19,6 @@
 namespace wombat {
 namespace core {
 
-std::vector<EventHandler> eventHandlers;
-
-
 // Event
 
 Event::Event(EventType type) {
@@ -31,13 +28,6 @@ Event::Event(EventType type) {
 Event::Event(EventType type, Task *task) {
 	this->m_type = type;
 	this->m_body.task = task;
-}
-
-
-// functions
-
-void addEventHandler(EventHandler handler) {
-	eventHandlers.push_back(handler);
 }
 
 }

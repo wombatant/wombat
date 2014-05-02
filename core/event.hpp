@@ -101,10 +101,6 @@ class Event {
 		}
 };
 
-typedef std::function<void(Event)> EventHandler;
-
-void addEventHandler(EventHandler func);
-
 }
 }
 

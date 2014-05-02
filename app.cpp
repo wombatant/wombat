@@ -12,9 +12,13 @@ void App::init() {
 
 TaskState App::run(core::Event e) {
 	TaskState retval = TaskState::Continue;
+
 	switch (e.type()) {
+	case core::ResolutionChange:
+		core::draw();
+		break;
 	case core::Timeout:
-		//core::draw();
+		core::draw();
 		retval = 16;
 		break;
 	case core::QuitEvent:
