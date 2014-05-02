@@ -58,6 +58,7 @@ class Event {
 			 */
 			Task *task;
 			Key key;
+			void *channel;
 		} m_body;
 
 	public:
@@ -70,9 +71,16 @@ class Event {
 		/**
 		 * Constructor
 		 * @param type the value for the type value of the Event
+		 * @param channel pointer to the Channel written to
+		 */
+		Event(EventType type, void *channel);
+
+		/**
+		 * Constructor
+		 * @param type the value for the type value of the Event
 		 * @param task the Task for the event to reference
 		 */
-		Event(EventType, Task *task);
+		Event(EventType type, Task *task);
 
 		/**
 		 * Gets the EventType describing this Event.
@@ -98,6 +106,14 @@ class Event {
 		 */
 		inline Task *task() const {
 			return m_body.task;
+		}
+
+		/**
+		 * Gets pointer to the Channel this Event is about.
+		 * @return pointer to the Channel this Event is about
+		 */
+		void *channel() {
+			return m_body.channel;
 		}
 };
 

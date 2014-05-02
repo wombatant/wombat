@@ -22,12 +22,21 @@ namespace core {
 // Event
 
 Event::Event(EventType type) {
-	this->m_type = type;
+	m_type = type;
+}
+
+Event::Event(EventType type, void *channel) {
+	m_type = type;
+	m_body.channel = channel;
 }
 
 Event::Event(EventType type, Task *task) {
-	this->m_type = type;
-	this->m_body.task = task;
+	m_type = type;
+	m_body.task = task;
+}
+
+void *Event::channel() {
+	return m_body.channel;
 }
 
 }

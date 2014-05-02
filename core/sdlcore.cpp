@@ -150,8 +150,8 @@ void main() {
 	TaskState taskState = TaskState::Waiting;
 	while (_running) {
 		if (taskState.state == TaskState::Running) {
+			// yes... SDL_WaitEventTimeout uses 0 indicate failure...
 			if (SDL_WaitEventTimeout(&sev, taskState.sleepDuration) == 0) {
-				// yes... SDL_WaitEventTimeout uses 0 indicate failure...
 				sev.type = Event_SemaphoreTimeout;
 			}
 		} else {

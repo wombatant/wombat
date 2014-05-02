@@ -248,7 +248,7 @@ class Channel {
 			m_mutex.lock();
 			m_msgs.push(msg);
 			m_mutex.unlock();
-			m_sem->post(ChannelMessage);
+			m_sem->post(Event(ChannelMessage, this));
 		}
 
 	// disallow copying
