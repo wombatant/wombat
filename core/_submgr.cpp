@@ -19,7 +19,7 @@
 namespace wombat {
 namespace core {
 
-SubscriptionManager::SubscriptionManager() {
+SubscriptionManager::SubscriptionManager(): m_subs(OptionalEventTypeRange) {
 }
 
 void SubscriptionManager::addSubscription(EventType et, Task *task) {

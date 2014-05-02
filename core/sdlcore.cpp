@@ -62,7 +62,7 @@ TaskProcessor _taskProcessor(&_mainSemaphore);
 
 const auto Event_DrawEvent = SDL_RegisterEvents(1);
 const auto Event_SemaporePost = SDL_RegisterEvents(1);
-const auto Event_SemaporeTimeout = SDL_RegisterEvents(1);
+const auto Event_SemaphoreTimeout = SDL_RegisterEvents(1);
 
 std::vector<Drawer*> drawers;
 std::vector<Graphics*> graphicsInstances;
@@ -95,10 +95,12 @@ Event EventQueueSemaphore::wait(uint64 timeout) {
 void EventQueueSemaphore::post(Event post) {
 	m_mutex.lock();
 	m_posts.push(post);
+
 	SDL_Event ev;
 	SDL_zero(ev);
 	ev.type = Event_SemaporePost;
 	SDL_PushEvent(&ev);
+
 	m_mutex.unlock();
 }
 
@@ -151,7 +153,7 @@ void main() {
 		if (taskState.state == TaskState::Running) {
 			if (SDL_WaitEventTimeout(&sev, taskState.sleepDuration) == 0) {
 				// yes... SDL_WaitEventTimeout uses 0 indicate failure...
-				sev.type = Event_SemaporeTimeout;
+				sev.type = Event_SemaphoreTimeout;
 			}
 		} else {
 			SDL_WaitEvent(&sev);
@@ -162,7 +164,7 @@ void main() {
 		_updateEventTime();
 		if (t == Event_DrawEvent) {
 			_draw();
-		} else if (sev.type == Event_SemaporeTimeout) {
+		} else if (sev.type == Event_SemaphoreTimeout) {
 			ev.m_type = Timeout;
 			taskState = _taskProcessor.run(ev);
 		} else if (sev.type == Event_SemaporePost) {
@@ -171,31 +173,20 @@ void main() {
 			}
 		} else if (t == SDL_WINDOWEVENT) {
 			if (sev.window.event == SDL_WINDOWEVENT_RESIZED) {
-				_draw();
+				ev.m_type = ResolutionChange;
+				_submgr.post(ev);
 			}
 		} else if (t == SDL_QUIT) {
 			ev.m_type = QuitEvent;
 			_submgr.post(ev);
-
-			for (auto f : eventHandlers) {
-				f(ev);
-			}
 		} else if (t == SDL_KEYUP) {
 			ev.m_type = KeyUpEvent;
 			ev.m_body.key = toWombatKey(sev);
 			_submgr.post(ev);
-
-			for (auto f : eventHandlers) {
-				f(ev);
-			}
 		} else if (t == SDL_KEYDOWN) {
 			ev.m_type = KeyDownEvent;
 			ev.m_body.key = toWombatKey(sev);
 			_submgr.post(ev);
-
-			for (auto f : eventHandlers) {
-				f(ev);
-			}
 		}
 	}
 }
@@ -205,7 +196,7 @@ int init(models::Settings settings) {
 	auto w = settings.Width;
 	auto h = settings.Height;
 
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) == -1) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) == -1) {
 		return -1;
 	}
 

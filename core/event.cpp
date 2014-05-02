@@ -28,6 +28,11 @@ Event::Event(EventType type) {
 	this->m_type = type;
 }
 
+Event::Event(EventType type, Task *task) {
+	this->m_type = type;
+	this->m_body.task = task;
+}
+
 
 // functions
 

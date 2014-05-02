@@ -101,8 +101,7 @@ TaskState TaskProcessor::run(Event event) {
 
 	setActiveTaskProcessor(this);
 
-	if (event.type() > OptionalEventTypeStart &&
-		 event.type() < OptionalEventTypeStop) {
+	if (event.type() < OptionalEventTypeRange) {
 		m_submgr.run(event);
 	}
 
@@ -123,6 +122,10 @@ TaskState TaskProcessor::run(Event event) {
 		break;
 	case ChannelMessage:
 		runTask(event.task(), ChannelMessage);
+		break;
+	case InitTask:
+		event.task()->init();
+		processTaskState(event.task(), TaskState::Running);
 		break;
 	case SemaphorePost:
 		// SemaphorePost is already designated for use only as a
@@ -152,11 +155,8 @@ void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState stat
 }
 
 void TaskProcessor::addTask(Task *task, TaskState state) {
-	task->init();
-	processTaskState(task, state);
-
 	// post to the semaphore to refresh the sleep time
-	m_sem->post();
+	m_sem->post(Event(InitTask, task));
 }
 
 void TaskProcessor::start() {
@@ -237,10 +237,12 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 			const auto val = TaskProcessor::ScheduleItem(task, wakeup);
 
 			bool inserted = false;
-			for (auto i = m_schedule.begin(); i < m_schedule.end(); i++) {
-				if (wakeup > i->wakeupTime) {
-					m_schedule.insert(i, val);
+			for (auto i = 0; i < m_schedule.size(); i++) {
+				auto ptr = m_schedule.begin() + i;
+				if (wakeup > ptr->wakeupTime) {
+					m_schedule.insert(ptr, val);
 					inserted = true;
+					break;
 				}
 			}
 

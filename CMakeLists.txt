@@ -38,5 +38,11 @@ set(LIBS WombatCore ${LIBS})
 add_subdirectory(world)
 set(LIBS WombatWorld ${LIBS})
 
-add_executable(wombat main.cpp tests.cpp)
+add_executable(
+	wombat
+		app.cpp
+		main.cpp
+		tests.cpp
+)
+
 target_link_libraries(wombat ${LIBS})

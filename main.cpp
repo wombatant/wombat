@@ -15,7 +15,7 @@
  */
 #include <string.h>
 #include "core/core.hpp"
-#include "models/enginemodels.hpp"
+#include "app.hpp"
 #include "tests.hpp"
 
 using namespace models;
@@ -23,10 +23,6 @@ using namespace wombat;
 using core::TaskState;
 
 const auto SettingsPath = "settings.json";
-
-void quit() {
-	core::quit();
-}
 
 int main(int argc, const char **args) {
 	models::Settings settings;
@@ -51,6 +47,9 @@ int main(int argc, const char **args) {
 		tests::test(vargs);
 	}
 
+	App *app = new App();
+	core::addTask(app);
+
 	core::addTask([](core::Event e) -> TaskState {
 		if (e.type() == core::Timeout) {
 			core::draw();
@@ -62,13 +61,13 @@ int main(int argc, const char **args) {
 	core::addEventHandler([](core::Event e) {
 		switch (e.type()) {
 		case core::QuitEvent:
-			quit();
+			core::quit();
 			break;
 		case core::KeyDownEvent:
 			switch (e.key()) {
 			case core::Key_Escape:
 			case core::Key_Q:
-				quit();
+				core::quit();
 				break;
 			default:
 				break;

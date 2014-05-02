@@ -26,7 +26,7 @@ class Task;
 
 class SubscriptionManager {
 	private:
-		std::vector<Task*> m_subs[OptionalEventTypeStop];
+		std::vector<std::vector<Task*>> m_subs;
 
 	public:
 		/**

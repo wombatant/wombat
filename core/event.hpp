@@ -23,22 +23,19 @@ namespace wombat {
 namespace core {
 
 enum EventType {
-	UnknownEvent = 1 << 48,
+	UnknownEvent = 1024,
+	Timeout,
 	ChannelMessage,
 	SemaphorePost,
+	InitTask,
 
 	// Optional EventTypes
-	OptionalEventTypeStart = 0,
-	Timeout                = 1 << 0,
-	QuitEvent              = 1 << 1,
-	KeyUpEvent             = 1 << 2,
-	KeyDownEvent           = 1 << 3,
-	ResolutionChange       = 1 << 4,
-	OptionalEventTypeStop  = 5 // be sure to update this value when adding to this enum
+	QuitEvent = 0,
+	KeyUpEvent,
+	KeyDownEvent,
+	ResolutionChange,
+	OptionalEventTypeRange
 };
-
-// This should be updated inline with the range of the optional EventTypes
-typedef uint8 EventTypeMask;
 
 enum Key {
 	Key_Unknown,
@@ -71,6 +68,13 @@ class Event {
 		Event(EventType type = UnknownEvent);
 
 		/**
+		 * Constructor
+		 * @param type the value for the type value of the Event
+		 * @param task the Task for the event to reference
+		 */
+		Event(EventType, Task *task);
+
+		/**
 		 * Gets the EventType describing this Event.
 		 * @return the EventType describing this Event
 		 */
@@ -89,7 +93,7 @@ class Event {
 
 		/**
 		 * Gets the Task this Event is for.
-		 * This method assumes type() returns KeyUpEvent or KeyDownEvent.
+		 * This method assumes type() returns KeyUpEvent, KeyDownEvent, or InitTask.
 		 * @return the EventType describing this Event
 		 */
 		inline Task *task() const {
