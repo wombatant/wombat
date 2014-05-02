@@ -152,6 +152,7 @@ void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState stat
 }
 
 void TaskProcessor::addTask(Task *task, TaskState state) {
+	task->init();
 	processTaskState(task, state);
 
 	// post to the semaphore to refresh the sleep time
