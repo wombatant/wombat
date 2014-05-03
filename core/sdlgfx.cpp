@@ -44,7 +44,7 @@ int displayHeight() {
 
 Image::Image(models::Image img) {
 	models::SpriteSheet ss;
-	open(ss, img.SpriteSheet);
+	read(ss, img.SpriteSheet);
 	SDL_Surface *s = IMG_Load(path(ss.SrcFile).c_str());
 	m_img = SDL_CreateTextureFromSurface(renderer, s);
 	SDL_FreeSurface(s);
@@ -122,15 +122,6 @@ void Graphics::draw(Image *img, int x, int y) {
 
 		SDL_RenderCopy(renderer, (SDL_Texture*) img->m_img, &src, &dest);
 	}
-}
-
-void Graphics::fillRect(int x, int y, int w, int h) {
-	SDL_Rect rect;
-	rect.x = x;
-	rect.y = y;
-	rect.w = w;
-	rect.h = h;
-	SDL_RenderFillRect(renderer, &rect);
 }
 
 void Graphics::setRGBA(int r, int g, int b, int a) {

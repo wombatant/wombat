@@ -23,26 +23,20 @@ Drawer *test(std::vector<std::string> &args) {
 	if (args[2] == "animation") {
 		test = new AnimationTest(args[3]);
 	}
-
-	if (test) {
-		core::addDrawer(test);
-	}
 	return test;
 }
 
 //Animation Test
 AnimationTest::AnimationTest(std::string path) {
 	models::Animation anim;
-	core::open(anim, path);
+	core::read(anim, path);
 	m_anim = new Animation(anim);
 }
 
 void AnimationTest::draw(Graphics *g) {
 	if (m_anim->loaded()) {
 		auto img = m_anim->getImage();
-		if (img) {
-			g->draw(img, 42, 42);
-		}
+		g->draw(img, 42, 42);
 	}
 }
 

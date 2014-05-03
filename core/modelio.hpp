@@ -29,16 +29,19 @@ using std::string;
 using std::function;
 
 /**
- * Gets the home path to load models from.
- * @return the new home path
+ * Prepends to the path to load models from.
+ * Unless another path is prepended to the path, this will be the first
+ * directory that files are looked for in.
+ * @param path the new path
  */
-std::string getHome();
+void prependPath(std::string h);
 
 /**
- * Sets the home path to load models from.
- * @param path the new home path
+ * Adds to the path to load models from.
+ * This will be the last directory the files are looked for in.
+ * @param path the new path
  */
-void setHome(std::string path);
+void appendPath(std::string path);
 
 /**
  * Returns the given path with the wombat_home path prepended to it.
@@ -48,11 +51,11 @@ void setHome(std::string path);
 std::string path(std::string path);
 
 /**
- * Reads the file at the given path within the home path into the given model.
+ * Reads the file at the given path within the path into the given model.
  * @param model the model to load the file into
- * @prarm path the path within the home path to read from
+ * @prarm path the path within the path to read from
  */
-int open(models::cyborgbear::Model &model, std::string path);
+int read(models::cyborgbear::Model &model, std::string path);
 
 /**
  * Manages Model IO, preventing redundancies in memory.
@@ -98,7 +101,7 @@ class Flyweight {
 			Value *v = m_cache[modelPath];
 			if (!v) {
 				Model key;
-				open(key, modelPath);
+				read(key, modelPath);
 				m_cache[modelPath] = v = m_build(key);
 			}
 			if (v) {	

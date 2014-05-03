@@ -210,7 +210,9 @@ int init(models::Settings settings) {
 		return -3;
 	renderer = SDL_CreateRenderer(display, -1, SDL_RENDERER_ACCELERATED);
 
-	_running = true; _updateEventTime();
+	_running = true;
+	_updateEventTime();
+
 	return 0;
 }
 

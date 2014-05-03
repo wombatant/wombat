@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <fstream>
 #include "modelio.hpp"
 
 namespace wombat {
@@ -20,19 +21,30 @@ namespace core {
 
 using namespace models::cyborgbear;
 
-std::string home = "wombat_home/";
+std::vector<std::string> _path({"wombat_home/"});
 
 
-std::string getHome() {
-	return home;
+std::vector<std::string> getPath() {
+	return _path;
 }
 
 std::string path(std::string path) {
-	return home + path;
+	for (auto p : _path) {
+		auto val = p + path;
+		std::ifstream file(val);
+		if (file.good()) {
+			return val;
+		}
+	}
+	return _path[0] + path;
 }
 
-void setHome(std::string h) {
-	home = h + "/";
+void prependPath(std::string h) {
+	_path.insert(_path.begin(), h + "/");
+}
+
+void appendPath(std::string h) {
+	_path.push_back(h + "/");
 }
 
 /**
@@ -45,7 +57,7 @@ string _suffix(string path, string suffix) {
 	return path;
 }
 
-int open(models::cyborgbear::Model &m, std::string path) {
+int read(models::cyborgbear::Model &m, std::string path) {
 	auto retval = m.readJsonFile(core::path(_suffix(path, ".json")));
 	if (retval == Error_CouldNotAccessFile) {
 		// see if it is in "hidden" model file

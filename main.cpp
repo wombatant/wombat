@@ -44,7 +44,11 @@ int main(int argc, const char **args) {
 		for (int i = 0; i < argc; i++) {
 			vargs.push_back(args[i]);
 		}
-		tests::test(vargs);
+		test = tests::test(vargs);
+
+		if (test) {
+			core::addDrawer(test);
+		}
 	}
 
 	App app;

@@ -103,8 +103,6 @@ class Graphics {
 
 		void draw(Image *img, int x, int y);
 
-		void fillRect(int x, int y, int w, int h);
-
 		/**
 		 * Sets the color for primitives to draw with.
 		 * @param r red value (0-255)
