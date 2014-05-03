@@ -137,7 +137,7 @@ class TaskProcessor: public Task {
 			 * @param task the Task scheduled
 			 * @param task the time the Task is scheduled to wake up
 			 */
-			ScheduleItem(Task *task, uint8 wakeupTime) {
+			ScheduleItem(Task *task, uint64 wakeupTime) {
 				this->task = task;
 				this->wakeupTime = wakeupTime;
 			}
