@@ -18,6 +18,8 @@
 namespace wombat {
 namespace world {
 
+using core::TaskState;
+
 
 Zone::TileGrid::TileGrid() {
 	m_tiles = 0;
@@ -54,6 +56,14 @@ Zone::Zone() {
 }
 
 Zone::~Zone() {
+}
+
+core::TaskState Zone::run(core::Event) {
+	return core::TaskState::Continue;
+}
+
+bool Zone::loaded() {
+	return m_loaded;
 }
 
 }

@@ -24,11 +24,21 @@ namespace world {
 
 class World: public core::Task {
 	private:
+		core::TaskProcessor m_taskProc;
 		std::vector<Zone*> m_zones;
 
 	public:
-		World();
+		/**
+		 * Constructor
+		 * @param model Model to build the World off of
+		 */
+		World(models::World model);
+
+		/**
+		 * Destructor
+		 */
 		~World();
+
 		core::TaskState run(core::Event);
 };
 

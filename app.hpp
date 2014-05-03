@@ -22,11 +22,19 @@ namespace wombat {
 
 class App: public core::Task {
 	public:
+		/**
+		 * Constructor
+		 */
+		App();
+
 		void init();
 
 		core::TaskState run(core::Event);
 
 	private:
+		/**
+		 * Runs exit code.
+		 */
 		void quit();
 };
 

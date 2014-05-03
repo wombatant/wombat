@@ -18,8 +18,17 @@
 namespace wombat {
 namespace world {
 
+World::World(models::World world) {
+	m_taskProc.start();
+	m_taskProc.addTask(this);
+}
+
+World::~World() {
+	m_taskProc.stop();
+}
+
 core::TaskState World::run(core::Event) {
-	return 1000;
+	return core::TaskState::Continue;
 }
 
 }

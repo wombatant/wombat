@@ -19,6 +19,10 @@ namespace wombat {
 
 using core::TaskState;
 
+App::App() {
+	core::prependPath("active_path");
+}
+
 void App::init() {
 	core::subscribe(core::KeyDownEvent);
 	core::subscribe(core::KeyUpEvent);

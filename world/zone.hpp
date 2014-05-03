@@ -16,12 +16,13 @@
 #ifndef WOMBAT_WORLD_ZONE_HPP
 #define WOMBAT_WORLD_ZONE_HPP
 
+#include "core/core.hpp"
 #include "tile.hpp"
 
 namespace wombat {
 namespace world {
 
-class Zone {
+class Zone: public core::Task {
 	private:
 		class TileGrid {
 			private:
@@ -60,6 +61,7 @@ class Zone {
 					return m_tiles[layer][y][x];
 				}
 		} m_tiles;
+		bool m_loaded;
 
 	public:
 		/**
@@ -71,6 +73,14 @@ class Zone {
 		 * Destructor
 		 */
 		~Zone();
+
+		core::TaskState run(core::Event);
+
+		/**
+		 * Indicates whether or not the Zone has been loaded yet.
+		 * @return whether or not the Zone has been loaded yet
+		 */
+		bool loaded();
 };
 
 }
