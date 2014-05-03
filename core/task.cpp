@@ -138,6 +138,8 @@ TaskState TaskProcessor::run(Event event) {
 		break;
 	}
 
+	setActiveTaskProcessor(prevTp);
+
 	TaskProcessor::ScheduleItem nt;
 	if (nextTask(nt) == 0) {
 		auto time = core::time();
@@ -149,8 +151,6 @@ TaskState TaskProcessor::run(Event event) {
 	} else {
 		return TaskState::Waiting;
 	}
-
-	setActiveTaskProcessor(prevTp);
 }
 
 void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState state) {
