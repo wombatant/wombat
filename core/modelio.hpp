@@ -19,6 +19,7 @@
 #include <map>
 #include <string>
 #include <functional>
+#include "threads.hpp"
 #include "models/enginemodels.hpp"
 
 namespace wombat {
@@ -86,6 +87,7 @@ class Flyweight {
 	private:
 		map<string, Value*> m_cache;
 		FlyweightNodeBuilder m_build;
+		core::Mutex m_lock;
 
 	public:
 		Flyweight(FlyweightNodeBuilder build) {
@@ -98,6 +100,7 @@ class Flyweight {
 		 * @return the value associated with the given key
 		 */
 		Value* checkout(std::string modelPath) {
+			m_lock.lock();
 			Value *v = m_cache[modelPath];
 			if (!v) {
 				Model key;
@@ -107,10 +110,12 @@ class Flyweight {
 			if (v) {	
 				v->dependents++;
 			}
+			m_lock.unlock();
 			return v;
 		}
 
 		Value* checkout(Model &key) {
+			m_lock.lock();
 			string keyStr = key.toJson();
 			Value *v = m_cache[keyStr];
 			if (!v) {
@@ -119,20 +124,25 @@ class Flyweight {
 			if (v) {	
 				v->dependents++;
 			}
+			m_lock.unlock();
 			return v;
 		}
 
 		void checkin(string key) {
+			m_lock.lock();
 			Value *v = m_cache[key];
 			checkin(v);
+			m_lock.unlock();
 		}
 
 		void checkin(Value *v) {
+			m_lock.lock();
 			v->dependents--;
 			if (!v->dependents) {
 				m_cache.erase(v->key());
 				delete v;
 			}
+			m_lock.unlock();
 		}
 };
 
