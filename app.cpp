@@ -29,7 +29,7 @@ TaskState App::run(core::Event e) {
 	TaskState retval = TaskState::Continue;
 
 	switch (e.type()) {
-	case core::ResolutionChange:
+	case core::ScreenSizeChange:
 		core::draw();
 		break;
 	case core::Timeout:

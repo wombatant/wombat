@@ -33,7 +33,7 @@ enum EventType {
 	QuitEvent = 0,
 	KeyUpEvent,
 	KeyDownEvent,
-	ResolutionChange,
+	ScreenSizeChange,
 	OptionalEventTypeRange
 };
 

@@ -172,7 +172,7 @@ void main() {
 			}
 		} else if (t == SDL_WINDOWEVENT) {
 			if (sev.window.event == SDL_WINDOWEVENT_RESIZED) {
-				ev.m_type = ResolutionChange;
+				ev.m_type = ScreenSizeChange;
 				_submgr.post(ev);
 			}
 		} else if (t == SDL_QUIT) {
