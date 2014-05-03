@@ -5,9 +5,9 @@ namespace wombat {
 using core::TaskState;
 
 void App::init() {
-	subscribe(core::KeyDownEvent);
-	subscribe(core::KeyUpEvent);
-	subscribe(core::QuitEvent);
+	core::subscribe(core::KeyDownEvent);
+	core::subscribe(core::KeyUpEvent);
+	core::subscribe(core::QuitEvent);
 }
 
 TaskState App::run(core::Event e) {

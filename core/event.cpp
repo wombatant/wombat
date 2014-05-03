@@ -35,9 +35,5 @@ Event::Event(EventType type, Task *task) {
 	m_body.task = task;
 }
 
-void *Event::channel() {
-	return m_body.channel;
-}
-
 }
 }

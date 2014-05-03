@@ -21,6 +21,17 @@ namespace core {
 
 SubscriptionManager _submgr;
 
+int subscribe(EventType et) {
+	int retval = 0;
+	auto tp = activeTaskProcessor();
+	if (tp) {
+		tp->addSubscription(et);
+	} else {
+		retval = 1;
+	}
+	return retval;
+}
+
 // TaskState
 
 TaskState::TaskState(uint64 sleep) {
@@ -40,17 +51,6 @@ Task::Task() {
 }
 
 Task::~Task() {
-}
-
-int Task::subscribe(EventType et) {
-	int retval = 0;
-	auto tp = activeTaskProcessor();
-	if (tp) {
-		tp->addSubscription(et, this);
-	} else {
-		retval = 1;
-	}
-	return retval;
 }
 
 void Task::setAutoDelete(bool autoDelete) {
@@ -79,6 +79,7 @@ TaskState FunctionTask::run(Event e) {
 
 TaskProcessor::TaskProcessor(BaseSemaphore *sem) {
 	m_running = false;
+	m_currentTask = 0;
 	if (sem) {
 		m_sem = sem;
 		m_semInternal = false;
@@ -124,8 +125,10 @@ TaskState TaskProcessor::run(Event event) {
 		runTask(event.task(), ChannelMessage);
 		break;
 	case InitTask:
+		m_currentTask = event.task();
 		event.task()->init();
 		processTaskState(event.task(), TaskState::Running);
+		m_currentTask = 0;
 		break;
 	case SemaphorePost:
 		// SemaphorePost is already designated for use only as a
@@ -191,12 +194,12 @@ void TaskProcessor::post(Event event) {
 	m_sem->post(event);
 }
 
-void TaskProcessor::addSubscription(EventType et, Task *task) {
+void TaskProcessor::addSubscription(EventType et) {
 	if (m_submgr.subs(et) == 0) {
 		_submgr.addSubscription(et, this);
 	}
 
-	m_submgr.addSubscription(et, task);
+	m_submgr.addSubscription(et, m_currentTask);
 }
 
 Task *TaskProcessor::popActiveTask() {
@@ -273,8 +276,10 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 }
 
 void TaskProcessor::runTask(Task *task, Event event) {
+	m_currentTask = task;
 	auto state = task->run(event);
 	processTaskState(task, state);
+	m_currentTask = 0;
 }
 
 void TaskProcessor::deschedule(Task *task) {

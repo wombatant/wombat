@@ -26,6 +26,14 @@ namespace core {
 
 class TaskProcessor;
 
+/**
+ * Subscribes to events of the given type. This must be run from within
+ * the Task it is called for.
+ * @param et the EventType to subscribe to
+ * @return 0 if success
+ */
+int subscribe(EventType et);
+		
 class TaskState {
 	public:
 		enum State {
@@ -79,14 +87,6 @@ class Task {
 
 	protected:
 		/**
-		 * Subscribes to events of the given type. This must be run from within
-		 * the Task it is called for.
-		 * @param et the EventType to subscribe to
-		 * @return 0 if success
-		 */
-		int subscribe(EventType);
-		
-		/**
 		 * Sets whether or not the Task should be auto-deleted when it completes.
 		 * @param autoDelete whether or not the Task should be auto-deleted when it completes
 		 */
@@ -120,6 +120,7 @@ class FunctionTask: public Task {
 
 class TaskProcessor: public Task {
 	friend Task;
+	friend int subscribe(EventType);
 	private:
 		struct ScheduleItem {
 			Task *task;
@@ -151,6 +152,7 @@ class TaskProcessor: public Task {
 		Mutex m_mutex;
 		BaseSemaphore *m_sem;
 		Channel<bool> m_done;
+		Task *m_currentTask;
 
 	public:
 		/**
@@ -205,9 +207,8 @@ class TaskProcessor: public Task {
 		/**
 		 * Adds the given Task to the subscription list of the given EventType.
 		 * @param et the EventType that the Task is subscribing to
-		 * @param task the Task to add to the subscription list
 		 */
-		void addSubscription(EventType et, Task *task);
+		void addSubscription(EventType et);
 
 	private:
 		/**
