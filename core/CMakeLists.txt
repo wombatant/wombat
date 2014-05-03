@@ -26,6 +26,7 @@ install(
 		gfx.hpp
 		modelio.hpp
 		task.hpp
+		tls.hpp
 		threads.hpp
 		types.hpp
 		_submgr.hpp

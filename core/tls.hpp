@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBATCORE_CORE_HPP
-#define WOMBATCORE_CORE_HPP
+#ifndef WOMBAT_CORE_TLS_HPP
+#define WOMBAT_CORE_TLS_HPP
 
-#include "models/enginemodels.hpp"
-#include "event.hpp"
-#include "gfx.hpp"
-#include "misc.hpp"
-#include "types.hpp"
-#include "modelio.hpp"
-#include "task.hpp"
-#include "tls.hpp"
-#include "threads.hpp"
-#include "types.hpp"
+#include "core.hpp"
+
+namespace wombat {
+namespace core {
+
+/**
+ * Gets the TaskProcessor running the current Task that is running in 
+ * the calling thread.
+ * @return the TaskProcessor of the active Task that in calling thread
+ */
+TaskProcessor *activeTaskProcessor();
+
+}
+}
 
 #endif
