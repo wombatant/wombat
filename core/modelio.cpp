@@ -21,8 +21,7 @@ namespace core {
 
 using namespace models::cyborgbear;
 
-std::vector<std::string> _path({"wombat_home/"});
-
+std::vector<std::string> _path({"wombat_path/"});
 
 std::vector<std::string> getPath() {
 	return _path;
