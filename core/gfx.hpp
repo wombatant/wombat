@@ -112,7 +112,6 @@ class Graphics {
 	friend void _draw();
 	private:
 		models::Point m_origin;
-		//models::Point m_translation;
 
 	protected:
 		ClipRectStack m_cliprect;

@@ -66,8 +66,8 @@ const auto Event_SemaphoreTimeout = SDL_RegisterEvents(1);
 
 std::vector<Drawer*> drawers;
 std::vector<Graphics*> graphicsInstances;
-SDL_Window *display = 0;
-SDL_Renderer *renderer = 0;
+SDL_Window *_display = 0;
+SDL_Renderer *_renderer = 0;
 
 extern bool _running;
 
@@ -137,12 +137,12 @@ void draw() {
 }
 
 void _draw() {
-	SDL_RenderClear(renderer);
+	SDL_RenderClear(_renderer);
 	for (int i = 0; i < drawers.size(); i++) {
 		drawers[i]->draw(graphicsInstances[i]);
 		graphicsInstances[i]->resetViewport();
 	}
-	SDL_RenderPresent(renderer);
+	SDL_RenderPresent(_renderer);
 }
 
 void main() {
@@ -206,10 +206,10 @@ int init(models::Settings settings) {
 	} else {
 		flags = (SDL_WindowFlags) (flags | SDL_WINDOW_RESIZABLE);
 	}
-	display = SDL_CreateWindow("Wombat", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, flags);
-	if (!display)
+	_display = SDL_CreateWindow("Wombat", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, flags);
+	if (!_display)
 		return -3;
-	renderer = SDL_CreateRenderer(display, -1, SDL_RENDERER_ACCELERATED);
+	_renderer = SDL_CreateRenderer(_display, -1, SDL_RENDERER_ACCELERATED);
 
 	_running = true;
 	_updateEventTime();

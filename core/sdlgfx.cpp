@@ -30,13 +30,13 @@ using std::string;
 
 int displayWidth() {
 	int w;
-	SDL_GetWindowSize(display, &w, 0);
+	SDL_GetWindowSize(_display, &w, 0);
 	return w;
 }
 
 int displayHeight() {
 	int h;
-	SDL_GetWindowSize(display, 0, &h);
+	SDL_GetWindowSize(_display, 0, &h);
 	return h;
 }
 
@@ -46,7 +46,7 @@ Image::Image(models::Image img) {
 	models::SpriteSheet ss;
 	read(ss, img.SpriteSheet);
 	SDL_Surface *s = IMG_Load(path(ss.SrcFile).c_str());
-	m_img = SDL_CreateTextureFromSurface(renderer, s);
+	m_img = SDL_CreateTextureFromSurface(_renderer, s);
 	SDL_FreeSurface(s);
 	m_bounds = ss.Images[img.ImgId].SrcBounds;
 	m_defaultSize.Width = img.DefaultSize.Width;
@@ -91,7 +91,7 @@ void Graphics::draw(Image *img, int x, int y, int w, int h) {
 		src.w = img->m_bounds.Width;
 		src.h = img->m_bounds.Height;
 
-		SDL_RenderCopy(renderer, (SDL_Texture*) img->m_img, &src, &dest);
+		SDL_RenderCopy(_renderer, (SDL_Texture*) img->m_img, &src, &dest);
 	}
 }
 
@@ -120,16 +120,16 @@ void Graphics::draw(Image *img, int x, int y) {
 		src.w = img->m_bounds.Width;
 		src.h = img->m_bounds.Height;
 
-		SDL_RenderCopy(renderer, (SDL_Texture*) img->m_img, &src, &dest);
+		SDL_RenderCopy(_renderer, (SDL_Texture*) img->m_img, &src, &dest);
 	}
 }
 
 void Graphics::setRGBA(int r, int g, int b, int a) {
-	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+	SDL_SetRenderDrawColor(_renderer, r, g, b, a);
 }
 
 void Graphics::setRGB(int r, int g, int b) {
-	SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+	SDL_SetRenderDrawColor(_renderer, r, g, b, 255);
 }
 
 void Graphics::pushClipRect(int x, int y, int w, int h) {
@@ -149,7 +149,7 @@ void Graphics::pushClipRect(int x, int y, int w, int h) {
 	sdlRct.y = r.Y;
 	sdlRct.w = r.Width;
 	sdlRct.h = r.Height;
-	SDL_RenderSetClipRect(renderer, &sdlRct);
+	SDL_RenderSetClipRect(_renderer, &sdlRct);
 
 	m_origin.X = m_cliprect.bounds().X;
 	m_origin.Y = m_cliprect.bounds().Y;
@@ -176,7 +176,7 @@ void Graphics::popClipRect() {
 		sdlRct.y = r.Y;
 		sdlRct.w = r.Width;
 		sdlRct.h = r.Height;
-		SDL_RenderSetClipRect(renderer, &sdlRct);
+		SDL_RenderSetClipRect(_renderer, &sdlRct);
 
 		m_origin.X = m_cliprect.bounds().X;
 		m_origin.Y = m_cliprect.bounds().Y;
