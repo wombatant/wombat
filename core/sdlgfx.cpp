@@ -81,8 +81,8 @@ void Graphics::draw(Image *img, int x, int y, int w, int h) {
 	if (img->loaded()) {
 		SDL_SetTextureAlphaMod((SDL_Texture*) img->m_img, 255);
 		SDL_Rect dest, src;
-		dest.x = x;
-		dest.y = y;
+		dest.x = m_origin.X = x;
+		dest.y = m_origin.Y = y;
 		dest.w = w;
 		dest.h = h;
 
@@ -110,8 +110,8 @@ void Graphics::draw(Image *img, int x, int y) {
 
 		SDL_SetTextureAlphaMod((SDL_Texture*) img->m_img, 255);
 		SDL_Rect dest, src;
-		dest.x = x;
-		dest.y = y;
+		dest.x = m_origin.X + x;
+		dest.y = m_origin.Y + y;
 		dest.w = w;
 		dest.h = h;
 
@@ -130,6 +130,36 @@ void Graphics::setRGBA(int r, int g, int b, int a) {
 
 void Graphics::setRGB(int r, int g, int b) {
 	SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+}
+
+void Graphics::pushViewport(int x, int y, int w, int h) {
+	models::Bounds bnds;
+	bnds.X = x;
+	bnds.Y = y;
+	bnds.Width = w;
+	bnds.Height = h;
+
+	m_origin.X -= m_viewport.translate().X;
+	m_origin.Y -= m_viewport.translate().Y;
+	m_viewport.push(bnds);
+	auto r = m_viewport.bounds();
+
+	SDL_Rect sdlRct;
+	sdlRct.x = r.X;
+	sdlRct.y = r.Y;
+	sdlRct.w = r.Width;
+	sdlRct.h = r.Height;
+
+	m_origin.X = m_viewport.bounds().X;
+	m_origin.Y = m_viewport.bounds().Y;
+	m_origin.X += m_viewport.translate().X;
+	m_origin.Y += m_viewport.translate().Y;
+}
+
+void Graphics::resetViewport() {
+	m_viewport.clear();
+	m_origin.X = 0;
+	m_origin.Y = 0;
 }
 
 }

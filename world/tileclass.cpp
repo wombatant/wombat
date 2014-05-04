@@ -20,7 +20,14 @@ namespace world {
 
 // Static
 
-Flyweight<models::TileClass> TileClass::tileClasses([](models::TileClass &model) {
+TileClass::TileClass() {
+}
+
+TileClass::~TileClass() {
+	checkin(this);
+}
+
+core::Flyweight<models::TileClass> TileClass::c_tileClasses([](models::TileClass &model) {
 	auto tc = new TileClass();
 	tc->m_terrainFlags = model.TerrainFlags;
 	for (auto alm : model.UpperAnims) {
@@ -38,12 +45,15 @@ Flyweight<models::TileClass> TileClass::tileClasses([](models::TileClass &model)
 	return tc;
 });
 
-TileClass *TileClass::checkout(string path) {
-	return dynamic_cast<TileClass*>(tileClasses.checkout(path));
+void TileClass::drawLower(core::Graphics *g, int x, int y) {
+}
+
+TileClass *TileClass::checkout(std::string path) {
+	return dynamic_cast<TileClass*>(c_tileClasses.checkout(path));
 }
 
 void TileClass::checkin(TileClass *tc) {
-	tileClasses.checkin(tc);
+	c_tileClasses.checkin(tc);
 }
 
 }

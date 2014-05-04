@@ -19,6 +19,7 @@
 #include <string>
 
 #include "core/core.hpp"
+#include "world/tileclass.hpp"
 #include "models/enginemodels.hpp"
 
 namespace wombat {
@@ -31,6 +32,14 @@ class AnimationTest: public Drawer {
 		Animation *m_anim;
 	public:
 		AnimationTest(std::string path);
+		void draw(Graphics*);
+};
+
+class TileClassTest: public Drawer {
+	private:
+		world::TileClass *m_tileClass;
+	public:
+		TileClassTest(std::string path);
 		void draw(Graphics*);
 };
 

@@ -20,6 +20,7 @@
 
 #include "models/enginemodels.hpp"
 
+#include "_viewportmgr.hpp"
 #include "modelio.hpp"
 #include "core.hpp"
 
@@ -37,17 +38,27 @@ class Image: public Flyweight<models::Image>::Value {
 	friend class Graphics;
 	public:
 		void *m_img;
+
 	private:
 		models::Size m_defaultSize;
 		string m_key;
+
 	protected:
 		/**
 		 * The bounds to cut out of the source image.
 		 */
 		models::Bounds m_bounds;
+
 	public:
+		/**
+		 * Constructor
+		 * @param model Model to build the Image from
+		 */
 		Image(models::Image);
 
+		/**
+		 * Destructor
+		 */
 		virtual ~Image();
 
 		/**
@@ -98,6 +109,14 @@ class Animation: public Flyweight<models::Animation>::Value {
 };
 
 class Graphics {
+	friend void _draw();
+	private:
+		models::Point m_origin;
+		//models::Point m_translation;
+
+	protected:
+		ViewportManager m_viewport;
+
 	public:
 		void draw(Image *img, int x, int y, int w, int h);
 
@@ -119,6 +138,19 @@ class Graphics {
 		 * @param b blue value (0-255)
 		 */
 		void setRGB(int r, int g, int b);
+
+		/**
+		 * Pushs the given view port the viewports stack.
+		 * This will get cleared out at the end of this draw iteration regardless
+		 * of whether or not it is manually popped.
+		 * @param bnds the bounds of the desired viewport 
+		 */
+		void pushViewport(models::Bounds bnds);
+
+		void pushViewport(int x, int y, int w, int h);
+
+	protected:
+		void resetViewport();
 };
 
 class Drawer {

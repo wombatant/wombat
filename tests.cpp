@@ -26,7 +26,7 @@ Drawer *test(std::vector<std::string> &args) {
 	return test;
 }
 
-//Animation Test
+// Animation Test
 AnimationTest::AnimationTest(std::string path) {
 	models::Animation anim;
 	core::read(anim, path);
@@ -38,6 +38,17 @@ void AnimationTest::draw(Graphics *g) {
 		auto img = m_anim->getImage();
 		g->draw(img, 42, 42);
 	}
+}
+
+// TileClass Test
+
+TileClassTest::TileClassTest(std::string path) {
+	models::TileClass model;
+	core::read(model, path);
+	m_tileClass = world::TileClass::checkout(path);
+}
+
+void TileClassTest::draw(Graphics *g) {
 }
 
 }

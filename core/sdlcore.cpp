@@ -140,6 +140,7 @@ void _draw() {
 	SDL_RenderClear(renderer);
 	for (int i = 0; i < drawers.size(); i++) {
 		drawers[i]->draw(graphicsInstances[i]);
+		graphicsInstances[i]->resetViewport();
 	}
 	SDL_RenderPresent(renderer);
 }

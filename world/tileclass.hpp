@@ -23,31 +23,43 @@
 namespace wombat {
 namespace world {
 
-using std::string;
-using std::vector;
-using core::Flyweight;
-
-class TileClass: public Flyweight<models::TileClass>::GenericValue {
+class TileClass: public core::Flyweight<models::TileClass>::GenericValue {
 	private:
-		static Flyweight<models::TileClass> tileClasses;
+		static core::Flyweight<models::TileClass> c_tileClasses;
 
 	private:
 		int m_terrainFlags;
-		vector<world::AnimLayer> m_upperAnims;
-		vector<world::AnimLayer> m_lowerAnims;
+		std::vector<world::AnimLayer> m_upperAnims;
+		std::vector<world::AnimLayer> m_lowerAnims;
 
 	public:
+		/**
+		 * Constructor
+		 */
+		TileClass();
+
+		/**
+		 * Destructor
+		 */
+		~TileClass();
+
+		void drawLower(core::Graphics *g, int x, int y);
+
 		/**
 		 * Checks out the TileClass object stored at the given path.
 		 * @param path path of the TileClass to checkout
 		 */
-		static TileClass *checkout(string path);
+		static TileClass *checkout(std::string path);
 
+	private:
 		/**
 		 * Checks in the given TileClass object.
 		 * @param tc TileClass object to checkin
 		 */
 		static void checkin(TileClass*);
+
+		TileClass(const TileClass&);
+		TileClass &operator=(const TileClass&);
 };
 
 }
