@@ -145,9 +145,18 @@ class Graphics {
 		 * of whether or not it is manually popped.
 		 * @param bnds the bounds of the desired viewport 
 		 */
-		void pushViewport(models::Bounds bnds);
+		void pushClipRect(models::Bounds bnds);
 
-		void pushViewport(int x, int y, int w, int h);
+		/**
+		 * Pushs the given view port the viewports stack.
+		 * This will get cleared out at the end of this draw iteration regardless
+		 * of whether or not it is manually popped.
+		 * @param x the left border of the clip rect
+		 * @param y the right border of the clip rect
+		 * @param w the width of the clip rect
+		 * @param h the height of the clip rect
+		 */
+		void pushClipRect(int x, int y, int w, int h);
 
 	protected:
 		void resetViewport();

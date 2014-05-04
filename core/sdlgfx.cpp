@@ -132,7 +132,7 @@ void Graphics::setRGB(int r, int g, int b) {
 	SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 }
 
-void Graphics::pushViewport(int x, int y, int w, int h) {
+void Graphics::pushClipRect(int x, int y, int w, int h) {
 	models::Bounds bnds;
 	bnds.X = x;
 	bnds.Y = y;
@@ -149,6 +149,7 @@ void Graphics::pushViewport(int x, int y, int w, int h) {
 	sdlRct.y = r.Y;
 	sdlRct.w = r.Width;
 	sdlRct.h = r.Height;
+	SDL_RenderSetClipRect(renderer, &sdlRct);
 
 	m_origin.X = m_viewport.bounds().X;
 	m_origin.Y = m_viewport.bounds().Y;
