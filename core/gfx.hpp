@@ -20,7 +20,7 @@
 
 #include "models/enginemodels.hpp"
 
-#include "_viewportmgr.hpp"
+#include "_cliprectstack.hpp"
 #include "modelio.hpp"
 #include "core.hpp"
 
@@ -115,7 +115,7 @@ class Graphics {
 		//models::Point m_translation;
 
 	protected:
-		ViewportManager m_viewport;
+		ClipRectStack m_cliprect;
 
 	public:
 		void draw(Image *img, int x, int y, int w, int h);
@@ -157,6 +157,11 @@ class Graphics {
 		 * @param h the height of the clip rect
 		 */
 		void pushClipRect(int x, int y, int w, int h);
+
+		/**
+		 * Pop the current clip rect.
+		 */
+		void popClipRect();
 
 	protected:
 		void resetViewport();

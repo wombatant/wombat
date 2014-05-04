@@ -139,10 +139,10 @@ void Graphics::pushClipRect(int x, int y, int w, int h) {
 	bnds.Width = w;
 	bnds.Height = h;
 
-	m_origin.X -= m_viewport.translate().X;
-	m_origin.Y -= m_viewport.translate().Y;
-	m_viewport.push(bnds);
-	auto r = m_viewport.bounds();
+	m_origin.X -= m_cliprect.translate().X;
+	m_origin.Y -= m_cliprect.translate().Y;
+	m_cliprect.push(bnds);
+	auto r = m_cliprect.bounds();
 
 	SDL_Rect sdlRct;
 	sdlRct.x = r.X;
@@ -151,14 +151,42 @@ void Graphics::pushClipRect(int x, int y, int w, int h) {
 	sdlRct.h = r.Height;
 	SDL_RenderSetClipRect(renderer, &sdlRct);
 
-	m_origin.X = m_viewport.bounds().X;
-	m_origin.Y = m_viewport.bounds().Y;
-	m_origin.X += m_viewport.translate().X;
-	m_origin.Y += m_viewport.translate().Y;
+	m_origin.X = m_cliprect.bounds().X;
+	m_origin.Y = m_cliprect.bounds().Y;
+	m_origin.X += m_cliprect.translate().X;
+	m_origin.Y += m_cliprect.translate().Y;
+}
+
+void Graphics::popClipRect() {
+	if (m_cliprect.size()) {
+		m_origin.X -= m_cliprect.translate().X;
+		m_origin.Y -= m_cliprect.translate().Y;
+
+		m_cliprect.pop();
+		auto r = m_cliprect.bounds();
+		if (r.Width == -1) {
+			r.Width = displayWidth();
+		}
+		if (r.Height == -1) {
+			r.Height = displayHeight();
+		}
+
+		SDL_Rect sdlRct;
+		sdlRct.x = r.X;
+		sdlRct.y = r.Y;
+		sdlRct.w = r.Width;
+		sdlRct.h = r.Height;
+		SDL_RenderSetClipRect(renderer, &sdlRct);
+
+		m_origin.X = m_cliprect.bounds().X;
+		m_origin.Y = m_cliprect.bounds().Y;
+		m_origin.X += m_cliprect.translate().X;
+		m_origin.Y += m_cliprect.translate().Y;
+	}
 }
 
 void Graphics::resetViewport() {
-	m_viewport.clear();
+	m_cliprect.clear();
 	m_origin.X = 0;
 	m_origin.Y = 0;
 }

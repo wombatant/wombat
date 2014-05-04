@@ -1,12 +1,12 @@
-#ifndef WOMBAT_CORE__VIEWPORTMGR_HPP
-#define WOMBAT_CORE__VIEWPORTMGR_HPP
+#ifndef WOMBAT_CORE__CLIPRECTSTACK_HPP
+#define WOMBAT_CORE__CLIPRECTSTACK_HPP
 
 #include "core.hpp"
 
 namespace wombat {
 namespace core {
 
-class ViewportManager {
+class ClipRectStack {
 	private:
 		struct Viewport {
 			models::Bounds bounds;
@@ -24,7 +24,7 @@ class ViewportManager {
 		/**
 		 * Constructor
 		 */
-		ViewportManager();
+		ClipRectStack();
 
 		models::Point translate();
 
@@ -37,6 +37,8 @@ class ViewportManager {
 		void calcBounds();
 
 		void clear();
+
+		int size();
 };
 
 }

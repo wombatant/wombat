@@ -16,7 +16,7 @@ add_library(
 		sdlthreads.cpp
 		_sdltls.cpp
 		_submgr.cpp
-		_viewportmgr.cpp
+		_cliprectstack.cpp
 )
 
 install(TARGETS WombatCore DESTINATION lib)
@@ -31,7 +31,7 @@ install(
 		threads.hpp
 		types.hpp
 		_submgr.hpp
-		_viewportmgr.hpp
+		_cliprectstack.hpp
 	DESTINATION
 		include/wombat/core
 )

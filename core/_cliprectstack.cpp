@@ -1,10 +1,10 @@
 #include "gfx.hpp"
-#include "_viewportmgr.hpp"
+#include "_cliprectstack.hpp"
 
 namespace wombat {
 namespace core {
 
-ViewportManager::ViewportManager() {
+ClipRectStack::ClipRectStack() {
 	Viewport v;
 	v.bounds.X = 0;
 	v.bounds.Y = 0;
@@ -13,28 +13,28 @@ ViewportManager::ViewportManager() {
 	m_viewports.push_back(v);
 }
 
-models::Point ViewportManager::translate() {
+models::Point ClipRectStack::translate() {
 	return m_viewports[m_pt].point;
 }
 
-models::Bounds ViewportManager::bounds() {
+models::Bounds ClipRectStack::bounds() {
 	return m_viewports[m_pt].bounds;
 }
 
-void ViewportManager::push(models::Bounds rect) {
+void ClipRectStack::push(models::Bounds rect) {
 	m_pt++;
 	m_viewports.push_back(rect);
 	calcBounds();
 }
 
-void ViewportManager::pop() {
+void ClipRectStack::pop() {
 	if (m_pt < 1) {
 		return;
 	}
 	m_pt--;
 }
 
-void ViewportManager::calcBounds() {
+void ClipRectStack::calcBounds() {
 	if (m_pt == 0) {
 		return;
 	}
@@ -86,7 +86,7 @@ void ViewportManager::calcBounds() {
 	}
 }
 
-void ViewportManager::clear() {
+void ClipRectStack::clear() {
 	m_viewports.erase(m_viewports.begin(), m_viewports.end());
 	Viewport v;
 	v.bounds.X = 0;
@@ -98,6 +98,10 @@ void ViewportManager::clear() {
 	m_viewports.push_back(v);
 	m_pt = 0;
 	calcBounds();
+}
+
+int ClipRectStack::size() {
+	return m_pt;
 }
 
 }
