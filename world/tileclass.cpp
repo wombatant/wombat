@@ -20,12 +20,8 @@ namespace world {
 
 // Static
 
-TileClass::TileClass() {
-}
-
-TileClass::~TileClass() {
-	checkin(this);
-}
+const int TileClass::Width = 32;
+const int TileClass::Height = 32;
 
 core::Flyweight<models::TileClass> TileClass::c_tileClasses([](models::TileClass &model) {
 	auto tc = new TileClass();
@@ -45,11 +41,32 @@ core::Flyweight<models::TileClass> TileClass::c_tileClasses([](models::TileClass
 	return tc;
 });
 
-void TileClass::drawLower(core::Graphics *g, int x, int y) {
+TileClass::TileClass() {
+}
+
+TileClass::~TileClass() {
+}
+
+void TileClass::drawUpper(core::Graphics &g, int x, int y) {
+	draw(g, x, y, m_upperAnims);
+}
+
+void TileClass::drawLower(core::Graphics &g, int x, int y) {
+	draw(g, x, y, m_lowerAnims);
 }
 
 TileClass *TileClass::checkout(std::string path) {
 	return dynamic_cast<TileClass*>(c_tileClasses.checkout(path));
+}
+
+void TileClass::draw(core::Graphics &g, int x, int y, std::vector<AnimLayer> &anims) {
+	g.pushClipRect(x, y, Width, Height);
+	for (auto i : m_lowerAnims) {
+		auto x = i.point.X;
+		auto y = i.point.Y;
+		g.draw(i.animation->getImage(), x, y);
+	}
+	g.popClipRect();
 }
 
 void TileClass::checkin(TileClass *tc) {

@@ -22,6 +22,8 @@ Drawer *test(std::vector<std::string> &args) {
 	Drawer *test = 0;
 	if (args[2] == "animation") {
 		test = new AnimationTest(args[3]);
+	} else if (args[2] == "test") {
+		test = new TileClassTest(args[3]);
 	}
 	return test;
 }
@@ -33,10 +35,10 @@ AnimationTest::AnimationTest(std::string path) {
 	m_anim = new Animation(anim);
 }
 
-void AnimationTest::draw(Graphics *g) {
+void AnimationTest::draw(Graphics &g) {
 	if (m_anim->loaded()) {
 		auto img = m_anim->getImage();
-		g->draw(img, 42, 42);
+		g.draw(img, 42, 42);
 	}
 }
 
@@ -48,7 +50,9 @@ TileClassTest::TileClassTest(std::string path) {
 	m_tileClass = world::TileClass::checkout(path);
 }
 
-void TileClassTest::draw(Graphics *g) {
+void TileClassTest::draw(Graphics &g) {
+	m_tileClass->drawLower(g, 42, 42);
+	m_tileClass->drawUpper(g, 42, 42);
 }
 
 }

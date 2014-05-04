@@ -32,7 +32,7 @@ class AnimationTest: public Drawer {
 		Animation *m_anim;
 	public:
 		AnimationTest(std::string path);
-		void draw(Graphics*);
+		void draw(Graphics&);
 };
 
 class TileClassTest: public Drawer {
@@ -40,7 +40,7 @@ class TileClassTest: public Drawer {
 		world::TileClass *m_tileClass;
 	public:
 		TileClassTest(std::string path);
-		void draw(Graphics*);
+		void draw(Graphics&);
 };
 
 Drawer *test(std::vector<std::string>&);

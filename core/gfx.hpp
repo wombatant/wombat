@@ -169,12 +169,12 @@ class Graphics {
 class Drawer {
 	public:
 		virtual ~Drawer() {};
-		virtual void draw(Graphics*) = 0;
+		virtual void draw(Graphics&) = 0;
 };
 
 void addDrawer(Drawer*);
 
-Animation *checkoutAnimation(models::Animation & anim);
+Animation *checkoutAnimation(models::Animation &anim);
 
 Image *checkoutImage(models::Image &img);
 
