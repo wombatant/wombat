@@ -19,7 +19,7 @@
 #include <string>
 #include <functional>
 
-#include "models/enginemodels.hpp"
+#include "models/models.hpp"
 #include "types.hpp"
 
 namespace wombat {

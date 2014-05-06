@@ -20,7 +20,7 @@
 
 #include "core/core.hpp"
 #include "world/tileclass.hpp"
-#include "models/enginemodels.hpp"
+#include "models/models.hpp"
 
 namespace wombat {
 namespace tests {

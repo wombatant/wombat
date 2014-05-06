@@ -16,7 +16,7 @@
 #ifndef WOMBATCORE_CORE_HPP
 #define WOMBATCORE_CORE_HPP
 
-#include "models/enginemodels.hpp"
+#include "models/models.hpp"
 #include "event.hpp"
 #include "gfx.hpp"
 #include "misc.hpp"

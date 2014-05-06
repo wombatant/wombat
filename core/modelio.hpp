@@ -20,7 +20,7 @@
 #include <string>
 #include <functional>
 #include "threads.hpp"
-#include "models/enginemodels.hpp"
+#include "models/models.hpp"
 
 namespace wombat {
 namespace core {
