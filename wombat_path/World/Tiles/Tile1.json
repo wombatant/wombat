@@ -1,8 +1,7 @@
 {
-	"TerrainFlags": 0,
 	"LowerAnims": [
 		{
-			"Animation": "Animations/Animation1.json"
+			"Animation": "Animations/Animation2.json"
 		}
 	]
 }

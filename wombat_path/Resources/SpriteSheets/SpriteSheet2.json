@@ -1,5 +1,5 @@
 {
-    "ImageIdIterator": 3,
+    "ImageIdIterator": 4,
     "Images": {
         "0": {
             "SrcBounds": {
@@ -27,11 +27,8 @@
         }
     },
     "RecycledImageIds": [
+        3
     ],
-    "SheetIdx": {
-        "X": 0,
-        "Y": 0
-    },
     "SrcFile": "Resources/SpriteSheets/SpriteSheet2.png",
     "TileHeight": 32,
     "TileWidth": 32,
