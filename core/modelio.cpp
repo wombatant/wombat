@@ -56,12 +56,21 @@ string _suffix(string path, string suffix) {
 	return path;
 }
 
-uint64 read(models::cyborgbear::Model &m, std::string path) {
+models::cyborgbear::Error read(models::cyborgbear::Model &m, std::string path) {
+	using namespace models::cyborgbear;
 	auto retval = m.readJsonFile(core::path(_suffix(path, ".json")));
-	if (retval == Error_CouldNotAccessFile) {
+	if (retval & Error_CouldNotAccessFile) {
 		// see if it is in "hidden" model file
 		retval = m.readJsonFile(core::path(_suffix(path, ".hjson")));
 	};
+
+	if (retval & Error_TypeMismatch) {
+		printf("Warning: type mismatch in %s\n", path.c_str());
+	}
+	if (retval & Error_GenericParsingError) {
+		printf("Warning: generic parsing error in %s\n", path.c_str());
+	}
+
 	return retval;
 }
 
