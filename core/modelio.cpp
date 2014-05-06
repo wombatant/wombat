@@ -56,7 +56,7 @@ string _suffix(string path, string suffix) {
 	return path;
 }
 
-int read(models::cyborgbear::Model &m, std::string path) {
+uint64 read(models::cyborgbear::Model &m, std::string path) {
 	auto retval = m.readJsonFile(core::path(_suffix(path, ".json")));
 	if (retval == Error_CouldNotAccessFile) {
 		// see if it is in "hidden" model file

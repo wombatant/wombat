@@ -55,10 +55,6 @@ void TileClass::drawLower(core::Graphics &g, int x, int y) {
 	draw(g, x, y, m_lowerAnims);
 }
 
-TileClass *TileClass::checkout(std::string path) {
-	return dynamic_cast<TileClass*>(c_tileClasses.checkout(path));
-}
-
 void TileClass::draw(core::Graphics &g, int x, int y, std::vector<AnimLayer> &anims) {
 	g.pushClipRect(x, y, Width, Height);
 	for (auto i : m_lowerAnims) {
@@ -67,6 +63,10 @@ void TileClass::draw(core::Graphics &g, int x, int y, std::vector<AnimLayer> &an
 		g.draw(i.animation->getImage(), x, y);
 	}
 	g.popClipRect();
+}
+
+TileClass *TileClass::checkout(std::string path) {
+	return dynamic_cast<TileClass*>(c_tileClasses.checkout(path));
 }
 
 void TileClass::checkin(TileClass *tc) {

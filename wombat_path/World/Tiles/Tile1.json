@@ -1,0 +1,11 @@
+{
+	"Import": "",
+	"TerrainFlags": 0,
+	"UpperAnims": [
+	],
+	"LowerAnims": [
+		{
+			"Animation": "Animations/Animation1.json"
+		}
+	]
+}

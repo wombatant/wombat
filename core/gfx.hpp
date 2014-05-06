@@ -174,6 +174,8 @@ class Drawer {
 
 void addDrawer(Drawer*);
 
+Animation *checkoutAnimation(std::string path);
+
 Animation *checkoutAnimation(models::Animation &anim);
 
 Image *checkoutImage(models::Image &img);

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-add_library(WombatModels models/enginemodels.cpp)
+add_library(WombatModels models.cpp)
 
 install(TARGETS WombatModels DESTINATION lib)
-install(FILES models/enginemodels.hpp DESTINATION include/wombat/models)
+install(FILES models/models.hpp DESTINATION include/wombat/models)

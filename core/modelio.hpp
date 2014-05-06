@@ -56,7 +56,7 @@ std::string path(std::string path);
  * @param model the model to load the file into
  * @prarm path the path within the path to read from
  */
-int read(models::cyborgbear::Model &model, std::string path);
+uint64 read(models::cyborgbear::Model &model, std::string path);
 
 /**
  * Manages Model IO, preventing redundancies in memory.

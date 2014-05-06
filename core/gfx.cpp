@@ -83,6 +83,10 @@ Flyweight<models::Animation>::Value *loadAnimation(models::cyborgbear::Model &ke
 
 Flyweight<models::Animation> animCache(loadAnimation);
 
+Animation *checkoutAnimation(std::string path) {
+	return (Animation*) animCache.checkout(path);
+}
+
 Animation *checkoutAnimation(models::Animation &anim) {
 	return (Animation*) animCache.checkout(anim);
 }
