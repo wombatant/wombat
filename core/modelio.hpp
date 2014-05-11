@@ -19,7 +19,7 @@
 #include <map>
 #include <string>
 #include <functional>
-#include "threads.hpp"
+#include "sync.hpp"
 #include "models/models.hpp"
 
 namespace wombat {

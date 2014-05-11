@@ -13,18 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBATCORE_CORE_HPP
-#define WOMBATCORE_CORE_HPP
+#ifdef WITH_SDL
 
-#include "models/models.hpp"
-#include "event.hpp"
-#include "gfx.hpp"
-#include "misc.hpp"
-#include "types.hpp"
-#include "modelio.hpp"
-#include "sync.hpp"
-#include "task.hpp"
-#include "tls.hpp"
-#include "types.hpp"
+#include <SDL.h>
+#include "core.hpp"
+
+namespace wombat {
+namespace core {
+
+int _sdlthread(void *func) {
+	if (func) {
+		auto f = (std::function<void()>*) func;
+		(*f)();
+		delete f;
+	}
+	return 0;
+}
+
+void startThread(std::function<void()> f) {
+	static int threadCount = 0;
+
+	char thrdNm[10];
+	snprintf(thrdNm, 10, "Thread %d", threadCount);
+
+
+	auto fp = new std::function<void()>(f);
+	auto thread = SDL_CreateThread(_sdlthread, thrdNm, (void*) fp);
+	SDL_DetachThread(thread);
+
+	threadCount++;
+}
+
+void sleep(uint64 ms) {
+	SDL_Delay(ms);
+}
+
+}
+}
 
 #endif

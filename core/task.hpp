@@ -16,15 +16,13 @@
 #ifndef WOMBAT_CORE_TASK_HPP
 #define WOMBAT_CORE_TASK_HPP
 
-#include"_submgr.hpp"
+#include "_submgr.hpp"
+#include "channel.hpp"
 #include "event.hpp"
-#include "threads.hpp"
 #include "types.hpp"
 
 namespace wombat {
 namespace core {
-
-class TaskProcessor;
 
 /**
  * Subscribes to events of the given type. This must be run from within
@@ -66,7 +64,7 @@ class TaskState {
 };
 
 class Task {
-	friend TaskProcessor;
+	friend class TaskProcessor;
 	private:
 		bool m_autoDelete;
 
@@ -159,7 +157,7 @@ class TaskProcessor: public Task {
 		 * Constructor
 		 * @param sem allows specifying an external EventQueue for this TaskProcessor
 		 */
-		TaskProcessor(BaseEventQueue *sem = 0);
+		TaskProcessor(class BaseEventQueue *sem = 0);
 
 		/**
 		 * Destructor

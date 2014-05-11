@@ -13,18 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBATCORE_CORE_HPP
-#define WOMBATCORE_CORE_HPP
+#ifndef WOMBAT_CORE_THREADS_HPP
+#define WOMBAT_CORE_THREADS_HPP
 
-#include "models/models.hpp"
+#include <functional>
+#include <map>
+#include <queue>
+
 #include "event.hpp"
-#include "gfx.hpp"
 #include "misc.hpp"
 #include "types.hpp"
-#include "modelio.hpp"
-#include "sync.hpp"
-#include "task.hpp"
-#include "tls.hpp"
-#include "types.hpp"
+
+namespace wombat {
+namespace core {
+
+void startThread(std::function<void()> f);
+
+void sleep(uint64 ms);
+
+}
+}
 
 #endif

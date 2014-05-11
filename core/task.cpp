@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include "_tls.hpp"
+#include "_threads.hpp"
 #include "task.hpp"
 
 namespace wombat {

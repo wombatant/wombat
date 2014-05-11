@@ -9,29 +9,33 @@ add_library(
 		misc.cpp
 		modelio.cpp
 		task.cpp
-		threads.cpp
 		sdlcore.cpp
 		sdlevent.cpp
 		sdlgfx.cpp
-		sdlthreads.cpp
+		sdlsync.cpp
+		sync.cpp
+		_cliprectstack.cpp
+		_sdlthreads.cpp
 		_sdltls.cpp
 		_submgr.cpp
-		_cliprectstack.cpp
+		_threads.cpp
 )
 
 install(TARGETS WombatCore DESTINATION lib)
 install(
 	FILES
+		channel.hpp
 		core.hpp
 		event.hpp
 		gfx.hpp
 		modelio.hpp
+		sync.hpp
 		task.hpp
 		tls.hpp
-		threads.hpp
 		types.hpp
-		_submgr.hpp
 		_cliprectstack.hpp
+		_submgr.hpp
+		_threads.hpp
 	DESTINATION
 		include/wombat/core
 )
