@@ -77,14 +77,14 @@ TaskState FunctionTask::run(Event e) {
 
 // TaskProcessor
 
-TaskProcessor::TaskProcessor(BaseSemaphore *sem) {
+TaskProcessor::TaskProcessor(BaseEventQueue *sem) {
 	m_running = false;
 	m_currentTask = 0;
 	if (sem) {
 		m_sem = sem;
 		m_semInternal = false;
 	} else {
-		m_sem = new Semaphore();
+		m_sem = new EventQueue();
 		m_semInternal = true;
 	}
 }
@@ -130,8 +130,8 @@ TaskState TaskProcessor::run(Event event) {
 		processTaskState(event.task(), TaskState::Running);
 		m_currentTask = 0;
 		break;
-	case SemaphorePost:
-		// SemaphorePost is already designated for use only as a
+	case GenericPost:
+		// GenericPost is already designated for use only as a
 		//  sleep refresh in this switch or exit the thread loop
 		break;
 	default:

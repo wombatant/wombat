@@ -150,16 +150,16 @@ class TaskProcessor: public Task {
 		bool m_running;
 		bool m_semInternal;
 		Mutex m_mutex;
-		BaseSemaphore *m_sem;
+		BaseEventQueue *m_sem;
 		Channel<bool> m_done;
 		Task *m_currentTask;
 
 	public:
 		/**
 		 * Constructor
-		 * @param sem allows specifying an external Semaphore for this TaskProcessor
+		 * @param sem allows specifying an external EventQueue for this TaskProcessor
 		 */
-		TaskProcessor(BaseSemaphore *sem = 0);
+		TaskProcessor(BaseEventQueue *sem = 0);
 
 		/**
 		 * Destructor

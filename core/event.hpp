@@ -26,7 +26,7 @@ enum EventType {
 	UnknownEvent = 1024,
 	Timeout,
 	ChannelMessage,
-	SemaphorePost,
+	GenericPost,
 	InitTask,
 
 	// Optional EventTypes

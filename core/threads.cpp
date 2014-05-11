@@ -20,14 +20,14 @@
 namespace wombat {
 namespace core {
 
-BaseSemaphore::~BaseSemaphore() {
+BaseEventQueue::~BaseEventQueue() {
 }
 
-bool Semaphore::hasPosts() {
+bool EventQueue::hasPosts() {
 	return !m_posts.empty();
 }
 
-int Semaphore::popPost(Event &post) {
+int EventQueue::popPost(Event &post) {
 	m_mutex.lock();
 	if (hasPosts()) {
 		post = m_posts.front();

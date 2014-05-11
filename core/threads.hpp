@@ -27,10 +27,6 @@
 namespace wombat {
 namespace core {
 
-class Task;
-class TaskProcessor;
-class Semaphore;
-
 class Mutex {
 	public:
 		void *m_mutex;
@@ -62,12 +58,12 @@ class Mutex {
 		Mutex &operator=(const Mutex&);
 }; 
 
-class BaseSemaphore {
+class BaseEventQueue {
 	public:
 		/**
 		 * Destructor
 		 */
-		virtual ~BaseSemaphore();
+		virtual ~BaseEventQueue();
 
 		/**
 		 * Waits until there is a post to process.
@@ -83,7 +79,7 @@ class BaseSemaphore {
 		virtual Event wait(uint64 timeout) = 0;
 
 		/**
-		 * Posts the the Semaphore to wake up.
+		 * Posts the the EventQueue to wake up.
 		 * @param wakeup optional parameter used to specify the reason for the wake up
 		 */
 		virtual void post(Event wakeup = Event()) = 0;
@@ -102,7 +98,7 @@ class BaseSemaphore {
 		virtual bool hasPosts() = 0;
 };
 
-class Semaphore: public BaseSemaphore {
+class EventQueue: public BaseEventQueue {
 	private:
 		std::queue<Event> m_posts;
 		void *m_semaphore;
@@ -112,18 +108,18 @@ class Semaphore: public BaseSemaphore {
 		/**
 		 * Constructor
 		 */
-		Semaphore();
+		EventQueue();
 
 		/**
 		 * Destructor
 		 */
-		~Semaphore();
+		~EventQueue();
 
 		Event wait();
 
 		Event wait(uint64 timeout);
 
-		void post(Event wakeup = SemaphorePost);
+		void post(Event wakeup = GenericPost);
 
 		int popPost(Event &post);
 
@@ -131,8 +127,8 @@ class Semaphore: public BaseSemaphore {
 
 	// disallow copying
 	private:
-		Semaphore(const Semaphore&);
-		Semaphore &operator=(const Semaphore&);
+		EventQueue(const EventQueue&);
+		EventQueue &operator=(const EventQueue&);
 };
 
 void startThread(std::function<void()> f);
@@ -143,16 +139,16 @@ void sleep(uint64 ms);
 template <typename T>
 class Channel {
 	private:
-		Semaphore *m_sem;
+		EventQueue *m_sem;
 		Mutex m_mutex;
 		std::queue<T> m_msgs;
 
 	public:
 		/**
 		 * Constructor
-		 * @param sem the Semaphore for this Channel to listen on
+		 * @param sem the EventQueue for this Channel to listen on
 		 */
-		Channel(Semaphore *sem = new Semaphore()) {
+		Channel(EventQueue *sem = new EventQueue()) {
 			m_sem = sem;
 		}
 

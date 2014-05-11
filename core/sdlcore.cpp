@@ -26,7 +26,7 @@ namespace core {
 
 extern SubscriptionManager _submgr;
 
-class EventQueueSemaphore: public BaseSemaphore {
+class SdlMainEventQueue: public BaseEventQueue {
 	private:
 		std::queue<Event> m_posts;
 		Mutex m_mutex;
@@ -35,18 +35,18 @@ class EventQueueSemaphore: public BaseSemaphore {
 		/**
 		 * Constructor
 		 */
-		EventQueueSemaphore();
+		SdlMainEventQueue();
 
 		/**
 		 * Destructor
 		 */
-		~EventQueueSemaphore();
+		~SdlMainEventQueue();
 
 		Event wait();
 
 		Event wait(uint64 timeout);
 
-		void post(Event wakeup = SemaphorePost);
+		void post(Event wakeup = GenericPost);
 
 		int popPost(Event &post);
 
@@ -54,11 +54,11 @@ class EventQueueSemaphore: public BaseSemaphore {
 
 	// disallow copying
 	private:
-		EventQueueSemaphore(const EventQueueSemaphore&);
-		EventQueueSemaphore &operator=(const EventQueueSemaphore&);
-} _mainSemaphore;
+		SdlMainEventQueue(const SdlMainEventQueue&);
+		SdlMainEventQueue &operator=(const SdlMainEventQueue&);
+} _mainEventQueue;
 
-TaskProcessor _taskProcessor(&_mainSemaphore);
+TaskProcessor _taskProcessor(&_mainEventQueue);
 
 const auto Event_DrawEvent = SDL_RegisterEvents(1);
 const auto Event_SemaporePost = SDL_RegisterEvents(1);
@@ -75,23 +75,23 @@ extern bool _running;
 Key toWombatKey(SDL_Event);
 void _updateEventTime();
 
-// EventQueueSemaphore Implementation
+// SdlMainEventQueue Implementation
 
-EventQueueSemaphore::EventQueueSemaphore() {
+SdlMainEventQueue::SdlMainEventQueue() {
 }
 
-EventQueueSemaphore::~EventQueueSemaphore() {
+SdlMainEventQueue::~SdlMainEventQueue() {
 }
 
-Event EventQueueSemaphore::wait() {
+Event SdlMainEventQueue::wait() {
 	return UnknownEvent;
 }
 
-Event EventQueueSemaphore::wait(uint64 timeout) {
+Event SdlMainEventQueue::wait(uint64 timeout) {
 	return UnknownEvent;
 }
 
-void EventQueueSemaphore::post(Event post) {
+void SdlMainEventQueue::post(Event post) {
 	m_mutex.lock();
 	m_posts.push(post);
 
@@ -103,7 +103,7 @@ void EventQueueSemaphore::post(Event post) {
 	m_mutex.unlock();
 }
 
-int EventQueueSemaphore::popPost(Event &post) {
+int SdlMainEventQueue::popPost(Event &post) {
 	m_mutex.lock();
 	if (hasPosts()) {
 		post = m_posts.front();
@@ -115,7 +115,7 @@ int EventQueueSemaphore::popPost(Event &post) {
 	return 1;
 }
 
-bool EventQueueSemaphore::hasPosts() {
+bool SdlMainEventQueue::hasPosts() {
 	return m_posts.size();
 }
 
@@ -168,7 +168,7 @@ void main() {
 			ev.m_type = Timeout;
 			taskState = _taskProcessor.run(ev);
 		} else if (sev.type == Event_SemaporePost) {
-			if (_mainSemaphore.popPost(ev) == 0) {
+			if (_mainEventQueue.popPost(ev) == 0) {
 				taskState = _taskProcessor.run(ev);
 			}
 		} else if (t == SDL_WINDOWEVENT) {
