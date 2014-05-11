@@ -17,7 +17,7 @@
 #define WOMBAT_WORLD_ZONE_HPP
 
 #include "core/core.hpp"
-#include "tile.hpp"
+#include "tileinstance.hpp"
 
 namespace wombat {
 namespace world {
@@ -26,7 +26,7 @@ class Zone: public core::Task {
 	private:
 		class TileGrid {
 			private:
-				Tile ***m_tiles;
+				TileInstance ***m_tiles;
 				int m_width;
 				int m_height;
 				int m_layers;
@@ -43,7 +43,7 @@ class Zone: public core::Task {
 				~TileGrid();
 
 				/**
-				 * Allocates Tile grid.
+				 * Allocates TileInstance grid.
 				 * @param w width of grid
 				 * @param h height of grid
 				 * @param layers layers of grid
@@ -51,13 +51,13 @@ class Zone: public core::Task {
 				void allocate(int w, int h, int layers);
 
 				/**
-				 * Gets the Tile at the given address.
-				 * @param x X address of desired Tile
-				 * @param y Y address of desired Tile
-				 * @param layer layer of desired Tile
-				 * @return pointer to the Tile at the given address
+				 * Gets the TileInstance at the given address.
+				 * @param x X address of desired TileInstance
+				 * @param y Y address of desired TileInstance
+				 * @param layer layer of desired TileInstance
+				 * @return pointer to the TileInstance at the given address
 				 */
-				inline Tile &at(int x, int y, int layer) {
+				inline TileInstance &at(int x, int y, int layer) {
 					return m_tiles[layer][y][x];
 				}
 		} m_tiles;

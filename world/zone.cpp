@@ -43,11 +43,11 @@ void Zone::TileGrid::allocate(int w, int h, int layers) {
 	m_height = h;
 	m_layers = layers;
 
-	m_tiles = new Tile**[layers];
+	m_tiles = new TileInstance**[layers];
 	for (int l = 0; l < layers; l++) {
-		m_tiles[l] = new Tile*[h];
+		m_tiles[l] = new TileInstance*[h];
 		for (int y = 0; y < h; y++) {
-			m_tiles[l][y] = new Tile[w];
+			m_tiles[l][y] = new TileInstance[w];
 		}
 	}
 }

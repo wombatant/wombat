@@ -22,7 +22,7 @@ Drawer *test(std::vector<std::string> &args) {
 	Drawer *test = 0;
 	if (args[2] == "animation") {
 		test = new AnimationTest(args[3]);
-	} else if (args[2] == "tileclass") {
+	} else if (args[2] == "tile") {
 		test = new TileClassTest(args[3]);
 	}
 	return test;
@@ -42,13 +42,13 @@ void AnimationTest::draw(Graphics &g) {
 	}
 }
 
-// TileClass Test
+// Tile Test
 
 TileClassTest::TileClassTest(std::string path) {
 	using namespace models::cyborgbear;
-	models::TileClass model;
+	models::Tile model;
 	core::read(model, path);
-	m_tileClass = world::TileClass::checkout(path);
+	m_tileClass = world::Tile::checkout(path);
 }
 
 void TileClassTest::draw(Graphics &g) {

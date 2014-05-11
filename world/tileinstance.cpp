@@ -13,39 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_TESTS_HPP
-#define WOMBAT_TESTS_HPP
-
-#include <string>
-
-#include "core/core.hpp"
-#include "world/tile.hpp"
-#include "models/models.hpp"
+#include "tileinstance.hpp"
 
 namespace wombat {
-namespace tests {
+namespace world {
 
-using namespace wombat::core;
-
-class AnimationTest: public Drawer {
-	private:
-		Animation *m_anim;
-	public:
-		AnimationTest(std::string path);
-		void draw(Graphics&);
-};
-
-class TileClassTest: public Drawer {
-	private:
-		world::Tile *m_tileClass;
-	public:
-		TileClassTest(std::string path);
-		void draw(Graphics&);
-};
-
-Drawer *test(std::vector<std::string>&);
+void TileInstance::draw(core::Graphics gfx, models::Point pt) {
+}
 
 }
 }
-
-#endif
