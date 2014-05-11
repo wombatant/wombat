@@ -1,3 +1,18 @@
+/*
+ * Copyright 2013-2014 gtalent2@gmail.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 //Generated Code
 
 #ifndef MODELS_HPP
@@ -686,33 +701,6 @@ namespace models {
 
 using cyborgbear::string;
 
-class Settings: public cyborgbear::Model {
-
-	public:
-
-		Settings();
-
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-#ifdef CYBORGBEAR_BOOST_ENABLED
-
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		bool Fullscreen;
-		int Width;
-		int Height;
-};
-
-}
-
-
-namespace models {
-
-using cyborgbear::string;
-
 class Point: public cyborgbear::Model {
 
 	public:
@@ -902,33 +890,6 @@ namespace models {
 
 using cyborgbear::string;
 
-class ZoneInstance: public cyborgbear::Model {
-
-	public:
-
-		ZoneInstance();
-
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-#ifdef CYBORGBEAR_BOOST_ENABLED
-
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		string AccessorID;
-		string ZonePath;
-		models::Point Location;
-};
-
-}
-
-
-namespace models {
-
-using cyborgbear::string;
-
 class AnimationSlide: public cyborgbear::Model {
 
 	public:
@@ -981,6 +942,60 @@ namespace models {
 
 using cyborgbear::string;
 
+class Settings: public cyborgbear::Model {
+
+	public:
+
+		Settings();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		bool Fullscreen;
+		int Width;
+		int Height;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
+class ZoneInstance: public cyborgbear::Model {
+
+	public:
+
+		ZoneInstance();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		string AccessorID;
+		string ZonePath;
+		models::Point Location;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
 class ZoneHeader: public cyborgbear::Model {
 
 	public:
@@ -998,6 +1013,32 @@ class ZoneHeader: public cyborgbear::Model {
 #endif
 		string Path;
 		models::Size Size;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
+class Animation: public cyborgbear::Model {
+
+	public:
+
+		Animation();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		string Import;
+		std::vector< models::AnimationSlide > Images;
 };
 
 }
@@ -1029,32 +1070,6 @@ class Sprite: public cyborgbear::Model {
 		string Name;
 		string Path;
 		string ScriptPath;
-};
-
-}
-
-
-namespace models {
-
-using cyborgbear::string;
-
-class Animation: public cyborgbear::Model {
-
-	public:
-
-		Animation();
-
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-#ifdef CYBORGBEAR_BOOST_ENABLED
-
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		string Import;
-		std::vector< models::AnimationSlide > Images;
 };
 
 }
@@ -1176,13 +1191,6 @@ namespace boost {
 namespace serialization {
 
 template<class Archive>
-void serialize(Archive &ar, models::Settings &model, const unsigned int) {
-	ar & model.Fullscreen;
-	ar & model.Width;
-	ar & model.Height;
-}
-
-template<class Archive>
 void serialize(Archive &ar, models::Point &model, const unsigned int) {
 	ar & model.X;
 	ar & model.Y;
@@ -1232,13 +1240,6 @@ void serialize(Archive &ar, models::Image &model, const unsigned int) {
 }
 
 template<class Archive>
-void serialize(Archive &ar, models::ZoneInstance &model, const unsigned int) {
-	ar & model.AccessorID;
-	ar & model.ZonePath;
-	ar & model.Location;
-}
-
-template<class Archive>
 void serialize(Archive &ar, models::AnimationSlide &model, const unsigned int) {
 	ar & model.Interval;
 	ar & model.Image;
@@ -1251,9 +1252,29 @@ void serialize(Archive &ar, models::AnimLayer &model, const unsigned int) {
 }
 
 template<class Archive>
+void serialize(Archive &ar, models::Settings &model, const unsigned int) {
+	ar & model.Fullscreen;
+	ar & model.Width;
+	ar & model.Height;
+}
+
+template<class Archive>
+void serialize(Archive &ar, models::ZoneInstance &model, const unsigned int) {
+	ar & model.AccessorID;
+	ar & model.ZonePath;
+	ar & model.Location;
+}
+
+template<class Archive>
 void serialize(Archive &ar, models::ZoneHeader &model, const unsigned int) {
 	ar & model.Path;
 	ar & model.Size;
+}
+
+template<class Archive>
+void serialize(Archive &ar, models::Animation &model, const unsigned int) {
+	ar & model.Import;
+	ar & model.Images;
 }
 
 template<class Archive>
@@ -1265,12 +1286,6 @@ void serialize(Archive &ar, models::Sprite &model, const unsigned int) {
 	ar & model.Name;
 	ar & model.Path;
 	ar & model.ScriptPath;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Animation &model, const unsigned int) {
-	ar & model.Import;
-	ar & model.Images;
 }
 
 template<class Archive>
