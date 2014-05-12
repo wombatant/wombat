@@ -20,7 +20,6 @@
 #include "event.hpp"
 #include "gfx.hpp"
 #include "misc.hpp"
-#include "types.hpp"
 #include "modelio.hpp"
 #include "sync.hpp"
 #include "task.hpp"
