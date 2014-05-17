@@ -43,7 +43,6 @@ void AnimationTest::draw(Graphics &g) {
 }
 
 // Tile Test
-
 TileClassTest::TileClassTest(std::string path) {
 	using namespace models::cyborgbear;
 	models::Tile model;

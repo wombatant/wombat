@@ -24,20 +24,18 @@ const int Tile::Width = 32;
 const int Tile::Height = 32;
 
 core::Flyweight<models::Tile> Tile::c_tileClasses([](models::Tile &model) {
+	AnimLayer al;
 	auto tc = new Tile();
-	tc->m_terrainFlags = model.TerrainFlags;
-	for (auto alm : model.UpperAnims) {
-		AnimLayer al;
-		al.animation = core::checkoutAnimation(alm.Animation);
-		al.point = alm.Point;
-		tc->m_upperAnims.push_back(al);
-	}
-	for (auto alm : model.LowerAnims) {
-		AnimLayer al;
-		al.animation = core::checkoutAnimation(alm.Animation);
-		al.point = alm.Point;
-		tc->m_lowerAnims.push_back(al);
-	}
+	tc->m_terrainFlags = model.TerrainType;
+
+	al.animation = core::checkoutAnimation(model.UpperAnim.Animation);
+	al.point = model.UpperAnim.Point;
+	tc->m_upperAnim = al;
+
+	al.animation = core::checkoutAnimation(model.LowerAnim.Animation);
+	al.point = model.LowerAnim.Point;
+	tc->m_lowerAnim = al;
+
 	return tc;
 });
 
@@ -48,21 +46,23 @@ Tile::~Tile() {
 }
 
 void Tile::drawUpper(core::Graphics &g, int x, int y) {
-	draw(g, x, y, m_upperAnims);
+	draw(g, x, y, m_upperAnim);
 }
 
 void Tile::drawLower(core::Graphics &g, int x, int y) {
-	draw(g, x, y, m_lowerAnims);
+	draw(g, x, y, m_lowerAnim);
 }
 
-void Tile::draw(core::Graphics &g, int x, int y, std::vector<AnimLayer> &anims) {
-	g.pushClipRect(x, y, Width, Height);
-	for (auto i : m_lowerAnims) {
-		auto x = i.point.X;
-		auto y = i.point.Y;
-		g.draw(i.animation->getImage(), x, y);
+void Tile::draw(core::Graphics &g, int x, int y, AnimLayer &anim) {
+	if (anim.animation) {
+		g.pushClipRect(x, y, Width, Height);
+		{
+			auto x = anim.point.X;
+			auto y = anim.point.Y;
+			g.draw(anim.animation->getImage(), x, y);
+		}
+		g.popClipRect();
 	}
-	g.popClipRect();
 }
 
 Tile *Tile::checkout(std::string path) {

@@ -50,7 +50,7 @@ void appendPath(std::string h) {
  * Adds the given suffix to the given string if it is not already there.
  */
 string _suffix(string path, string suffix) {
-	if (path.substr(path.size() - suffix.size()) != suffix) {
+	if (path.size() >= suffix.size() && path.substr(path.size() - suffix.size()) != suffix) {
 		path += suffix;
 	}
 	return path;
@@ -58,7 +58,8 @@ string _suffix(string path, string suffix) {
 
 models::cyborgbear::Error read(models::cyborgbear::Model &m, std::string path) {
 	using namespace models::cyborgbear;
-	auto retval = m.readJsonFile(core::path(_suffix(path, ".json")));
+	auto p = core::path(_suffix(path, ".json"));
+	auto retval = m.readJsonFile(p);
 	if (retval & Error_CouldNotAccessFile) {
 		// see if it is in "hidden" model file
 		retval = m.readJsonFile(core::path(_suffix(path, ".hjson")));

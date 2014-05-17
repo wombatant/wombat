@@ -677,6 +677,9 @@ class unknown: public Model {
 		void set(double v);
 		void set(string v);
 
+		bool operator==(const unknown&) const;
+		bool operator!=(const unknown&) const;
+
 #ifdef CYBORGBEAR_BOOST_ENABLED
 		/**
 		 * Returns Boost serialization version of this object.
@@ -710,6 +713,10 @@ class Point: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Point&) const;
+
+		bool operator!=(const Point&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -736,6 +743,10 @@ class Size: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Size&) const;
+
+		bool operator!=(const Size&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -762,6 +773,10 @@ class Bounds: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Bounds&) const;
+
+		bool operator!=(const Bounds&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -790,6 +805,10 @@ class SaveVariables: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const SaveVariables&) const;
+
+		bool operator!=(const SaveVariables&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -815,6 +834,10 @@ class SpriteSheetImage: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const SpriteSheetImage&) const;
+
+		bool operator!=(const SpriteSheetImage&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -840,6 +863,10 @@ class SpriteSheet: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const SpriteSheet&) const;
+
+		bool operator!=(const SpriteSheet&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -872,6 +899,10 @@ class Image: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Image&) const;
+
+		bool operator!=(const Image&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -899,6 +930,10 @@ class AnimationSlide: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const AnimationSlide&) const;
+
+		bool operator!=(const AnimationSlide&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -925,6 +960,10 @@ class AnimLayer: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const AnimLayer&) const;
+
+		bool operator!=(const AnimLayer&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -951,6 +990,10 @@ class Settings: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Settings&) const;
+
+		bool operator!=(const Settings&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -978,6 +1021,10 @@ class ZoneInstance: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const ZoneInstance&) const;
+
+		bool operator!=(const ZoneInstance&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -1005,6 +1052,10 @@ class ZoneHeader: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const ZoneHeader&) const;
+
+		bool operator!=(const ZoneHeader&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -1031,6 +1082,10 @@ class Animation: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Animation&) const;
+
+		bool operator!=(const Animation&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -1057,6 +1112,10 @@ class Sprite: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Sprite&) const;
+
+		bool operator!=(const Sprite&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -1088,6 +1147,10 @@ class Tile: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Tile&) const;
+
+		bool operator!=(const Tile&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -1095,9 +1158,9 @@ class Tile: public cyborgbear::Model {
 		virtual void fromBoostBinary(string dat);
 #endif
 		string Import;
-		int TerrainFlags;
-		std::vector< models::AnimLayer > LowerAnims;
-		std::vector< models::AnimLayer > UpperAnims;
+		int TerrainType;
+		models::AnimLayer LowerAnim;
+		models::AnimLayer UpperAnim;
 };
 
 }
@@ -1116,6 +1179,10 @@ class World: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const World&) const;
+
+		bool operator!=(const World&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -1141,6 +1208,10 @@ class TileInstance: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const TileInstance&) const;
+
+		bool operator!=(const TileInstance&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -1167,6 +1238,10 @@ class Zone: public cyborgbear::Model {
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Zone&) const;
+
+		bool operator!=(const Zone&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -1291,9 +1366,9 @@ void serialize(Archive &ar, models::Sprite &model, const unsigned int) {
 template<class Archive>
 void serialize(Archive &ar, models::Tile &model, const unsigned int) {
 	ar & model.Import;
-	ar & model.TerrainFlags;
-	ar & model.LowerAnims;
-	ar & model.UpperAnims;
+	ar & model.TerrainType;
+	ar & model.LowerAnim;
+	ar & model.UpperAnim;
 }
 
 template<class Archive>

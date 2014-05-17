@@ -21,15 +21,18 @@
 using namespace models;
 using namespace models::cyborgbear;
 
-string models::cyborgbear::version = "1.0.0";
+string models::cyborgbear::version = "1.1.1";
 
 int Model::readJsonFile(string path) {
-	std::ifstream in;
-	in.open(cyborgbear::toStdString(path).c_str());
-	if (in.is_open()) {
-		std::string json((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-		in.close();
-		return fromJson(cyborgbear::toString(json));
+	try {
+		std::ifstream in;
+		in.open(cyborgbear::toStdString(path).c_str());
+		if (in.is_open()) {
+			std::string json((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+			in.close();
+			return fromJson(cyborgbear::toString(json));
+		}
+	} catch (...) {
 	}
 	return cyborgbear::Error_CouldNotAccessFile;
 }
@@ -208,6 +211,14 @@ void unknown::set(string v) {
 	cyborgbear::decref(obj);
 }
 
+bool unknown::operator==(const unknown &o) const {
+	return m_type == o.m_type && m_data == o.m_data;
+}
+
+bool unknown::operator!=(const unknown &o) const {
+	return m_type != o.m_type || m_data != o.m_data;
+}
+
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 void unknown::fromBoostBinary(string dat) {
@@ -311,7 +322,7 @@ Sprite::Sprite() {
 
 Tile::Tile() {
 	this->Import = "";
-	this->TerrainFlags = 0;
+	this->TerrainType = 0;
 }
 
 World::World() {
@@ -1109,10 +1120,10 @@ cyborgbear::Error Tile::loadJsonObj(cyborgbear::JsonVal in) {
 		}
 	}
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "TerrainFlags");
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "TerrainType");
 		{
 			if (cyborgbear::isInt(obj0)) {
-				this->TerrainFlags = cyborgbear::toInt(obj0);
+				this->TerrainType = cyborgbear::toInt(obj0);
 			} else {
 				if (cyborgbear::isNull(obj0)) {
 					retval |= cyborgbear::Error_MissingField;
@@ -1123,56 +1134,32 @@ cyborgbear::Error Tile::loadJsonObj(cyborgbear::JsonVal in) {
 		}
 	}
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "LowerAnims");
-		if (!cyborgbear::isNull(obj0)) {
-			if (cyborgbear::isArray(obj0)) {
-				cyborgbear::JsonArrayOut array0 = cyborgbear::toArray(obj0);
-				unsigned int size = cyborgbear::arraySize(array0);
-				this->LowerAnims.resize(size);
-				for (unsigned int i = 0; i < size; i++) {
-					cyborgbear::JsonValOut obj1 = cyborgbear::arrayRead(array0, i);
-					{
-						cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj1);
-						if (cyborgbear::isObj(finalObj)) {
-							retval |= this->LowerAnims[i].loadJsonObj(obj1);
-						} else {
-							if (cyborgbear::isNull(obj1)) {
-								retval |= cyborgbear::Error_MissingField;
-							} else {
-								retval |= cyborgbear::Error_TypeMismatch;
-							}
-						}
-					}
-				}
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "LowerAnim");
+		{
+			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
+			if (cyborgbear::isObj(finalObj)) {
+				retval |= this->LowerAnim.loadJsonObj(obj0);
 			} else {
-				retval |= cyborgbear::Error_TypeMismatch;
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
 			}
 		}
 	}
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "UpperAnims");
-		if (!cyborgbear::isNull(obj0)) {
-			if (cyborgbear::isArray(obj0)) {
-				cyborgbear::JsonArrayOut array0 = cyborgbear::toArray(obj0);
-				unsigned int size = cyborgbear::arraySize(array0);
-				this->UpperAnims.resize(size);
-				for (unsigned int i = 0; i < size; i++) {
-					cyborgbear::JsonValOut obj1 = cyborgbear::arrayRead(array0, i);
-					{
-						cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj1);
-						if (cyborgbear::isObj(finalObj)) {
-							retval |= this->UpperAnims[i].loadJsonObj(obj1);
-						} else {
-							if (cyborgbear::isNull(obj1)) {
-								retval |= cyborgbear::Error_MissingField;
-							} else {
-								retval |= cyborgbear::Error_TypeMismatch;
-							}
-						}
-					}
-				}
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "UpperAnim");
+		{
+			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
+			if (cyborgbear::isObj(finalObj)) {
+				retval |= this->UpperAnim.loadJsonObj(obj0);
 			} else {
-				retval |= cyborgbear::Error_TypeMismatch;
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
 			}
 		}
 	}
@@ -1689,31 +1676,21 @@ cyborgbear::JsonValOut Tile::buildJsonObj() {
 		cyborgbear::decref(out0);
 	}
 	{
-		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->TerrainFlags);
-		cyborgbear::objSet(obj, "TerrainFlags", out0);
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->TerrainType);
+		cyborgbear::objSet(obj, "TerrainType", out0);
 		cyborgbear::decref(out0);
 	}
 	{
-		cyborgbear::JsonArrayOut out1 = cyborgbear::newJsonArray();
-		for (cyborgbear::VectorIterator i = 0; i < this->LowerAnims.size(); i++) {
-			cyborgbear::JsonValOut obj0 = this->LowerAnims[i].buildJsonObj();
-			cyborgbear::JsonValOut out0 = obj0;
-			cyborgbear::arrayAdd(out1, out0);
-			cyborgbear::decref(out0);
-		}
-		cyborgbear::objSet(obj, "LowerAnims", out1);
-		cyborgbear::decref(out1);
+		cyborgbear::JsonValOut obj0 = this->LowerAnim.buildJsonObj();
+		cyborgbear::JsonValOut out0 = obj0;
+		cyborgbear::objSet(obj, "LowerAnim", out0);
+		cyborgbear::decref(out0);
 	}
 	{
-		cyborgbear::JsonArrayOut out1 = cyborgbear::newJsonArray();
-		for (cyborgbear::VectorIterator i = 0; i < this->UpperAnims.size(); i++) {
-			cyborgbear::JsonValOut obj0 = this->UpperAnims[i].buildJsonObj();
-			cyborgbear::JsonValOut out0 = obj0;
-			cyborgbear::arrayAdd(out1, out0);
-			cyborgbear::decref(out0);
-		}
-		cyborgbear::objSet(obj, "UpperAnims", out1);
-		cyborgbear::decref(out1);
+		cyborgbear::JsonValOut obj0 = this->UpperAnim.buildJsonObj();
+		cyborgbear::JsonValOut out0 = obj0;
+		cyborgbear::objSet(obj, "UpperAnim", out0);
+		cyborgbear::decref(out0);
 	}
 	return obj;
 }
@@ -1792,6 +1769,290 @@ cyborgbear::JsonValOut Zone::buildJsonObj() {
 	}
 	return obj;
 }
+bool Point::operator==(const Point &o) const {
+	if (X != o.X) return false;
+	if (Y != o.Y) return false;
+
+	return true;
+}
+
+bool Size::operator==(const Size &o) const {
+	if (Width != o.Width) return false;
+	if (Height != o.Height) return false;
+
+	return true;
+}
+
+bool Bounds::operator==(const Bounds &o) const {
+	if (X != o.X) return false;
+	if (Y != o.Y) return false;
+	if (Width != o.Width) return false;
+	if (Height != o.Height) return false;
+
+	return true;
+}
+
+bool SaveVariables::operator==(const SaveVariables &o) const {
+	if (Vars != o.Vars) return false;
+
+	return true;
+}
+
+bool SpriteSheetImage::operator==(const SpriteSheetImage &o) const {
+	if (SrcBounds != o.SrcBounds) return false;
+
+	return true;
+}
+
+bool SpriteSheet::operator==(const SpriteSheet &o) const {
+	if (TilesWide != o.TilesWide) return false;
+	if (TilesHigh != o.TilesHigh) return false;
+	if (TileWidth != o.TileWidth) return false;
+	if (TileHeight != o.TileHeight) return false;
+	if (SrcFile != o.SrcFile) return false;
+	if (Images != o.Images) return false;
+	if (ImageIdIterator != o.ImageIdIterator) return false;
+	if (RecycledImageIds != o.RecycledImageIds) return false;
+
+	return true;
+}
+
+bool Image::operator==(const Image &o) const {
+	if (SpriteSheet != o.SpriteSheet) return false;
+	if (ImgId != o.ImgId) return false;
+	if (DefaultSize != o.DefaultSize) return false;
+
+	return true;
+}
+
+bool AnimationSlide::operator==(const AnimationSlide &o) const {
+	if (Interval != o.Interval) return false;
+	if (Image != o.Image) return false;
+
+	return true;
+}
+
+bool AnimLayer::operator==(const AnimLayer &o) const {
+	if (Point != o.Point) return false;
+	if (Animation != o.Animation) return false;
+
+	return true;
+}
+
+bool Settings::operator==(const Settings &o) const {
+	if (Fullscreen != o.Fullscreen) return false;
+	if (Width != o.Width) return false;
+	if (Height != o.Height) return false;
+
+	return true;
+}
+
+bool ZoneInstance::operator==(const ZoneInstance &o) const {
+	if (AccessorID != o.AccessorID) return false;
+	if (ZonePath != o.ZonePath) return false;
+	if (Location != o.Location) return false;
+
+	return true;
+}
+
+bool ZoneHeader::operator==(const ZoneHeader &o) const {
+	if (Path != o.Path) return false;
+	if (Size != o.Size) return false;
+
+	return true;
+}
+
+bool Animation::operator==(const Animation &o) const {
+	if (Import != o.Import) return false;
+	if (Images != o.Images) return false;
+
+	return true;
+}
+
+bool Sprite::operator==(const Sprite &o) const {
+	if (AnimLayers != o.AnimLayers) return false;
+	if (SpriteType != o.SpriteType) return false;
+	if (PersonID != o.PersonID) return false;
+	if (Speed != o.Speed) return false;
+	if (Name != o.Name) return false;
+	if (Path != o.Path) return false;
+	if (ScriptPath != o.ScriptPath) return false;
+
+	return true;
+}
+
+bool Tile::operator==(const Tile &o) const {
+	if (Import != o.Import) return false;
+	if (TerrainType != o.TerrainType) return false;
+	if (LowerAnim != o.LowerAnim) return false;
+	if (UpperAnim != o.UpperAnim) return false;
+
+	return true;
+}
+
+bool World::operator==(const World &o) const {
+	if (Zones != o.Zones) return false;
+
+	return true;
+}
+
+bool TileInstance::operator==(const TileInstance &o) const {
+	if (Tile != o.Tile) return false;
+	if (Occupant != o.Occupant) return false;
+
+	return true;
+}
+
+bool Zone::operator==(const Zone &o) const {
+	if (Tiles != o.Tiles) return false;
+	if (InitScripts != o.InitScripts) return false;
+	if (Location != o.Location) return false;
+
+	return true;
+}
+
+bool Point::operator!=(const Point &o) const {
+	if (X != o.X) return true;
+	if (Y != o.Y) return true;
+
+	return false;
+}
+
+bool Size::operator!=(const Size &o) const {
+	if (Width != o.Width) return true;
+	if (Height != o.Height) return true;
+
+	return false;
+}
+
+bool Bounds::operator!=(const Bounds &o) const {
+	if (X != o.X) return true;
+	if (Y != o.Y) return true;
+	if (Width != o.Width) return true;
+	if (Height != o.Height) return true;
+
+	return false;
+}
+
+bool SaveVariables::operator!=(const SaveVariables &o) const {
+	if (Vars != o.Vars) return true;
+
+	return false;
+}
+
+bool SpriteSheetImage::operator!=(const SpriteSheetImage &o) const {
+	if (SrcBounds != o.SrcBounds) return true;
+
+	return false;
+}
+
+bool SpriteSheet::operator!=(const SpriteSheet &o) const {
+	if (TilesWide != o.TilesWide) return true;
+	if (TilesHigh != o.TilesHigh) return true;
+	if (TileWidth != o.TileWidth) return true;
+	if (TileHeight != o.TileHeight) return true;
+	if (SrcFile != o.SrcFile) return true;
+	if (Images != o.Images) return true;
+	if (ImageIdIterator != o.ImageIdIterator) return true;
+	if (RecycledImageIds != o.RecycledImageIds) return true;
+
+	return false;
+}
+
+bool Image::operator!=(const Image &o) const {
+	if (SpriteSheet != o.SpriteSheet) return true;
+	if (ImgId != o.ImgId) return true;
+	if (DefaultSize != o.DefaultSize) return true;
+
+	return false;
+}
+
+bool AnimationSlide::operator!=(const AnimationSlide &o) const {
+	if (Interval != o.Interval) return true;
+	if (Image != o.Image) return true;
+
+	return false;
+}
+
+bool AnimLayer::operator!=(const AnimLayer &o) const {
+	if (Point != o.Point) return true;
+	if (Animation != o.Animation) return true;
+
+	return false;
+}
+
+bool Settings::operator!=(const Settings &o) const {
+	if (Fullscreen != o.Fullscreen) return true;
+	if (Width != o.Width) return true;
+	if (Height != o.Height) return true;
+
+	return false;
+}
+
+bool ZoneInstance::operator!=(const ZoneInstance &o) const {
+	if (AccessorID != o.AccessorID) return true;
+	if (ZonePath != o.ZonePath) return true;
+	if (Location != o.Location) return true;
+
+	return false;
+}
+
+bool ZoneHeader::operator!=(const ZoneHeader &o) const {
+	if (Path != o.Path) return true;
+	if (Size != o.Size) return true;
+
+	return false;
+}
+
+bool Animation::operator!=(const Animation &o) const {
+	if (Import != o.Import) return true;
+	if (Images != o.Images) return true;
+
+	return false;
+}
+
+bool Sprite::operator!=(const Sprite &o) const {
+	if (AnimLayers != o.AnimLayers) return true;
+	if (SpriteType != o.SpriteType) return true;
+	if (PersonID != o.PersonID) return true;
+	if (Speed != o.Speed) return true;
+	if (Name != o.Name) return true;
+	if (Path != o.Path) return true;
+	if (ScriptPath != o.ScriptPath) return true;
+
+	return false;
+}
+
+bool Tile::operator!=(const Tile &o) const {
+	if (Import != o.Import) return true;
+	if (TerrainType != o.TerrainType) return true;
+	if (LowerAnim != o.LowerAnim) return true;
+	if (UpperAnim != o.UpperAnim) return true;
+
+	return false;
+}
+
+bool World::operator!=(const World &o) const {
+	if (Zones != o.Zones) return true;
+
+	return false;
+}
+
+bool TileInstance::operator!=(const TileInstance &o) const {
+	if (Tile != o.Tile) return true;
+	if (Occupant != o.Occupant) return true;
+
+	return false;
+}
+
+bool Zone::operator!=(const Zone &o) const {
+	if (Tiles != o.Tiles) return true;
+	if (InitScripts != o.InitScripts) return true;
+	if (Location != o.Location) return true;
+
+	return false;
+}
+
 
 namespace models {
 

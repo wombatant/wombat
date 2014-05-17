@@ -32,8 +32,8 @@ class Tile: public core::Flyweight<models::Tile>::GenericValue {
 		static core::Flyweight<models::Tile> c_tileClasses;
 
 		int m_terrainFlags;
-		std::vector<AnimLayer> m_upperAnims;
-		std::vector<AnimLayer> m_lowerAnims;
+		AnimLayer m_upperAnim;
+		AnimLayer m_lowerAnim;
 
 	public:
 		/**
@@ -63,7 +63,7 @@ class Tile: public core::Flyweight<models::Tile>::GenericValue {
 		static void checkin(Tile*);
 
 	private:
-		void draw(core::Graphics &g, int x, int y, std::vector<AnimLayer> &anims);
+		void draw(core::Graphics &g, int x, int y, AnimLayer &anims);
 
 		// prevent copies
 		Tile(const Tile&);

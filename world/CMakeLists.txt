@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 add_library(
 	WombatWorld
+		animlayer.cpp
 		tile.cpp
 		tileinstance.cpp
 		world.cpp

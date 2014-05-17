@@ -1,7 +1,18 @@
 {
-	"LowerAnims": [
-		{
-			"Animation": "Animations/Animation2.json"
-		}
-	]
+    "Import": "",
+    "LowerAnim": {
+        "Animation": "Animations/Animation2",
+        "Point": {
+            "X": 0,
+            "Y": 0
+        }
+    },
+    "TerrainType": 0,
+    "UpperAnim": {
+        "Animation": "",
+        "Point": {
+            "X": 0,
+            "Y": 0
+        }
+    }
 }

@@ -106,6 +106,12 @@ class Animation: public Flyweight<models::Animation>::Value {
 		bool loaded();
 
 		string key();
+
+		/**
+		 * Gets the number of Images in the Animation.
+		 * @return the number of Images in the Animation
+		 */
+		int size();
 };
 
 class Graphics {

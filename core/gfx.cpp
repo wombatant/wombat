@@ -118,12 +118,15 @@ void Animation::add(Image *img) {
 }
 
 Image *Animation::getImage() {
-	auto time = core::time();
-	if (m_lastUpdate <= time - m_interval) {
-		m_slide = (m_slide + 1) % m_imgs.size();
-		m_lastUpdate = time;
+	if (m_imgs.size()) {
+		auto time = core::time();
+		if (m_lastUpdate <= time - m_interval) {
+			m_slide = (m_slide + 1) % m_imgs.size();
+			m_lastUpdate = time;
+		}
+		return m_imgs[m_slide];
 	}
-	return m_imgs[m_slide];
+	return 0;
 }
 
 bool Animation::loaded() {
@@ -136,6 +139,10 @@ bool Animation::loaded() {
 		}
 	}
 	return retval;
+}
+
+int Animation::size() {
+	return m_imgs.size();
 }
 
 }

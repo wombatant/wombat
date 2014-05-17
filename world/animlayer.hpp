@@ -25,6 +25,16 @@ class AnimLayer {
 	public:
 		core::Animation *animation;
 		models::Point point;
+
+		/**
+		 * Constructor
+		 */
+		AnimLayer();
+
+		/**
+		 * Constructor
+		 */
+		AnimLayer(core::Animation *anim, models::Point point);
 };
 
 }
