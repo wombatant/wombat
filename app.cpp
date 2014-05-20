@@ -21,6 +21,18 @@ using core::TaskState;
 
 App::App() {
 	core::prependPath("active_path");
+	models::InitFile initFile;
+	models::World world;
+	models::User user;
+
+	core::read(initFile, "Misc/Init.json");
+	core::read(user, initFile.User);
+	core::read(world, user.World);
+	m_world = new world::World(world);
+}
+
+App::~App() {
+	delete m_world;
 }
 
 void App::init() {

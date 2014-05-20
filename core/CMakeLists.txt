@@ -18,7 +18,6 @@ add_library(
 		_sdlthreads.cpp
 		_sdltls.cpp
 		_submgr.cpp
-		_threads.cpp
 )
 
 install(TARGETS WombatCore DESTINATION lib)

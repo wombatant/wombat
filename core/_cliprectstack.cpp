@@ -1,3 +1,18 @@
+/*
+ * Copyright 2013-2014 gtalent2@gmail.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "gfx.hpp"
 #include "_cliprectstack.hpp"
 
@@ -13,15 +28,15 @@ ClipRectStack::ClipRectStack() {
 	m_viewports.push_back(v);
 }
 
-models::Point ClipRectStack::translate() {
+common::Point ClipRectStack::translate() {
 	return m_viewports[m_pt].point;
 }
 
-models::Bounds ClipRectStack::bounds() {
+common::Bounds ClipRectStack::bounds() {
 	return m_viewports[m_pt].bounds;
 }
 
-void ClipRectStack::push(models::Bounds rect) {
+void ClipRectStack::push(common::Bounds rect) {
 	m_pt++;
 	m_viewports.push_back(rect);
 	calcBounds();
@@ -54,7 +69,7 @@ void ClipRectStack::calcBounds() {
 	// make sure the point of origin is not negative
 	if (n.X < p.X) {
 		t.X = n.X - p.X;
-		n.Width -= p.X -n.X;
+		n.Width -= p.X - n.X;
 		n.X = p.X;
 		if (n.Width < 0) {
 			n.Width = 0;
@@ -62,7 +77,7 @@ void ClipRectStack::calcBounds() {
 	}
 	if (n.Y < p.Y) {
 		t.Y = n.Y - p.Y;
-		n.Height -= p.Y -n.Y;
+		n.Height -= p.Y - n.Y;
 		n.Y = p.Y;
 		if (n.Height < 0) {
 			n.Height = 0;

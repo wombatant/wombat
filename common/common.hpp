@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "core.hpp"
-#include "event.hpp"
-#include "_threads.hpp"
+#ifndef WOMBAT_COMMON_COMMON_HPP
+#define WOMBAT_COMMON_COMMON_HPP
 
-namespace wombat {
-namespace core {
+#include "bounds.hpp"
+#include "point.hpp"
 
-}
-}
+#endif

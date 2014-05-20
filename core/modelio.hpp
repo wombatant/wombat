@@ -25,9 +25,7 @@
 namespace wombat {
 namespace core {
 
-using std::map;
-using std::string;
-using std::function;
+typedef std::string Path;
 
 /**
  * Prepends to the path to load models from.
@@ -49,14 +47,14 @@ void appendPath(std::string path);
  * @param path the of the file to refer to within wombat_home
  * @return the given path with the wombat_home path prepended to it.
  */
-std::string path(std::string path);
+std::string path(Path path);
 
 /**
  * Reads the file at the given path within the path into the given model.
  * @param model the model to load the file into
  * @prarm path the path within the path to read from
  */
-models::cyborgbear::Error read(models::cyborgbear::Model &model, std::string path);
+models::cyborgbear::Error read(models::cyborgbear::Model &model, Path path);
 
 /**
  * Manages Model IO, preventing redundancies in memory.
@@ -70,22 +68,22 @@ class Flyweight {
 				int dependents;
 			public:
 				virtual ~Value() {};
-				virtual string key() = 0;
+				virtual std::string key() = 0;
 		};
 		class GenericValue: public Value {
 			friend class Flyweight;
 			protected:
-				string m_key;
+				std::string m_key;
 			public:
 				virtual ~GenericValue() {};
-				virtual string key() {
+				virtual std::string key() {
 					return m_key;
 				};
 		};
-		typedef function<Value*(Model&)> FlyweightNodeBuilder;
+		typedef std::function<Value*(Model&)> FlyweightNodeBuilder;
 
 	private:
-		map<string, Value*> m_cache;
+		std::map<std::string, Value*> m_cache;
 		FlyweightNodeBuilder m_build;
 		core::Mutex m_lock;
 
@@ -99,7 +97,7 @@ class Flyweight {
 		 * @param modelPath the path to the model
 		 * @return the value associated with the given key
 		 */
-		Value* checkout(std::string modelPath) {
+		Value* checkout(Path modelPath) {
 			m_lock.lock();
 			Value *v = m_cache[modelPath];
 			if (!v) {
@@ -116,7 +114,7 @@ class Flyweight {
 
 		Value* checkout(Model &key) {
 			m_lock.lock();
-			string keyStr = key.toJson();
+			std::string keyStr = key.toJson();
 			Value *v = m_cache[keyStr];
 			if (!v) {
 				m_cache[keyStr] = v = m_build(key);
@@ -128,7 +126,7 @@ class Flyweight {
 			return v;
 		}
 
-		void checkin(string key) {
+		void checkin(Path key) {
 			m_lock.lock();
 			Value *v = m_cache[key];
 			checkin(v);

@@ -16,7 +16,8 @@
 #ifndef WOMBAT_WORLD_ZONE_HPP
 #define WOMBAT_WORLD_ZONE_HPP
 
-#include "core/core.hpp"
+#include <common/common.hpp>
+#include <core/core.hpp>
 #include "tileinstance.hpp"
 
 namespace wombat {
@@ -27,8 +28,8 @@ class Zone: public core::Task {
 		class TileGrid {
 			private:
 				TileInstance ***m_tiles;
-				int m_width;
-				int m_height;
+				int m_tilesWide;
+				int m_tilesHigh;
 				int m_layers;
 
 			public:
@@ -43,12 +44,20 @@ class Zone: public core::Task {
 				~TileGrid();
 
 				/**
+				 * Sets the dimensions of the TileInstance grid.
+				 * @param w width of grid
+				 * @param h height of grid
+				 * @param layers layers of grid
+				 */
+				void setDimensions(int w, int h, int layers);
+
+				/**
 				 * Allocates TileInstance grid.
 				 * @param w width of grid
 				 * @param h height of grid
 				 * @param layers layers of grid
 				 */
-				void allocate(int w, int h, int layers);
+				void allocate();
 
 				/**
 				 * Gets the TileInstance at the given address.
@@ -60,14 +69,38 @@ class Zone: public core::Task {
 				inline TileInstance &at(int x, int y, int layer) {
 					return m_tiles[layer][y][x];
 				}
+
+				/**
+				 * Gets the number of tiles this grid spans horizontally.
+				 * @return the number of tiles this grid spans horizontally
+				 */
+				int tilesWide();
+
+				/**
+				 * Gets the number of tiles this grid spans vertically.
+				 * @return the number of tiles this grid spans vertically
+				 */
+				int tilesHigh();
+
+				/**
+				 * Gets the number of layers this grid has.
+				 * @return the number of layers this grid has
+				 */
+				int layers();
 		} m_tiles;
+		core::Path m_zone;
+		common::Point m_address;
+		// used to count the number Cameras watching the Zone to
+		//  determine when to unload
+		int m_dependents;
 		bool m_loaded;
+		core::Mutex m_mutex;
 
 	public:
 		/**
 		 * Constructor
 		 */
-		Zone();
+		Zone(models::ZoneInstance model);
 
 		/**
 		 * Destructor
@@ -81,6 +114,33 @@ class Zone: public core::Task {
 		 * @return whether or not the Zone has been loaded yet
 		 */
 		bool loaded();
+
+		/**
+		 * Gets the bounds of this Zone.
+		 * @return the bounds of this Zone
+		 */
+		common::Bounds bounds();
+
+		void draw(core::Graphics &g, common::Bounds crop, common::Point translation);
+
+		/**
+		 * Gets the coordinates of this Zone.
+		 * @return the coordinates of this Zone
+		 */
+		common::Point loc();
+
+		/**
+		 * Increments the dependent counter.
+		 */
+		void incDeps();
+
+		/**
+		 * Decrements the dependent counter.
+		 */
+		void decDeps();
+
+	private:
+		void load();
 };
 
 }

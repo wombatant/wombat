@@ -27,7 +27,7 @@ std::vector<std::string> getPath() {
 	return _path;
 }
 
-std::string path(std::string path) {
+std::string path(Path path) {
 	for (auto p : _path) {
 		auto val = p + path;
 		std::ifstream file(val);
@@ -56,14 +56,10 @@ string _suffix(string path, string suffix) {
 	return path;
 }
 
-models::cyborgbear::Error read(models::cyborgbear::Model &m, std::string path) {
+models::cyborgbear::Error read(models::cyborgbear::Model &m, Path path) {
 	using namespace models::cyborgbear;
 	auto p = core::path(_suffix(path, ".json"));
 	auto retval = m.readJsonFile(p);
-	if (retval & Error_CouldNotAccessFile) {
-		// see if it is in "hidden" model file
-		retval = m.readJsonFile(core::path(_suffix(path, ".hjson")));
-	};
 
 	if (retval & Error_TypeMismatch) {
 		printf("Warning: type mismatch in %s\n", path.c_str());

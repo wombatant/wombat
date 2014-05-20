@@ -51,8 +51,8 @@ TileClassTest::TileClassTest(std::string path) {
 }
 
 void TileClassTest::draw(Graphics &g) {
-	m_tileClass->drawLower(g, 42, 42);
-	m_tileClass->drawUpper(g, 42, 42);
+	m_tileClass->drawLower(g, common::Point(42, 42));
+	m_tileClass->drawUpper(g, common::Point(42, 42));
 }
 
 }

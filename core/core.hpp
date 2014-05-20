@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBATCORE_CORE_HPP
-#define WOMBATCORE_CORE_HPP
+#ifndef WOMBAT_CORE_CORE_HPP
+#define WOMBAT_CORE_CORE_HPP
 
 #include "models/models.hpp"
 #include "event.hpp"

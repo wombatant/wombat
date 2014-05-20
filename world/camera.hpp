@@ -13,40 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_APP_HPP
-#define WOMBAT_APP_HPP
+#ifndef WOMBAT_WORLD_CAMERA_HPP
+#define WOMBAT_WORLD_CAMERA_HPP
 
+#include <common/common.hpp>
 #include <core/core.hpp>
-#include <world/world.hpp>
+#include "world.hpp"
 
 namespace wombat {
+namespace world {
 
-class App: public core::Task {
+class Camera {
 	private:
-		world::World *m_world;
+		common::Bounds m_bounds;
+		std::vector<Zone*> m_zones;
+		// Tracks what Zone each corner is in
+		Zone *m_tlZone, *m_trZone, *m_blZone, *m_brZone;
+		World *m_world;
 
 	public:
 		/**
 		 * Constructor
 		 */
-		App();
-		
+		Camera();
+
 		/**
-		 * Destructor
+		 * Draws what the Camera is currently hovering over.
+		 * @param g the Graphics instance to draw the Camera's sight with
 		 */
-		~App();
+		void draw(core::Graphics &g);
 
-		void init();
-
-		core::TaskState run(core::Event);
+		/**
+		 * Gets the bounds of this Camera.
+		 * @return the bounds of this Camera
+		 */
+		common::Bounds bounds();
 
 	private:
-		/**
-		 * Runs exit code.
-		 */
-		void quit();
+		void findZones();
 };
 
+}
 }
 
 #endif

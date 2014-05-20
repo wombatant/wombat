@@ -20,13 +20,15 @@
 #include <SDL_ttf.h>
 
 #include "core.hpp"
-#include "_sdlglobs.hpp"
-#include "core/modelio.hpp"
 
 namespace wombat {
 namespace core {
 
 using std::string;
+
+extern SDL_Window *_display;
+extern SDL_Renderer *_renderer;
+
 
 int displayWidth() {
 	int w;
@@ -133,7 +135,7 @@ void Graphics::setRGB(int r, int g, int b) {
 }
 
 void Graphics::pushClipRect(int x, int y, int w, int h) {
-	models::Bounds bnds;
+	common::Bounds bnds;
 	bnds.X = x;
 	bnds.Y = y;
 	bnds.Width = w;

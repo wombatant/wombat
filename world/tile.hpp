@@ -17,7 +17,8 @@
 #define WOMBAT_WORLD_TILE_HPP
 
 #include <string>
-#include "core/core.hpp"
+#include <common/common.hpp>
+#include <core/core.hpp>
 #include "animlayer.hpp"
 
 namespace wombat {
@@ -46,9 +47,14 @@ class Tile: public core::Flyweight<models::Tile>::GenericValue {
 		 */
 		~Tile();
 
-		void drawUpper(core::Graphics &g, int x, int y);
+		void drawUpper(core::Graphics &g, common::Point p);
+		void drawLower(core::Graphics &g, common::Point p);
 
-		void drawLower(core::Graphics &g, int x, int y);
+		/**
+		 * Checks out the Tile object matching the given model.
+		 * @param model model representing the desired Tile
+		 */
+		static Tile *checkout(models::Tile model);
 
 		/**
 		 * Checks out the Tile object stored at the given path.

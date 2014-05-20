@@ -292,23 +292,38 @@ AnimLayer::AnimLayer() {
 	this->Animation = "";
 }
 
+User::User() {
+	this->Person = "";
+	this->World = "";
+	this->ZoneInstance = "";
+	this->Layer = 0;
+}
+
 Settings::Settings() {
 	this->Fullscreen = 0;
 	this->Width = 0;
 	this->Height = 0;
 }
 
-ZoneInstance::ZoneInstance() {
-	this->AccessorID = "";
-	this->ZonePath = "";
+InitFile::InitFile() {
+	this->User = "";
 }
 
-ZoneHeader::ZoneHeader() {
-	this->Path = "";
+ZoneInstance::ZoneInstance() {
+	this->AccessorID = "";
+	this->ZoneHeader = "";
 }
 
 Animation::Animation() {
 	this->Import = "";
+}
+
+World::World() {
+}
+
+Tile::Tile() {
+	this->Import = "";
+	this->TerrainType = 0;
 }
 
 Sprite::Sprite() {
@@ -320,12 +335,18 @@ Sprite::Sprite() {
 	this->ScriptPath = "";
 }
 
-Tile::Tile() {
-	this->Import = "";
-	this->TerrainType = 0;
+ZoneHeader::ZoneHeader() {
+	this->Zone = "";
+	this->TilesWide = 0;
+	this->TilesHigh = 0;
+	this->Layers = 0;
 }
 
-World::World() {
+PersonClass::PersonClass() {
+	this->ID = 0;
+}
+
+Person::Person() {
 }
 
 TileInstance::TileInstance() {
@@ -788,6 +809,69 @@ cyborgbear::Error AnimLayer::loadJsonObj(cyborgbear::JsonVal in) {
 	return retval;
 }
 
+cyborgbear::Error User::loadJsonObj(cyborgbear::JsonVal in) {
+	cyborgbear::Error retval = cyborgbear::Error_Ok;
+	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
+
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Person");
+		{
+			if (cyborgbear::isString(obj0)) {
+				this->Person = cyborgbear::toString(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "World");
+		{
+			if (cyborgbear::isString(obj0)) {
+				this->World = cyborgbear::toString(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "ZoneInstance");
+		{
+			if (cyborgbear::isString(obj0)) {
+				this->ZoneInstance = cyborgbear::toString(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Layer");
+		{
+			if (cyborgbear::isInt(obj0)) {
+				this->Layer = cyborgbear::toInt(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	return retval;
+}
+
 cyborgbear::Error Settings::loadJsonObj(cyborgbear::JsonVal in) {
 	cyborgbear::Error retval = cyborgbear::Error_Ok;
 	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
@@ -837,6 +921,27 @@ cyborgbear::Error Settings::loadJsonObj(cyborgbear::JsonVal in) {
 	return retval;
 }
 
+cyborgbear::Error InitFile::loadJsonObj(cyborgbear::JsonVal in) {
+	cyborgbear::Error retval = cyborgbear::Error_Ok;
+	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
+
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "User");
+		{
+			if (cyborgbear::isString(obj0)) {
+				this->User = cyborgbear::toString(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	return retval;
+}
+
 cyborgbear::Error ZoneInstance::loadJsonObj(cyborgbear::JsonVal in) {
 	cyborgbear::Error retval = cyborgbear::Error_Ok;
 	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
@@ -856,10 +961,10 @@ cyborgbear::Error ZoneInstance::loadJsonObj(cyborgbear::JsonVal in) {
 		}
 	}
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "ZonePath");
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "ZoneHeader");
 		{
 			if (cyborgbear::isString(obj0)) {
-				this->ZonePath = cyborgbear::toString(obj0);
+				this->ZoneHeader = cyborgbear::toString(obj0);
 			} else {
 				if (cyborgbear::isNull(obj0)) {
 					retval |= cyborgbear::Error_MissingField;
@@ -870,47 +975,11 @@ cyborgbear::Error ZoneInstance::loadJsonObj(cyborgbear::JsonVal in) {
 		}
 	}
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Location");
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Address");
 		{
 			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
 			if (cyborgbear::isObj(finalObj)) {
-				retval |= this->Location.loadJsonObj(obj0);
-			} else {
-				if (cyborgbear::isNull(obj0)) {
-					retval |= cyborgbear::Error_MissingField;
-				} else {
-					retval |= cyborgbear::Error_TypeMismatch;
-				}
-			}
-		}
-	}
-	return retval;
-}
-
-cyborgbear::Error ZoneHeader::loadJsonObj(cyborgbear::JsonVal in) {
-	cyborgbear::Error retval = cyborgbear::Error_Ok;
-	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
-
-	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Path");
-		{
-			if (cyborgbear::isString(obj0)) {
-				this->Path = cyborgbear::toString(obj0);
-			} else {
-				if (cyborgbear::isNull(obj0)) {
-					retval |= cyborgbear::Error_MissingField;
-				} else {
-					retval |= cyborgbear::Error_TypeMismatch;
-				}
-			}
-		}
-	}
-	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Size");
-		{
-			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
-			if (cyborgbear::isObj(finalObj)) {
-				retval |= this->Size.loadJsonObj(obj0);
+				retval |= this->Address.loadJsonObj(obj0);
 			} else {
 				if (cyborgbear::isNull(obj0)) {
 					retval |= cyborgbear::Error_MissingField;
@@ -965,6 +1034,105 @@ cyborgbear::Error Animation::loadJsonObj(cyborgbear::JsonVal in) {
 				}
 			} else {
 				retval |= cyborgbear::Error_TypeMismatch;
+			}
+		}
+	}
+	return retval;
+}
+
+cyborgbear::Error World::loadJsonObj(cyborgbear::JsonVal in) {
+	cyborgbear::Error retval = cyborgbear::Error_Ok;
+	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
+
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Zones");
+		if (!cyborgbear::isNull(obj0)) {
+			if (cyborgbear::isArray(obj0)) {
+				cyborgbear::JsonArrayOut array0 = cyborgbear::toArray(obj0);
+				unsigned int size = cyborgbear::arraySize(array0);
+				this->Zones.resize(size);
+				for (unsigned int i = 0; i < size; i++) {
+					cyborgbear::JsonValOut obj1 = cyborgbear::arrayRead(array0, i);
+					{
+						cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj1);
+						if (cyborgbear::isObj(finalObj)) {
+							retval |= this->Zones[i].loadJsonObj(obj1);
+						} else {
+							if (cyborgbear::isNull(obj1)) {
+								retval |= cyborgbear::Error_MissingField;
+							} else {
+								retval |= cyborgbear::Error_TypeMismatch;
+							}
+						}
+					}
+				}
+			} else {
+				retval |= cyborgbear::Error_TypeMismatch;
+			}
+		}
+	}
+	return retval;
+}
+
+cyborgbear::Error Tile::loadJsonObj(cyborgbear::JsonVal in) {
+	cyborgbear::Error retval = cyborgbear::Error_Ok;
+	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
+
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Import");
+		{
+			if (cyborgbear::isString(obj0)) {
+				this->Import = cyborgbear::toString(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "TerrainType");
+		{
+			if (cyborgbear::isInt(obj0)) {
+				this->TerrainType = cyborgbear::toInt(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "LowerAnim");
+		{
+			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
+			if (cyborgbear::isObj(finalObj)) {
+				retval |= this->LowerAnim.loadJsonObj(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "UpperAnim");
+		{
+			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
+			if (cyborgbear::isObj(finalObj)) {
+				retval |= this->UpperAnim.loadJsonObj(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
 			}
 		}
 	}
@@ -1101,15 +1269,15 @@ cyborgbear::Error Sprite::loadJsonObj(cyborgbear::JsonVal in) {
 	return retval;
 }
 
-cyborgbear::Error Tile::loadJsonObj(cyborgbear::JsonVal in) {
+cyborgbear::Error ZoneHeader::loadJsonObj(cyborgbear::JsonVal in) {
 	cyborgbear::Error retval = cyborgbear::Error_Ok;
 	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
 
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Import");
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Zone");
 		{
 			if (cyborgbear::isString(obj0)) {
-				this->Import = cyborgbear::toString(obj0);
+				this->Zone = cyborgbear::toString(obj0);
 			} else {
 				if (cyborgbear::isNull(obj0)) {
 					retval |= cyborgbear::Error_MissingField;
@@ -1120,10 +1288,10 @@ cyborgbear::Error Tile::loadJsonObj(cyborgbear::JsonVal in) {
 		}
 	}
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "TerrainType");
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "TilesWide");
 		{
 			if (cyborgbear::isInt(obj0)) {
-				this->TerrainType = cyborgbear::toInt(obj0);
+				this->TilesWide = cyborgbear::toInt(obj0);
 			} else {
 				if (cyborgbear::isNull(obj0)) {
 					retval |= cyborgbear::Error_MissingField;
@@ -1134,11 +1302,10 @@ cyborgbear::Error Tile::loadJsonObj(cyborgbear::JsonVal in) {
 		}
 	}
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "LowerAnim");
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "TilesHigh");
 		{
-			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
-			if (cyborgbear::isObj(finalObj)) {
-				retval |= this->LowerAnim.loadJsonObj(obj0);
+			if (cyborgbear::isInt(obj0)) {
+				this->TilesHigh = cyborgbear::toInt(obj0);
 			} else {
 				if (cyborgbear::isNull(obj0)) {
 					retval |= cyborgbear::Error_MissingField;
@@ -1149,11 +1316,10 @@ cyborgbear::Error Tile::loadJsonObj(cyborgbear::JsonVal in) {
 		}
 	}
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "UpperAnim");
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Layers");
 		{
-			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
-			if (cyborgbear::isObj(finalObj)) {
-				retval |= this->UpperAnim.loadJsonObj(obj0);
+			if (cyborgbear::isInt(obj0)) {
+				this->Layers = cyborgbear::toInt(obj0);
 			} else {
 				if (cyborgbear::isNull(obj0)) {
 					retval |= cyborgbear::Error_MissingField;
@@ -1166,23 +1332,67 @@ cyborgbear::Error Tile::loadJsonObj(cyborgbear::JsonVal in) {
 	return retval;
 }
 
-cyborgbear::Error World::loadJsonObj(cyborgbear::JsonVal in) {
+cyborgbear::Error PersonClass::loadJsonObj(cyborgbear::JsonVal in) {
 	cyborgbear::Error retval = cyborgbear::Error_Ok;
 	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
 
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Zones");
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "ID");
+		{
+			if (cyborgbear::isInt(obj0)) {
+				this->ID = cyborgbear::toInt(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Name");
+		if (!cyborgbear::isNull(obj0)) {
+			if (cyborgbear::isObj(obj0)) {
+				cyborgbear::JsonObjOut map0 = cyborgbear::toObj(obj0);
+				for (cyborgbear::JsonObjIterator it1 = cyborgbear::jsonObjIterator(map0); !cyborgbear::iteratorAtEnd(it1, map0); it1 = cyborgbear::jsonObjIteratorNext(map0,  it1)) {
+					string i;
+					cyborgbear::JsonValOut obj1 = cyborgbear::iteratorValue(it1);
+					{
+						std::string key = cyborgbear::toStdString(cyborgbear::jsonObjIteratorKey(it1));
+						std::string o;
+						std::stringstream s;
+						s << key;
+						s >> o;
+						i = o.c_str();
+					}
+					{
+						if (cyborgbear::isString(obj1)) {
+							this->Name[i] = cyborgbear::toString(obj1);
+						} else {
+							if (cyborgbear::isNull(obj1)) {
+								retval |= cyborgbear::Error_MissingField;
+							} else {
+								retval |= cyborgbear::Error_TypeMismatch;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Creatures");
 		if (!cyborgbear::isNull(obj0)) {
 			if (cyborgbear::isArray(obj0)) {
 				cyborgbear::JsonArrayOut array0 = cyborgbear::toArray(obj0);
 				unsigned int size = cyborgbear::arraySize(array0);
-				this->Zones.resize(size);
+				this->Creatures.resize(size);
 				for (unsigned int i = 0; i < size; i++) {
 					cyborgbear::JsonValOut obj1 = cyborgbear::arrayRead(array0, i);
 					{
-						cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj1);
-						if (cyborgbear::isObj(finalObj)) {
-							retval |= this->Zones[i].loadJsonObj(obj1);
+						if (cyborgbear::isString(obj1)) {
+							this->Creatures[i] = cyborgbear::toString(obj1);
 						} else {
 							if (cyborgbear::isNull(obj1)) {
 								retval |= cyborgbear::Error_MissingField;
@@ -1194,6 +1404,85 @@ cyborgbear::Error World::loadJsonObj(cyborgbear::JsonVal in) {
 				}
 			} else {
 				retval |= cyborgbear::Error_TypeMismatch;
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Overhead");
+		if (!cyborgbear::isNull(obj0)) {
+			if (cyborgbear::isArray(obj0)) {
+				cyborgbear::JsonArrayOut array0 = cyborgbear::toArray(obj0);
+				unsigned int size = cyborgbear::arraySize(array0);
+				this->Overhead.resize(size);
+				for (unsigned int i = 0; i < size; i++) {
+					cyborgbear::JsonValOut obj1 = cyborgbear::arrayRead(array0, i);
+					{
+						cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj1);
+						if (cyborgbear::isObj(finalObj)) {
+							retval |= this->Overhead[i].loadJsonObj(obj1);
+						} else {
+							if (cyborgbear::isNull(obj1)) {
+								retval |= cyborgbear::Error_MissingField;
+							} else {
+								retval |= cyborgbear::Error_TypeMismatch;
+							}
+						}
+					}
+				}
+			} else {
+				retval |= cyborgbear::Error_TypeMismatch;
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "FrontView");
+		{
+			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
+			if (cyborgbear::isObj(finalObj)) {
+				retval |= this->FrontView.loadJsonObj(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "BackView");
+		{
+			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
+			if (cyborgbear::isObj(finalObj)) {
+				retval |= this->BackView.loadJsonObj(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	return retval;
+}
+
+cyborgbear::Error Person::loadJsonObj(cyborgbear::JsonVal in) {
+	cyborgbear::Error retval = cyborgbear::Error_Ok;
+	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
+
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "PersonClass");
+		{
+			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
+			if (cyborgbear::isObj(finalObj)) {
+				retval |= this->PersonClass.loadJsonObj(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
 			}
 		}
 	}
@@ -1539,6 +1828,31 @@ cyborgbear::JsonValOut AnimLayer::buildJsonObj() {
 	return obj;
 }
 
+cyborgbear::JsonValOut User::buildJsonObj() {
+	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
+	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Person);
+		cyborgbear::objSet(obj, "Person", out0);
+		cyborgbear::decref(out0);
+	}
+	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->World);
+		cyborgbear::objSet(obj, "World", out0);
+		cyborgbear::decref(out0);
+	}
+	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->ZoneInstance);
+		cyborgbear::objSet(obj, "ZoneInstance", out0);
+		cyborgbear::decref(out0);
+	}
+	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Layer);
+		cyborgbear::objSet(obj, "Layer", out0);
+		cyborgbear::decref(out0);
+	}
+	return obj;
+}
+
 cyborgbear::JsonValOut Settings::buildJsonObj() {
 	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
 	{
@@ -1559,6 +1873,16 @@ cyborgbear::JsonValOut Settings::buildJsonObj() {
 	return obj;
 }
 
+cyborgbear::JsonValOut InitFile::buildJsonObj() {
+	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
+	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->User);
+		cyborgbear::objSet(obj, "User", out0);
+		cyborgbear::decref(out0);
+	}
+	return obj;
+}
+
 cyborgbear::JsonValOut ZoneInstance::buildJsonObj() {
 	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
 	{
@@ -1567,30 +1891,14 @@ cyborgbear::JsonValOut ZoneInstance::buildJsonObj() {
 		cyborgbear::decref(out0);
 	}
 	{
-		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->ZonePath);
-		cyborgbear::objSet(obj, "ZonePath", out0);
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->ZoneHeader);
+		cyborgbear::objSet(obj, "ZoneHeader", out0);
 		cyborgbear::decref(out0);
 	}
 	{
-		cyborgbear::JsonValOut obj0 = this->Location.buildJsonObj();
+		cyborgbear::JsonValOut obj0 = this->Address.buildJsonObj();
 		cyborgbear::JsonValOut out0 = obj0;
-		cyborgbear::objSet(obj, "Location", out0);
-		cyborgbear::decref(out0);
-	}
-	return obj;
-}
-
-cyborgbear::JsonValOut ZoneHeader::buildJsonObj() {
-	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
-	{
-		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Path);
-		cyborgbear::objSet(obj, "Path", out0);
-		cyborgbear::decref(out0);
-	}
-	{
-		cyborgbear::JsonValOut obj0 = this->Size.buildJsonObj();
-		cyborgbear::JsonValOut out0 = obj0;
-		cyborgbear::objSet(obj, "Size", out0);
+		cyborgbear::objSet(obj, "Address", out0);
 		cyborgbear::decref(out0);
 	}
 	return obj;
@@ -1613,6 +1921,49 @@ cyborgbear::JsonValOut Animation::buildJsonObj() {
 		}
 		cyborgbear::objSet(obj, "Images", out1);
 		cyborgbear::decref(out1);
+	}
+	return obj;
+}
+
+cyborgbear::JsonValOut World::buildJsonObj() {
+	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
+	{
+		cyborgbear::JsonArrayOut out1 = cyborgbear::newJsonArray();
+		for (cyborgbear::VectorIterator i = 0; i < this->Zones.size(); i++) {
+			cyborgbear::JsonValOut obj0 = this->Zones[i].buildJsonObj();
+			cyborgbear::JsonValOut out0 = obj0;
+			cyborgbear::arrayAdd(out1, out0);
+			cyborgbear::decref(out0);
+		}
+		cyborgbear::objSet(obj, "Zones", out1);
+		cyborgbear::decref(out1);
+	}
+	return obj;
+}
+
+cyborgbear::JsonValOut Tile::buildJsonObj() {
+	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
+	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Import);
+		cyborgbear::objSet(obj, "Import", out0);
+		cyborgbear::decref(out0);
+	}
+	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->TerrainType);
+		cyborgbear::objSet(obj, "TerrainType", out0);
+		cyborgbear::decref(out0);
+	}
+	{
+		cyborgbear::JsonValOut obj0 = this->LowerAnim.buildJsonObj();
+		cyborgbear::JsonValOut out0 = obj0;
+		cyborgbear::objSet(obj, "LowerAnim", out0);
+		cyborgbear::decref(out0);
+	}
+	{
+		cyborgbear::JsonValOut obj0 = this->UpperAnim.buildJsonObj();
+		cyborgbear::JsonValOut out0 = obj0;
+		cyborgbear::objSet(obj, "UpperAnim", out0);
+		cyborgbear::decref(out0);
 	}
 	return obj;
 }
@@ -1668,45 +2019,97 @@ cyborgbear::JsonValOut Sprite::buildJsonObj() {
 	return obj;
 }
 
-cyborgbear::JsonValOut Tile::buildJsonObj() {
+cyborgbear::JsonValOut ZoneHeader::buildJsonObj() {
 	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
 	{
-		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Import);
-		cyborgbear::objSet(obj, "Import", out0);
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Zone);
+		cyborgbear::objSet(obj, "Zone", out0);
 		cyborgbear::decref(out0);
 	}
 	{
-		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->TerrainType);
-		cyborgbear::objSet(obj, "TerrainType", out0);
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->TilesWide);
+		cyborgbear::objSet(obj, "TilesWide", out0);
 		cyborgbear::decref(out0);
 	}
 	{
-		cyborgbear::JsonValOut obj0 = this->LowerAnim.buildJsonObj();
-		cyborgbear::JsonValOut out0 = obj0;
-		cyborgbear::objSet(obj, "LowerAnim", out0);
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->TilesHigh);
+		cyborgbear::objSet(obj, "TilesHigh", out0);
 		cyborgbear::decref(out0);
 	}
 	{
-		cyborgbear::JsonValOut obj0 = this->UpperAnim.buildJsonObj();
-		cyborgbear::JsonValOut out0 = obj0;
-		cyborgbear::objSet(obj, "UpperAnim", out0);
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Layers);
+		cyborgbear::objSet(obj, "Layers", out0);
 		cyborgbear::decref(out0);
 	}
 	return obj;
 }
 
-cyborgbear::JsonValOut World::buildJsonObj() {
+cyborgbear::JsonValOut PersonClass::buildJsonObj() {
 	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
 	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->ID);
+		cyborgbear::objSet(obj, "ID", out0);
+		cyborgbear::decref(out0);
+	}
+	{
+		cyborgbear::JsonObjOut out1 = cyborgbear::newJsonObj();
+		for (std::map< string, string >::iterator n = this->Name.begin(); n != this->Name.end(); ++n) {
+			std::stringstream s;
+			string key;
+			std::string tmp;
+			s << cyborgbear::toStdString(cyborgbear::toString(n->first));
+			s >> tmp;
+			key = cyborgbear::toString(tmp);
+			cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Name[n->first]);
+			cyborgbear::objSet(out1, key, out0);
+			cyborgbear::decref(out0);
+		}
+		cyborgbear::objSet(obj, "Name", out1);
+		cyborgbear::decref(out1);
+	}
+	{
 		cyborgbear::JsonArrayOut out1 = cyborgbear::newJsonArray();
-		for (cyborgbear::VectorIterator i = 0; i < this->Zones.size(); i++) {
-			cyborgbear::JsonValOut obj0 = this->Zones[i].buildJsonObj();
+		for (cyborgbear::VectorIterator i = 0; i < this->Creatures.size(); i++) {
+			cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Creatures[i]);
+			cyborgbear::arrayAdd(out1, out0);
+			cyborgbear::decref(out0);
+		}
+		cyborgbear::objSet(obj, "Creatures", out1);
+		cyborgbear::decref(out1);
+	}
+	{
+		cyborgbear::JsonArrayOut out1 = cyborgbear::newJsonArray();
+		for (cyborgbear::VectorIterator i = 0; i < this->Overhead.size(); i++) {
+			cyborgbear::JsonValOut obj0 = this->Overhead[i].buildJsonObj();
 			cyborgbear::JsonValOut out0 = obj0;
 			cyborgbear::arrayAdd(out1, out0);
 			cyborgbear::decref(out0);
 		}
-		cyborgbear::objSet(obj, "Zones", out1);
+		cyborgbear::objSet(obj, "Overhead", out1);
 		cyborgbear::decref(out1);
+	}
+	{
+		cyborgbear::JsonValOut obj0 = this->FrontView.buildJsonObj();
+		cyborgbear::JsonValOut out0 = obj0;
+		cyborgbear::objSet(obj, "FrontView", out0);
+		cyborgbear::decref(out0);
+	}
+	{
+		cyborgbear::JsonValOut obj0 = this->BackView.buildJsonObj();
+		cyborgbear::JsonValOut out0 = obj0;
+		cyborgbear::objSet(obj, "BackView", out0);
+		cyborgbear::decref(out0);
+	}
+	return obj;
+}
+
+cyborgbear::JsonValOut Person::buildJsonObj() {
+	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
+	{
+		cyborgbear::JsonValOut obj0 = this->PersonClass.buildJsonObj();
+		cyborgbear::JsonValOut out0 = obj0;
+		cyborgbear::objSet(obj, "PersonClass", out0);
+		cyborgbear::decref(out0);
 	}
 	return obj;
 }
@@ -1839,6 +2242,15 @@ bool AnimLayer::operator==(const AnimLayer &o) const {
 	return true;
 }
 
+bool User::operator==(const User &o) const {
+	if (Person != o.Person) return false;
+	if (World != o.World) return false;
+	if (ZoneInstance != o.ZoneInstance) return false;
+	if (Layer != o.Layer) return false;
+
+	return true;
+}
+
 bool Settings::operator==(const Settings &o) const {
 	if (Fullscreen != o.Fullscreen) return false;
 	if (Width != o.Width) return false;
@@ -1847,17 +2259,16 @@ bool Settings::operator==(const Settings &o) const {
 	return true;
 }
 
-bool ZoneInstance::operator==(const ZoneInstance &o) const {
-	if (AccessorID != o.AccessorID) return false;
-	if (ZonePath != o.ZonePath) return false;
-	if (Location != o.Location) return false;
+bool InitFile::operator==(const InitFile &o) const {
+	if (User != o.User) return false;
 
 	return true;
 }
 
-bool ZoneHeader::operator==(const ZoneHeader &o) const {
-	if (Path != o.Path) return false;
-	if (Size != o.Size) return false;
+bool ZoneInstance::operator==(const ZoneInstance &o) const {
+	if (AccessorID != o.AccessorID) return false;
+	if (ZoneHeader != o.ZoneHeader) return false;
+	if (Address != o.Address) return false;
 
 	return true;
 }
@@ -1865,6 +2276,21 @@ bool ZoneHeader::operator==(const ZoneHeader &o) const {
 bool Animation::operator==(const Animation &o) const {
 	if (Import != o.Import) return false;
 	if (Images != o.Images) return false;
+
+	return true;
+}
+
+bool World::operator==(const World &o) const {
+	if (Zones != o.Zones) return false;
+
+	return true;
+}
+
+bool Tile::operator==(const Tile &o) const {
+	if (Import != o.Import) return false;
+	if (TerrainType != o.TerrainType) return false;
+	if (LowerAnim != o.LowerAnim) return false;
+	if (UpperAnim != o.UpperAnim) return false;
 
 	return true;
 }
@@ -1881,17 +2307,28 @@ bool Sprite::operator==(const Sprite &o) const {
 	return true;
 }
 
-bool Tile::operator==(const Tile &o) const {
-	if (Import != o.Import) return false;
-	if (TerrainType != o.TerrainType) return false;
-	if (LowerAnim != o.LowerAnim) return false;
-	if (UpperAnim != o.UpperAnim) return false;
+bool ZoneHeader::operator==(const ZoneHeader &o) const {
+	if (Zone != o.Zone) return false;
+	if (TilesWide != o.TilesWide) return false;
+	if (TilesHigh != o.TilesHigh) return false;
+	if (Layers != o.Layers) return false;
 
 	return true;
 }
 
-bool World::operator==(const World &o) const {
-	if (Zones != o.Zones) return false;
+bool PersonClass::operator==(const PersonClass &o) const {
+	if (ID != o.ID) return false;
+	if (Name != o.Name) return false;
+	if (Creatures != o.Creatures) return false;
+	if (Overhead != o.Overhead) return false;
+	if (FrontView != o.FrontView) return false;
+	if (BackView != o.BackView) return false;
+
+	return true;
+}
+
+bool Person::operator==(const Person &o) const {
+	if (PersonClass != o.PersonClass) return false;
 
 	return true;
 }
@@ -1981,6 +2418,15 @@ bool AnimLayer::operator!=(const AnimLayer &o) const {
 	return false;
 }
 
+bool User::operator!=(const User &o) const {
+	if (Person != o.Person) return true;
+	if (World != o.World) return true;
+	if (ZoneInstance != o.ZoneInstance) return true;
+	if (Layer != o.Layer) return true;
+
+	return false;
+}
+
 bool Settings::operator!=(const Settings &o) const {
 	if (Fullscreen != o.Fullscreen) return true;
 	if (Width != o.Width) return true;
@@ -1989,17 +2435,16 @@ bool Settings::operator!=(const Settings &o) const {
 	return false;
 }
 
-bool ZoneInstance::operator!=(const ZoneInstance &o) const {
-	if (AccessorID != o.AccessorID) return true;
-	if (ZonePath != o.ZonePath) return true;
-	if (Location != o.Location) return true;
+bool InitFile::operator!=(const InitFile &o) const {
+	if (User != o.User) return true;
 
 	return false;
 }
 
-bool ZoneHeader::operator!=(const ZoneHeader &o) const {
-	if (Path != o.Path) return true;
-	if (Size != o.Size) return true;
+bool ZoneInstance::operator!=(const ZoneInstance &o) const {
+	if (AccessorID != o.AccessorID) return true;
+	if (ZoneHeader != o.ZoneHeader) return true;
+	if (Address != o.Address) return true;
 
 	return false;
 }
@@ -2007,6 +2452,21 @@ bool ZoneHeader::operator!=(const ZoneHeader &o) const {
 bool Animation::operator!=(const Animation &o) const {
 	if (Import != o.Import) return true;
 	if (Images != o.Images) return true;
+
+	return false;
+}
+
+bool World::operator!=(const World &o) const {
+	if (Zones != o.Zones) return true;
+
+	return false;
+}
+
+bool Tile::operator!=(const Tile &o) const {
+	if (Import != o.Import) return true;
+	if (TerrainType != o.TerrainType) return true;
+	if (LowerAnim != o.LowerAnim) return true;
+	if (UpperAnim != o.UpperAnim) return true;
 
 	return false;
 }
@@ -2023,17 +2483,28 @@ bool Sprite::operator!=(const Sprite &o) const {
 	return false;
 }
 
-bool Tile::operator!=(const Tile &o) const {
-	if (Import != o.Import) return true;
-	if (TerrainType != o.TerrainType) return true;
-	if (LowerAnim != o.LowerAnim) return true;
-	if (UpperAnim != o.UpperAnim) return true;
+bool ZoneHeader::operator!=(const ZoneHeader &o) const {
+	if (Zone != o.Zone) return true;
+	if (TilesWide != o.TilesWide) return true;
+	if (TilesHigh != o.TilesHigh) return true;
+	if (Layers != o.Layers) return true;
 
 	return false;
 }
 
-bool World::operator!=(const World &o) const {
-	if (Zones != o.Zones) return true;
+bool PersonClass::operator!=(const PersonClass &o) const {
+	if (ID != o.ID) return true;
+	if (Name != o.Name) return true;
+	if (Creatures != o.Creatures) return true;
+	if (Overhead != o.Overhead) return true;
+	if (FrontView != o.FrontView) return true;
+	if (BackView != o.BackView) return true;
+
+	return false;
+}
+
+bool Person::operator!=(const Person &o) const {
+	if (PersonClass != o.PersonClass) return true;
 
 	return false;
 }
@@ -2282,6 +2753,31 @@ string AnimLayer::toBoostBinary() {
 namespace models {
 
 #ifdef CYBORGBEAR_BOOST_ENABLED
+void User::fromBoostBinary(string dat) {
+	std::stringstream in(dat);
+	boost::archive::binary_iarchive ia(in);
+	ia >> *this;
+}
+
+string User::toBoostBinary() {
+	std::stringstream out;
+	{
+		boost::archive::binary_oarchive oa(out);
+		oa << *this;
+	}
+
+	string str;
+	while (out.good())
+		str += out.get();
+
+	return str;
+}
+#endif
+}
+
+namespace models {
+
+#ifdef CYBORGBEAR_BOOST_ENABLED
 void Settings::fromBoostBinary(string dat) {
 	std::stringstream in(dat);
 	boost::archive::binary_iarchive ia(in);
@@ -2289,6 +2785,31 @@ void Settings::fromBoostBinary(string dat) {
 }
 
 string Settings::toBoostBinary() {
+	std::stringstream out;
+	{
+		boost::archive::binary_oarchive oa(out);
+		oa << *this;
+	}
+
+	string str;
+	while (out.good())
+		str += out.get();
+
+	return str;
+}
+#endif
+}
+
+namespace models {
+
+#ifdef CYBORGBEAR_BOOST_ENABLED
+void InitFile::fromBoostBinary(string dat) {
+	std::stringstream in(dat);
+	boost::archive::binary_iarchive ia(in);
+	ia >> *this;
+}
+
+string InitFile::toBoostBinary() {
 	std::stringstream out;
 	{
 		boost::archive::binary_oarchive oa(out);
@@ -2332,31 +2853,6 @@ string ZoneInstance::toBoostBinary() {
 namespace models {
 
 #ifdef CYBORGBEAR_BOOST_ENABLED
-void ZoneHeader::fromBoostBinary(string dat) {
-	std::stringstream in(dat);
-	boost::archive::binary_iarchive ia(in);
-	ia >> *this;
-}
-
-string ZoneHeader::toBoostBinary() {
-	std::stringstream out;
-	{
-		boost::archive::binary_oarchive oa(out);
-		oa << *this;
-	}
-
-	string str;
-	while (out.good())
-		str += out.get();
-
-	return str;
-}
-#endif
-}
-
-namespace models {
-
-#ifdef CYBORGBEAR_BOOST_ENABLED
 void Animation::fromBoostBinary(string dat) {
 	std::stringstream in(dat);
 	boost::archive::binary_iarchive ia(in);
@@ -2382,13 +2878,13 @@ string Animation::toBoostBinary() {
 namespace models {
 
 #ifdef CYBORGBEAR_BOOST_ENABLED
-void Sprite::fromBoostBinary(string dat) {
+void World::fromBoostBinary(string dat) {
 	std::stringstream in(dat);
 	boost::archive::binary_iarchive ia(in);
 	ia >> *this;
 }
 
-string Sprite::toBoostBinary() {
+string World::toBoostBinary() {
 	std::stringstream out;
 	{
 		boost::archive::binary_oarchive oa(out);
@@ -2432,13 +2928,88 @@ string Tile::toBoostBinary() {
 namespace models {
 
 #ifdef CYBORGBEAR_BOOST_ENABLED
-void World::fromBoostBinary(string dat) {
+void Sprite::fromBoostBinary(string dat) {
 	std::stringstream in(dat);
 	boost::archive::binary_iarchive ia(in);
 	ia >> *this;
 }
 
-string World::toBoostBinary() {
+string Sprite::toBoostBinary() {
+	std::stringstream out;
+	{
+		boost::archive::binary_oarchive oa(out);
+		oa << *this;
+	}
+
+	string str;
+	while (out.good())
+		str += out.get();
+
+	return str;
+}
+#endif
+}
+
+namespace models {
+
+#ifdef CYBORGBEAR_BOOST_ENABLED
+void ZoneHeader::fromBoostBinary(string dat) {
+	std::stringstream in(dat);
+	boost::archive::binary_iarchive ia(in);
+	ia >> *this;
+}
+
+string ZoneHeader::toBoostBinary() {
+	std::stringstream out;
+	{
+		boost::archive::binary_oarchive oa(out);
+		oa << *this;
+	}
+
+	string str;
+	while (out.good())
+		str += out.get();
+
+	return str;
+}
+#endif
+}
+
+namespace models {
+
+#ifdef CYBORGBEAR_BOOST_ENABLED
+void PersonClass::fromBoostBinary(string dat) {
+	std::stringstream in(dat);
+	boost::archive::binary_iarchive ia(in);
+	ia >> *this;
+}
+
+string PersonClass::toBoostBinary() {
+	std::stringstream out;
+	{
+		boost::archive::binary_oarchive oa(out);
+		oa << *this;
+	}
+
+	string str;
+	while (out.good())
+		str += out.get();
+
+	return str;
+}
+#endif
+}
+
+namespace models {
+
+#ifdef CYBORGBEAR_BOOST_ENABLED
+void Person::fromBoostBinary(string dat) {
+	std::stringstream in(dat);
+	boost::archive::binary_iarchive ia(in);
+	ia >> *this;
+}
+
+string Person::toBoostBinary() {
 	std::stringstream out;
 	{
 		boost::archive::binary_oarchive oa(out);

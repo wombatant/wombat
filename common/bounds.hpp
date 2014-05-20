@@ -13,19 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_CORE_SDLGLOBS_HPP
-#define WOMBAT_CORE_SDLGLOBS_HPP
+#ifndef WOMBAT_COMMON_BOUNDS_HPP
+#define WOMBAT_COMMON_BOUNDS_HPP
 
-#include <SDL.h>
+#include "models/models.hpp"
 
 namespace wombat {
-namespace core {
+namespace common {
 
-extern SDL_Window *_display;
-extern SDL_Renderer *_renderer;
+class Bounds: public models::Bounds {
+	public:
+		/**
+		 * Constructor
+		 */
+		Bounds();
+
+		/**
+		 * Constructor
+		 * @param bnds the model::Bounds to build this Bounds off of
+		 */
+		Bounds(models::Bounds bnds);
+
+		bool intersects(Bounds other) const;
+
+		bool contains(models::Point pt) const;
+
+		bool contains(int x, int y) const;
+
+		int x2() const;
+
+		int y2() const;
+};
 
 }
 }
 
 #endif
-

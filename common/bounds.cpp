@@ -13,28 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "sync.hpp"
+#include "bounds.hpp"
 
 namespace wombat {
-namespace core {
+namespace common {
 
-BaseEventQueue::~BaseEventQueue() {
+Bounds::Bounds() {
 }
 
-bool EventQueue::hasPosts() {
-	return !m_posts.empty();
+Bounds::Bounds(models::Bounds bnds) {
+	X = bnds.X;
+	Y = bnds.Y;
+	Width = bnds.Width;
+	Height = bnds.Height;
 }
 
-int EventQueue::popPost(Event &post) {
-	m_mutex.lock();
-	if (hasPosts()) {
-		post = m_posts.front();
-		m_posts.pop();
-		m_mutex.unlock();
-		return 0;
-	}
-	m_mutex.unlock();
-	return 1;
+bool Bounds::intersects(Bounds b) const {
+	return contains(b.X, b.Y) || contains(b.X, b.y2()) ||
+		contains(b.x2(), b.Y) || contains(b.x2(), b.y2());
+}
+
+bool Bounds::contains(int x, int y) const {
+	return x >= X && y >= Y && x <= x2() && y <= y2();
+}
+
+bool Bounds::contains(models::Point p) const {
+	return p.X >= X && p.Y >= Y && p.X <= x2() && p.Y <= y2();
+}
+
+int Bounds::x2() const {
+	return X + Width;
+}
+
+int Bounds::y2() const {
+	return Y + Height;
 }
 
 }

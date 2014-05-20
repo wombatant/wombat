@@ -18,7 +18,7 @@
 
 #include <string>
 
-#include "models/models.hpp"
+#include <common/common.hpp>
 
 #include "_cliprectstack.hpp"
 #include "modelio.hpp"
@@ -26,8 +26,6 @@
 
 namespace wombat {
 namespace core {
-
-using std::string;
 
 int displayWidth();
 
@@ -41,13 +39,13 @@ class Image: public Flyweight<models::Image>::Value {
 
 	private:
 		models::Size m_defaultSize;
-		string m_key;
+		std::string m_key;
 
 	protected:
 		/**
 		 * The bounds to cut out of the source image.
 		 */
-		models::Bounds m_bounds;
+		common::Bounds m_bounds;
 
 	public:
 		/**
@@ -83,7 +81,7 @@ class Image: public Flyweight<models::Image>::Value {
 
 		bool loaded();
 
-		string key();
+		std::string key();
 };
 
 class Animation: public Flyweight<models::Animation>::Value {
@@ -105,7 +103,7 @@ class Animation: public Flyweight<models::Animation>::Value {
 
 		bool loaded();
 
-		string key();
+		std::string key();
 
 		/**
 		 * Gets the number of Images in the Animation.
@@ -117,7 +115,7 @@ class Animation: public Flyweight<models::Animation>::Value {
 class Graphics {
 	friend void _draw();
 	private:
-		models::Point m_origin;
+		common::Point m_origin;
 
 	protected:
 		ClipRectStack m_cliprect;
@@ -150,7 +148,7 @@ class Graphics {
 		 * of whether or not it is manually popped.
 		 * @param bnds the bounds of the desired viewport 
 		 */
-		void pushClipRect(models::Bounds bnds);
+		void pushClipRect(common::Bounds bnds);
 
 		/**
 		 * Pushs the given view port the viewports stack.
@@ -180,15 +178,11 @@ class Drawer {
 
 void addDrawer(Drawer*);
 
-Animation *checkoutAnimation(std::string path);
+Animation *checkoutAnimation(Path path);
 
 Animation *checkoutAnimation(models::Animation &anim);
 
 Image *checkoutImage(models::Image &img);
-
-void checkinImage(string path);
-
-void checkinImage(string path);
 
 void checkinImage(Image &img);
 

@@ -31,5 +31,28 @@ core::TaskState World::run(core::Event) {
 	return core::TaskState::Continue;
 }
 
+Zone *World::getZone(std::string accessorId) {
+	return m_zones[accessorId];
+}
+
+std::vector<Zone*> World::zonesAt(common::Bounds bnds) {
+	std::vector<Zone*> zones;
+	for (auto z : m_zones) {
+		if (z.second->bounds().intersects(bnds)) {
+			zones.push_back(z.second);
+		}
+	}
+	return zones;
+}
+
+Zone *World::zoneAt(int x, int y) {
+	for (auto z : m_zones) {
+		if (z.second->bounds().contains(x, y)) {
+			return z.second;
+		}
+	}
+	return 0;
+}
+
 }
 }

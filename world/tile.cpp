@@ -24,6 +24,10 @@ const int Tile::Width = 32;
 const int Tile::Height = 32;
 
 core::Flyweight<models::Tile> Tile::c_tileClasses([](models::Tile &model) {
+	if (model.Import != "") {
+		core::read(model, model.Import);
+	}
+
 	AnimLayer al;
 	auto tc = new Tile();
 	tc->m_terrainFlags = model.TerrainType;
@@ -45,12 +49,12 @@ Tile::Tile() {
 Tile::~Tile() {
 }
 
-void Tile::drawUpper(core::Graphics &g, int x, int y) {
-	draw(g, x, y, m_upperAnim);
+void Tile::drawUpper(core::Graphics &g, common::Point p) {
+	draw(g, p.X, p.Y, m_upperAnim);
 }
 
-void Tile::drawLower(core::Graphics &g, int x, int y) {
-	draw(g, x, y, m_lowerAnim);
+void Tile::drawLower(core::Graphics &g, common::Point p) {
+	draw(g, p.X, p.Y, m_lowerAnim);
 }
 
 void Tile::draw(core::Graphics &g, int x, int y, AnimLayer &anim) {
@@ -63,6 +67,10 @@ void Tile::draw(core::Graphics &g, int x, int y, AnimLayer &anim) {
 		}
 		g.popClipRect();
 	}
+}
+
+Tile *Tile::checkout(models::Tile model) {
+	return dynamic_cast<Tile*>(c_tileClasses.checkout(model));
 }
 
 Tile *Tile::checkout(std::string path) {

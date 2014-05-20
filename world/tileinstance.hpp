@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "common/common.hpp"
 #include "tile.hpp"
 
 #ifndef WOMBAT_WORLD_TILEINSTANCE_HPP
@@ -24,9 +25,11 @@ namespace world {
 class TileInstance {
 	private:
 		Tile *tileClass;
-	
+
 	public:
-		void draw(core::Graphics gfx, models::Point pt);
+		void load(models::TileInstance model);
+
+		void draw(core::Graphics &gfx, common::Point pt);
 };
 
 }

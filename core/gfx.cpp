@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 #include <iostream>
-#include "core/modelio.hpp"
 #include "core.hpp"
 
 namespace wombat {
 namespace core {
 
-using core::Flyweight;
-using std::string;
-
 //Image
 
-Flyweight<models::Image>::Value *loadImage(models::cyborgbear::Model &key) {
+Flyweight<models::Image> imageCache([](models::cyborgbear::Model &key) -> Image* {
 	models::Image &mod = (models::Image&) key;
 	Image *i = new Image(mod);
 	if (i->loaded()) {
@@ -34,12 +30,10 @@ Flyweight<models::Image>::Value *loadImage(models::cyborgbear::Model &key) {
 		delete i;
 		return 0;
 	}
-}
-
-Flyweight<models::Image> imageCache(loadImage);
+});
 
 
-Image *checkoutImage(string path) {
+Image *checkoutImage(Path path) {
 	models::Image img;
 	img.SpriteSheet = path;
 	img.DefaultSize.Width = -1;
@@ -56,7 +50,7 @@ void checkinImage(Image &i) {
 	imageCache.checkin(i.key());
 }
 
-string Image::key() {
+std::string Image::key() {
 	return m_key;
 }
 
@@ -68,20 +62,21 @@ int Image::defaultHeight() {
 	return m_defaultSize.Height;
 }
 
+
 //Animation
 
-Flyweight<models::Animation>::Value *loadAnimation(models::cyborgbear::Model &key) {
-	models::Animation &mod = (models::Animation&) key;
-	Animation *a = new Animation(mod);
+Flyweight<models::Animation> animCache([](models::Animation &key) -> Animation* {
+	if (key.Import != "") {
+		core::read(key, key.Import);
+	}
+	Animation *a = new Animation(key);
 	if (a->loaded()) {
 		return a;
 	} else {
 		delete a;
 		return 0;
 	}
-}
-
-Flyweight<models::Animation> animCache(loadAnimation);
+});
 
 Animation *checkoutAnimation(std::string path) {
 	return (Animation*) animCache.checkout(path);
@@ -109,7 +104,7 @@ Animation::Animation(models::Animation model) {
 Animation::~Animation() {
 }
 
-string Animation::key() {
+std::string Animation::key() {
 	return m_key;
 }
 

@@ -32,6 +32,9 @@ include_directories(".")
 add_subdirectory(models)
 set(LIBS WombatModels ${LIBS})
 
+add_subdirectory(common)
+set(LIBS WombatCommon ${LIBS})
+
 add_subdirectory(core)
 set(LIBS WombatCore ${LIBS})
 
