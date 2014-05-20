@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBATCORE_MISC_HPP
-#define WOMBATCORE_MISC_HPP
+#ifndef WOMBAT_CORE_MISC_HPP
+#define WOMBAT_CORE_MISC_HPP
 
 #include <string>
 #include <functional>
 
-#include "models/models.hpp"
+#include <models/models.hpp>
 #include "types.hpp"
 
 namespace wombat {

@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_CORE_THREADS_HPP
-#define WOMBAT_CORE_THREADS_HPP
+#ifndef WOMBAT_CORE__THREADS_HPP
+#define WOMBAT_CORE__THREADS_HPP
 
 #include <functional>
 #include <map>

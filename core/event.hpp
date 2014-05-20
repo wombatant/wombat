@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBATCORE_EVENT_HPP
-#define WOMBATCORE_EVENT_HPP
+#ifndef WOMBAT_CORE_EVENT_HPP
+#define WOMBAT_CORE_EVENT_HPP
 
 #include <functional>
 #include "types.hpp"

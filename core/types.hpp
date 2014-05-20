@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBATCORE_TYPES_HPP
-#define WOMBATCORE_TYPES_HPP
+#ifndef WOMBAT_CORE_TYPES_HPP
+#define WOMBAT_CORE_TYPES_HPP
 
 namespace wombat {
 namespace core {

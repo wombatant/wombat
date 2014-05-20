@@ -18,32 +18,30 @@
 
 #include <string>
 
-#include "core/core.hpp"
-#include "world/tile.hpp"
-#include "models/models.hpp"
+#include <core/core.hpp>
+#include <world/tile.hpp>
+#include <models/models.hpp>
 
 namespace wombat {
 namespace tests {
 
-using namespace wombat::core;
-
-class AnimationTest: public Drawer {
+class AnimationTest: public core::Drawer {
 	private:
-		Animation *m_anim;
+		core::Animation *m_anim;
 	public:
 		AnimationTest(std::string path);
-		void draw(Graphics&);
+		void draw(core::Graphics&);
 };
 
-class TileClassTest: public Drawer {
+class TileClassTest: public core::Drawer {
 	private:
 		world::Tile *m_tileClass;
 	public:
 		TileClassTest(std::string path);
-		void draw(Graphics&);
+		void draw(core::Graphics&);
 };
 
-Drawer *test(std::vector<std::string>&);
+core::Drawer *test(std::vector<std::string>&);
 
 }
 }

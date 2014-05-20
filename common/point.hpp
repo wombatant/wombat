@@ -16,7 +16,7 @@
 #ifndef WOMBAT_COMMON_POINT_HPP
 #define WOMBAT_COMMON_POINT_HPP
 
-#include "models/models.hpp"
+#include <models/models.hpp>
 
 namespace wombat {
 namespace common {

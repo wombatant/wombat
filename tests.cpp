@@ -18,6 +18,8 @@
 namespace wombat {
 namespace tests {
 
+using namespace core;
+
 Drawer *test(std::vector<std::string> &args) {
 	Drawer *test = 0;
 	if (args[2] == "animation") {
@@ -44,7 +46,6 @@ void AnimationTest::draw(Graphics &g) {
 
 // Tile Test
 TileClassTest::TileClassTest(std::string path) {
-	using namespace models::cyborgbear;
 	models::Tile model;
 	core::read(model, path);
 	m_tileClass = world::Tile::checkout(path);
