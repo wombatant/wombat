@@ -1581,47 +1581,6 @@ cyborgbear::Error Zone::loadJsonObj(cyborgbear::JsonVal in) {
 			}
 		}
 	}
-	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "InitScripts");
-		if (!cyborgbear::isNull(obj0)) {
-			if (cyborgbear::isArray(obj0)) {
-				cyborgbear::JsonArrayOut array0 = cyborgbear::toArray(obj0);
-				unsigned int size = cyborgbear::arraySize(array0);
-				this->InitScripts.resize(size);
-				for (unsigned int i = 0; i < size; i++) {
-					cyborgbear::JsonValOut obj1 = cyborgbear::arrayRead(array0, i);
-					{
-						if (cyborgbear::isString(obj1)) {
-							this->InitScripts[i] = cyborgbear::toString(obj1);
-						} else {
-							if (cyborgbear::isNull(obj1)) {
-								retval |= cyborgbear::Error_MissingField;
-							} else {
-								retval |= cyborgbear::Error_TypeMismatch;
-							}
-						}
-					}
-				}
-			} else {
-				retval |= cyborgbear::Error_TypeMismatch;
-			}
-		}
-	}
-	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Location");
-		{
-			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
-			if (cyborgbear::isObj(finalObj)) {
-				retval |= this->Location.loadJsonObj(obj0);
-			} else {
-				if (cyborgbear::isNull(obj0)) {
-					retval |= cyborgbear::Error_MissingField;
-				} else {
-					retval |= cyborgbear::Error_TypeMismatch;
-				}
-			}
-		}
-	}
 	return retval;
 }
 
@@ -2154,22 +2113,6 @@ cyborgbear::JsonValOut Zone::buildJsonObj() {
 		cyborgbear::objSet(obj, "Tiles", out3);
 		cyborgbear::decref(out3);
 	}
-	{
-		cyborgbear::JsonArrayOut out1 = cyborgbear::newJsonArray();
-		for (cyborgbear::VectorIterator i = 0; i < this->InitScripts.size(); i++) {
-			cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->InitScripts[i]);
-			cyborgbear::arrayAdd(out1, out0);
-			cyborgbear::decref(out0);
-		}
-		cyborgbear::objSet(obj, "InitScripts", out1);
-		cyborgbear::decref(out1);
-	}
-	{
-		cyborgbear::JsonValOut obj0 = this->Location.buildJsonObj();
-		cyborgbear::JsonValOut out0 = obj0;
-		cyborgbear::objSet(obj, "Location", out0);
-		cyborgbear::decref(out0);
-	}
 	return obj;
 }
 bool Point::operator==(const Point &o) const {
@@ -2342,8 +2285,6 @@ bool TileInstance::operator==(const TileInstance &o) const {
 
 bool Zone::operator==(const Zone &o) const {
 	if (Tiles != o.Tiles) return false;
-	if (InitScripts != o.InitScripts) return false;
-	if (Location != o.Location) return false;
 
 	return true;
 }
@@ -2518,8 +2459,6 @@ bool TileInstance::operator!=(const TileInstance &o) const {
 
 bool Zone::operator!=(const Zone &o) const {
 	if (Tiles != o.Tiles) return true;
-	if (InitScripts != o.InitScripts) return true;
-	if (Location != o.Location) return true;
 
 	return false;
 }

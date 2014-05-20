@@ -1375,8 +1375,6 @@ class Zone: public cyborgbear::Model {
 		virtual void fromBoostBinary(string dat);
 #endif
 		std::vector< std::vector< std::vector< models::TileInstance > > > Tiles;
-		std::vector< string > InitScripts;
-		models::Point Location;
 };
 
 }
@@ -1541,8 +1539,6 @@ void serialize(Archive &ar, models::TileInstance &model, const unsigned int) {
 template<class Archive>
 void serialize(Archive &ar, models::Zone &model, const unsigned int) {
 	ar & model.Tiles;
-	ar & model.InitScripts;
-	ar & model.Location;
 }
 
 }
