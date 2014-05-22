@@ -21,15 +21,6 @@
 namespace wombat {
 namespace core {
 
-int _sdlthread(void *func) {
-	if (func) {
-		auto f = (std::function<void()>*) func;
-		(*f)();
-		delete f;
-	}
-	return 0;
-}
-
 void startThread(std::function<void()> f) {
 	static int threadCount = 0;
 
@@ -38,7 +29,14 @@ void startThread(std::function<void()> f) {
 
 
 	auto fp = new std::function<void()>(f);
-	auto thread = SDL_CreateThread(_sdlthread, thrdNm, (void*) fp);
+	auto thread = SDL_CreateThread([](void *func) -> int {
+		if (func) {
+			auto f = (std::function<void()>*) func;
+			(*f)();
+			delete f;
+		}
+		return 0;
+	}, thrdNm, (void*) fp);
 	SDL_DetachThread(thread);
 
 	threadCount++;

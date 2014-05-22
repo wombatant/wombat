@@ -63,7 +63,7 @@ const auto Event_DrawEvent = SDL_RegisterEvents(1);
 const auto Event_SemaporePost = SDL_RegisterEvents(1);
 const auto Event_SemaphoreTimeout = SDL_RegisterEvents(1);
 
-std::vector<std::pair<Drawer*, Graphics*>> drawers;
+std::vector<std::pair<Drawer*, Graphics*>> _drawers;
 SDL_Window *_display = 0;
 SDL_Renderer *_renderer = 0;
 
@@ -74,7 +74,7 @@ Key toWombatKey(SDL_Event);
 void _updateEventTime();
 
 void addDrawer(Drawer *d) {
-	drawers.push_back(std::pair<Drawer*, Graphics*>(d, new Graphics()));
+	_drawers.push_back(std::pair<Drawer*, Graphics*>(d, new Graphics()));
 }
 
 // SdlMainEventQueue Implementation
@@ -140,7 +140,7 @@ void draw() {
 
 void _draw() {
 	SDL_RenderClear(_renderer);
-	for (auto d : drawers) {
+	for (auto d : _drawers) {
 		d.first->draw(*d.second);
 		d.second->resetViewport();
 	}
