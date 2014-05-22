@@ -29,10 +29,13 @@ App::App() {
 	core::read(user, initFile.User);
 	core::read(world, user.World);
 	m_world = new world::World(world);
+	m_camera = new world::Camera(m_world);
+	//core::addDrawer(m_camera);
 }
 
 App::~App() {
 	delete m_world;
+	delete m_camera;
 }
 
 void App::init() {

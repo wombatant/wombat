@@ -23,7 +23,7 @@
 namespace wombat {
 namespace world {
 
-class Camera {
+class Camera: public core::Drawer {
 	private:
 		common::Bounds m_bounds;
 		std::vector<Zone*> m_zones;
@@ -35,7 +35,7 @@ class Camera {
 		/**
 		 * Constructor
 		 */
-		Camera();
+		Camera(World *world);
 
 		/**
 		 * Draws what the Camera is currently hovering over.

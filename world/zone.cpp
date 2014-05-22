@@ -94,7 +94,7 @@ void Zone::load() {
 		for (int y = 0; y < m_tiles.tilesHigh(); y++) {
 			for (int x = 0; x < m_tiles.tilesWide(); x++) {
 				auto tile = m_tiles.at(x, y, l);
-				auto model = zone.Tiles[x][y][l];
+				auto model = zone.Tiles[l][y][x];
 				tile.load(model);
 			}
 		}

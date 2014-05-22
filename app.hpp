@@ -17,6 +17,7 @@
 #define WOMBAT_APP_HPP
 
 #include <core/core.hpp>
+#include <world/camera.hpp>
 #include <world/world.hpp>
 
 namespace wombat {
@@ -24,6 +25,7 @@ namespace wombat {
 class App: public core::Task {
 	private:
 		world::World *m_world;
+		world::Camera *m_camera;
 
 	public:
 		/**

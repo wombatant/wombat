@@ -63,8 +63,7 @@ const auto Event_DrawEvent = SDL_RegisterEvents(1);
 const auto Event_SemaporePost = SDL_RegisterEvents(1);
 const auto Event_SemaphoreTimeout = SDL_RegisterEvents(1);
 
-std::vector<Drawer*> drawers;
-std::vector<Graphics*> graphicsInstances;
+std::vector<std::pair<Drawer*, Graphics*>> drawers;
 SDL_Window *_display = 0;
 SDL_Renderer *_renderer = 0;
 
@@ -73,6 +72,10 @@ extern bool _running;
 
 Key toWombatKey(SDL_Event);
 void _updateEventTime();
+
+void addDrawer(Drawer *d) {
+	drawers.push_back(std::pair<Drawer*, Graphics*>(d, new Graphics()));
+}
 
 // SdlMainEventQueue Implementation
 
@@ -137,9 +140,9 @@ void draw() {
 
 void _draw() {
 	SDL_RenderClear(_renderer);
-	for (int i = 0; i < drawers.size(); i++) {
-		drawers[i]->draw(*graphicsInstances[i]);
-		graphicsInstances[i]->resetViewport();
+	for (auto d : drawers) {
+		d.first->draw(*d.second);
+		d.second->resetViewport();
 	}
 	SDL_RenderPresent(_renderer);
 }
@@ -214,11 +217,6 @@ int init(models::Settings settings) {
 	_updateEventTime();
 
 	return 0;
-}
-
-void addDrawer(Drawer *d) {
-	graphicsInstances.push_back(new Graphics());
-	drawers.push_back(d);
 }
 
 }

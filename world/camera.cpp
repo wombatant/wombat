@@ -18,8 +18,9 @@
 namespace wombat {
 namespace world {
 
-Camera::Camera() {
+Camera::Camera(World *world) {
 	m_tlZone = m_trZone = m_blZone = m_brZone = 0;
+	m_world = world;
 }
 
 void Camera::draw(core::Graphics &g) {
@@ -51,11 +52,13 @@ common::Bounds Camera::bounds() {
 }
 
 void Camera::findZones() {
-	bool zonesChanged = !(m_tlZone->bounds().contains(m_bounds.X, m_bounds.Y) &&
-		 m_tlZone->bounds().contains(m_bounds.X, m_bounds.y2()) &&
-		 m_tlZone->bounds().contains(m_bounds.x2(), m_bounds.Y) &&
-		 m_tlZone->bounds().contains(m_bounds.x2(), m_bounds.y2()));
-	if (zonesChanged) {
+	bool updateZones = !(m_tlZone && m_trZone && m_blZone && m_brZone) ||
+		!(m_tlZone->bounds().contains(m_bounds.X, m_bounds.Y) &&
+		m_tlZone->bounds().contains(m_bounds.X, m_bounds.y2()) &&
+		m_tlZone->bounds().contains(m_bounds.x2(), m_bounds.Y) &&
+		m_tlZone->bounds().contains(m_bounds.x2(), m_bounds.y2()));
+
+	if (updateZones) {
 		auto newZones = m_world->zonesAt(m_bounds);
 		for (auto z : newZones) {
 			z->incDeps();
@@ -64,6 +67,11 @@ void Camera::findZones() {
 			z->decDeps();
 		}
 		m_zones = newZones;
+
+		m_tlZone = m_world->zoneAt(m_bounds.X, m_bounds.Y);
+		m_trZone = m_world->zoneAt(m_bounds.x2(), m_bounds.Y);
+		m_blZone = m_world->zoneAt(m_bounds.X, m_bounds.y2());
+		m_brZone = m_world->zoneAt(m_bounds.x2(), m_bounds.y2());
 	}
 }
 
