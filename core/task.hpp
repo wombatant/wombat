@@ -148,7 +148,7 @@ class TaskProcessor: public Task {
 		bool m_running;
 		bool m_semInternal;
 		Mutex m_mutex;
-		BaseEventQueue *m_sem;
+		BaseEventQueue *m_events;
 		Channel<bool> m_done;
 		Task *m_currentTask;
 

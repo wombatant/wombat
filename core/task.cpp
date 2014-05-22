@@ -82,17 +82,17 @@ TaskProcessor::TaskProcessor(BaseEventQueue *sem) {
 	m_running = false;
 	m_currentTask = 0;
 	if (sem) {
-		m_sem = sem;
+		m_events = sem;
 		m_semInternal = false;
 	} else {
-		m_sem = new EventQueue();
+		m_events = new EventQueue();
 		m_semInternal = true;
 	}
 }
 
 TaskProcessor::~TaskProcessor() {
 	if (m_semInternal) {
-		delete m_sem;
+		delete m_events;
 	}
 }
 
@@ -160,7 +160,7 @@ void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState stat
 
 void TaskProcessor::addTask(Task *task, TaskState state) {
 	// post to the semaphore to refresh the sleep time
-	m_sem->post(Event(InitTask, task));
+	m_events->post(Event(InitTask, task));
 }
 
 void TaskProcessor::start() {
@@ -171,9 +171,9 @@ void TaskProcessor::start() {
 			while (m_running) {
 				Event post;
 				if (taskState.state == TaskState::Running) {
-					post = m_sem->wait(taskState.sleepDuration);
+					post = m_events->wait(taskState.sleepDuration);
 				} else {
-					post = m_sem->wait();
+					post = m_events->wait();
 				}
 				taskState = run(post);
 			}
@@ -183,7 +183,7 @@ void TaskProcessor::start() {
 }
 
 void TaskProcessor::stop() {
-	m_sem->post();
+	m_events->post();
 	m_running = false;
 }
 
@@ -192,7 +192,7 @@ void TaskProcessor::done() {
 }
 
 void TaskProcessor::post(Event event) {
-	m_sem->post(event);
+	m_events->post(event);
 }
 
 void TaskProcessor::addSubscription(EventType et) {
@@ -267,7 +267,7 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 		}
 		break;
 	case TaskState::Continue:
-		// continue exits to do nothing
+		// Continue exists to do nothing
 		break;
 	default:
 		// do nothing

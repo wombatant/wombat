@@ -25,6 +25,7 @@ World::World(models::World world) {
 
 World::~World() {
 	m_taskProc.stop();
+	m_taskProc.done();
 }
 
 core::TaskState World::run(core::Event) {
