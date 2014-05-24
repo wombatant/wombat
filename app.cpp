@@ -21,6 +21,7 @@ using core::TaskState;
 
 App::App() {
 	core::prependPath("active_path");
+	setAutoDelete(true);
 	models::InitFile initFile;
 	models::World world;
 	models::User user;
@@ -29,8 +30,12 @@ App::App() {
 	core::read(user, initFile.User);
 	core::read(world, user.World);
 	m_world = new world::World(world);
+
 	auto camera = new world::Camera(m_world);
 	core::addDrawer(camera);
+	core::addTask(camera);
+
+	core::addTask(this);
 }
 
 App::~App() {
@@ -63,6 +68,7 @@ TaskState App::run(core::Event e) {
 		case core::Key_Escape:
 		case core::Key_Q:
 			quit();
+			retval = TaskState::Done;
 			break;
 		default:
 			break;

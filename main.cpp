@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 #include <string.h>
-#include "core/core.hpp"
+#include <core/core.hpp>
 #include "app.hpp"
 #include "tests.hpp"
 
@@ -49,10 +49,9 @@ int main(int argc, const char **args) {
 		if (test) {
 			core::addDrawer(test);
 		}
+	} else {
+		new App();
 	}
-
-	App app;
-	core::addTask(&app);
 
 	core::main();
 
