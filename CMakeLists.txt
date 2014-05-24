@@ -2,12 +2,17 @@ cmake_minimum_required(VERSION 2.6)
 
 project(wombat)
 
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+include(address_sanitizer)
+
+set(WOMBATCORE_TYPE SDL)
 
 add_definitions(
 	-std=c++11
 	#-g
 	#--analyze
+	#-Os # GCC size optimization flag
 )
 
 #setup libraries

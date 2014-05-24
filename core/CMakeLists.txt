@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 
-add_definitions(-DWITH_SDL)
+if(WOMBATCORE_TYPE STREQUAL "SDL")
+	add_definitions(-DWITH_SDL)
+endif()
 
 add_library(
 	WombatCore

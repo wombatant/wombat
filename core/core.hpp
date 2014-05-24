@@ -17,6 +17,7 @@
 #define WOMBAT_CORE_CORE_HPP
 
 #include <iostream>
+#include <common/common.hpp>
 #include <models/models.hpp>
 #include "event.hpp"
 #include "gfx.hpp"
