@@ -18,13 +18,19 @@
 namespace wombat {
 namespace world {
 
+TileInstance::TileInstance() {
+	m_tileClass = 0;
+}
+
 void TileInstance::load(models::TileInstance model) {
-	tileClass = Tile::checkout(model.Tile);
+	m_tileClass = Tile::checkout(model.Tile);
 }
 
 void TileInstance::draw(core::Graphics &gfx, common::Point pt) {
-	tileClass->drawLower(gfx, pt);
-	tileClass->drawUpper(gfx, pt);
+	if (m_tileClass) {
+		m_tileClass->drawLower(gfx, pt);
+		m_tileClass->drawUpper(gfx, pt);
+	}
 }
 
 }

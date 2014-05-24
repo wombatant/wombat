@@ -53,7 +53,7 @@ class World: public core::Task {
 		 * @param bnds the bounds to find intersections with
 		 * @return the Zones at the given coordinates
 		 */
-		std::vector<Zone*> zonesAt(common::Bounds bnds);
+		void zonesAt(std::vector<Zone*> &zones, common::Bounds bnds);
 
 		/**
 		 * Gets the Zone at the given coordinates.

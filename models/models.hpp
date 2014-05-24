@@ -596,7 +596,7 @@ class Model {
 		/**
 		 * Reads fields of this Model from file of the given path.
 		 */
-		int readJsonFile(string path);
+		cyborgbear::Error readJsonFile(string path);
 
 		/**
 		 * Writes JSON representation of this Model to JSON file of the given path.
@@ -606,7 +606,7 @@ class Model {
 		/**
 		 * Loads fields of this Model from the given JSON text.
 		 */
-		int fromJson(string json);
+		cyborgbear::Error fromJson(string json);
 
 		/**
 		 * Returns JSON representation of this Model.
@@ -1000,10 +1000,9 @@ class User: public cyborgbear::Model {
 
 		virtual void fromBoostBinary(string dat);
 #endif
-		string Person;
 		string World;
 		string ZoneInstance;
-		int Layer;
+		string Person;
 };
 
 }
@@ -1281,7 +1280,7 @@ class PersonClass: public cyborgbear::Model {
 
 		virtual void fromBoostBinary(string dat);
 #endif
-		int ID;
+		string Import;
 		std::map< string, string > Name;
 		std::vector< string > Creatures;
 		std::vector< models::Animation > Overhead;
@@ -1452,10 +1451,9 @@ void serialize(Archive &ar, models::AnimLayer &model, const unsigned int) {
 
 template<class Archive>
 void serialize(Archive &ar, models::User &model, const unsigned int) {
-	ar & model.Person;
 	ar & model.World;
 	ar & model.ZoneInstance;
-	ar & model.Layer;
+	ar & model.Person;
 }
 
 template<class Archive>
@@ -1517,7 +1515,7 @@ void serialize(Archive &ar, models::ZoneHeader &model, const unsigned int) {
 
 template<class Archive>
 void serialize(Archive &ar, models::PersonClass &model, const unsigned int) {
-	ar & model.ID;
+	ar & model.Import;
 	ar & model.Name;
 	ar & model.Creatures;
 	ar & model.Overhead;

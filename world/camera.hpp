@@ -23,12 +23,10 @@
 namespace wombat {
 namespace world {
 
-class Camera: public core::Drawer {
+class Camera: public core::Drawer, public core::Task {
 	private:
 		common::Bounds m_bounds;
 		std::vector<Zone*> m_zones;
-		// Tracks what Zone each corner is in
-		Zone *m_tlZone, *m_trZone, *m_blZone, *m_brZone;
 		World *m_world;
 
 	public:
@@ -36,6 +34,10 @@ class Camera: public core::Drawer {
 		 * Constructor
 		 */
 		Camera(World *world);
+
+		void init();
+
+		core::TaskState run(core::Event);
 
 		/**
 		 * Draws what the Camera is currently hovering over.
@@ -51,6 +53,7 @@ class Camera: public core::Drawer {
 
 	private:
 		void findZones();
+		void updateSize();
 };
 
 }

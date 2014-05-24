@@ -46,6 +46,7 @@ void ClipRectStack::pop() {
 	if (m_pt < 1) {
 		return;
 	}
+	m_viewports.erase(m_viewports.end());
 	m_pt--;
 }
 

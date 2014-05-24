@@ -7,7 +7,6 @@ Settings
 	Height     int
 
 User
-	Person       string # path to the Person
 	World        string # World path
 	ZoneInstance string # Zone accessor
-	Layer        int
+	Person       string # path to the Person

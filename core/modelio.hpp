@@ -26,6 +26,7 @@ namespace wombat {
 namespace core {
 
 typedef std::string Path;
+const Path NullPath = "";
 
 /**
  * Prepends to the path to load models from.

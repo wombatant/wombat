@@ -21,6 +21,12 @@ namespace world {
 World::World(models::World world) {
 	m_taskProc.start();
 	m_taskProc.addTask(this);
+
+	for (auto z : world.Zones) {
+		auto zone = new Zone(z);
+		m_zones[z.AccessorID] = zone;
+		m_taskProc.addTask(zone);
+	}
 }
 
 World::~World() {
@@ -36,14 +42,13 @@ Zone *World::getZone(std::string accessorId) {
 	return m_zones[accessorId];
 }
 
-std::vector<Zone*> World::zonesAt(common::Bounds bnds) {
-	std::vector<Zone*> zones;
+void World::zonesAt(std::vector<Zone*> &zones, common::Bounds bnds) {
+	zones.erase(zones.begin(), zones.end());
 	for (auto z : m_zones) {
 		if (z.second->bounds().intersects(bnds)) {
 			zones.push_back(z.second);
 		}
 	}
-	return zones;
 }
 
 Zone *World::zoneAt(int x, int y) {

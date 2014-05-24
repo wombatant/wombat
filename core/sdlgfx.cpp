@@ -151,6 +151,7 @@ void Graphics::pushClipRect(int x, int y, int w, int h) {
 	sdlRct.y = r.Y;
 	sdlRct.w = r.Width;
 	sdlRct.h = r.Height;
+
 	SDL_RenderSetClipRect(_renderer, &sdlRct);
 
 	m_origin.X = m_cliprect.bounds().X;

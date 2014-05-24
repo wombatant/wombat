@@ -18,9 +18,31 @@
 namespace wombat {
 namespace world {
 
+using core::TaskState;
+
 Camera::Camera(World *world) {
-	m_tlZone = m_trZone = m_blZone = m_brZone = 0;
 	m_world = world;
+	setAutoDelete(true);
+	core::addTask(this);
+}
+
+void Camera::init() {
+	updateSize();
+	core::subscribe(core::ScreenSizeChange);
+}
+
+TaskState Camera::run(core::Event e) {
+	TaskState retval = TaskState::Continue;
+
+	switch (e.type()) {
+	case core::ScreenSizeChange:
+		updateSize();
+		break;
+	default:
+		break;
+	}
+
+	return retval;
 }
 
 void Camera::draw(core::Graphics &g) {
@@ -52,27 +74,18 @@ common::Bounds Camera::bounds() {
 }
 
 void Camera::findZones() {
-	bool updateZones = !(m_tlZone && m_trZone && m_blZone && m_brZone) ||
-		!(m_tlZone->bounds().contains(m_bounds.X, m_bounds.Y) &&
-		m_tlZone->bounds().contains(m_bounds.X, m_bounds.y2()) &&
-		m_tlZone->bounds().contains(m_bounds.x2(), m_bounds.Y) &&
-		m_tlZone->bounds().contains(m_bounds.x2(), m_bounds.y2()));
-
-	if (updateZones) {
-		auto newZones = m_world->zonesAt(m_bounds);
-		for (auto z : newZones) {
-			z->incDeps();
-		}
-		for (auto z : m_zones) {
-			z->decDeps();
-		}
-		m_zones = newZones;
-
-		m_tlZone = m_world->zoneAt(m_bounds.X, m_bounds.Y);
-		m_trZone = m_world->zoneAt(m_bounds.x2(), m_bounds.Y);
-		m_blZone = m_world->zoneAt(m_bounds.X, m_bounds.y2());
-		m_brZone = m_world->zoneAt(m_bounds.x2(), m_bounds.y2());
+	for (auto z : m_zones) {
+		z->decDeps();
 	}
+	m_world->zonesAt(m_zones, m_bounds);
+	for (auto z : m_zones) {
+		z->incDeps();
+	}
+}
+
+void Camera::updateSize() {
+	m_bounds.Width = core::displayWidth();
+	m_bounds.Height = core::displayHeight();
 }
 
 }

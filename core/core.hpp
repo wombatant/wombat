@@ -16,7 +16,8 @@
 #ifndef WOMBAT_CORE_CORE_HPP
 #define WOMBAT_CORE_CORE_HPP
 
-#include "models/models.hpp"
+#include <iostream>
+#include <models/models.hpp>
 #include "event.hpp"
 #include "gfx.hpp"
 #include "misc.hpp"
@@ -25,5 +26,8 @@
 #include "task.hpp"
 #include "tls.hpp"
 #include "types.hpp"
+
+using std::cout;
+using std::endl;
 
 #endif

@@ -6,7 +6,9 @@
 			"Address": {
 				"X": 0,
 				"Y": 0
-			}
+			},
+			"TilesWide": 25,
+			"TilesHigh": 25
 		}
 	]
 }

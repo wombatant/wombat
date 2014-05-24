@@ -24,9 +24,14 @@ namespace world {
 
 class TileInstance {
 	private:
-		Tile *tileClass;
+		Tile *m_tileClass;
 
 	public:
+		/**
+		 * Constructor
+		 */
+		TileInstance();
+
 		void load(models::TileInstance model);
 
 		void draw(core::Graphics &gfx, common::Point pt);

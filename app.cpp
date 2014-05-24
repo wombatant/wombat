@@ -25,22 +25,22 @@ App::App() {
 	models::World world;
 	models::User user;
 
-	core::read(initFile, "Misc/Init.json");
+	core::read(initFile, "Init");
 	core::read(user, initFile.User);
 	core::read(world, user.World);
 	m_world = new world::World(world);
-	m_camera = new world::Camera(m_world);
-	//core::addDrawer(m_camera);
+	auto camera = new world::Camera(m_world);
+	core::addDrawer(camera);
 }
 
 App::~App() {
 	delete m_world;
-	delete m_camera;
 }
 
 void App::init() {
 	core::subscribe(core::KeyDownEvent);
 	core::subscribe(core::KeyUpEvent);
+	core::subscribe(core::ScreenSizeChange);
 	core::subscribe(core::QuitEvent);
 }
 

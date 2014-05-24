@@ -53,11 +53,13 @@ class Zone: public core::Task {
 
 				/**
 				 * Allocates TileInstance grid.
-				 * @param w width of grid
-				 * @param h height of grid
-				 * @param layers layers of grid
 				 */
 				void allocate();
+
+				/**
+				 * Frees TileInstance grid.
+				 */
+				void free();
 
 				/**
 				 * Gets the TileInstance at the given address.
@@ -88,7 +90,7 @@ class Zone: public core::Task {
 				 */
 				int layers();
 		} m_tiles;
-		core::Path m_zone;
+		core::Path m_path;
 		common::Point m_address;
 		// used to count the number Cameras watching the Zone to
 		//  determine when to unload
@@ -141,6 +143,8 @@ class Zone: public core::Task {
 
 	private:
 		void load();
+
+		void unload();
 };
 
 }

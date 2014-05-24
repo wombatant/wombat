@@ -50,7 +50,7 @@ void appendPath(std::string h) {
  * Adds the given suffix to the given string if it is not already there.
  */
 string _suffix(string path, string suffix) {
-	if (path.size() >= suffix.size() && path.substr(path.size() - suffix.size()) != suffix) {
+	if (path.size() < suffix.size() || path.substr(path.size() - suffix.size()) != suffix) {
 		path += suffix;
 	}
 	return path;
@@ -58,14 +58,21 @@ string _suffix(string path, string suffix) {
 
 models::cyborgbear::Error read(models::cyborgbear::Model &m, Path path) {
 	using namespace models::cyborgbear;
-	auto p = core::path(_suffix(path, ".json"));
-	auto retval = m.readJsonFile(p);
+	auto retval = Error_Ok;
 
-	if (retval & Error_TypeMismatch) {
-		printf("Warning: type mismatch in %s\n", path.c_str());
-	}
-	if (retval & Error_GenericParsingError) {
-		printf("Warning: generic parsing error in %s\n", path.c_str());
+	if (path != core::NullPath) {
+		auto p = core::path(_suffix(path, ".json"));
+		retval = m.readJsonFile(p);
+
+		if (retval & Error_TypeMismatch) {
+			printf("Warning: type mismatch in \"%s\"\n", path.c_str());
+		}
+		if (retval & Error_GenericParsingError) {
+			printf("Warning: generic parsing error in \"%s\"\n", path.c_str());
+		}
+		if (retval & Error_CouldNotAccessFile) {
+			printf("Warning: could not access \"%s\"\n", path.c_str());
+		}
 	}
 
 	return retval;
