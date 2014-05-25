@@ -19,7 +19,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-#include "core.hpp"
+#include "../core.hpp"
 
 namespace wombat {
 namespace core {

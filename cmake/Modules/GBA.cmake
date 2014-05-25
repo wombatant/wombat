@@ -25,19 +25,19 @@ find_library(GBA_LIBRARY
 	NAMES
 		gba
 	PATHS
-		${DEVKITPRO}/libgba/lib
+		/lib
 )
 find_library(FILESYSTEM_LIBRARY
 	NAMES
 		filesystem
 	PATHS
-		${DEVKITPRO}/libgba/lib
+		/lib
 )
 find_library(FAT_LIBRARY
 	NAMES
 		fat
 	PATHS
-		${DEVKITPRO}/libgba/lib
+		/lib
 )
 
 include(FindPackageHandleStandardArgs)

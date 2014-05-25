@@ -16,7 +16,7 @@
 #ifdef WITH_SDL
 
 #include <SDL.h>
-#include "_tls.hpp"
+#include "../_tls.hpp"
 
 namespace wombat {
 namespace core {

@@ -15,7 +15,7 @@
  */
 #ifdef WITH_SDL
 #include <SDL.h>
-#include "core.hpp"
+#include "../core.hpp"
 
 namespace wombat {
 namespace core {

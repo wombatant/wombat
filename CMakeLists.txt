@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 2.6)
 project(wombat)
 
 set(WOMBAT_BUILD_TYPE "Native" CACHE STRING "The type of build to produce(Native/GBA)")
-#set(WOMBAT_BUILD_TYPE "GBA")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 include(address_sanitizer)

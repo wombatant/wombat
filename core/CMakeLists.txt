@@ -13,15 +13,15 @@ add_library(
 		misc.cpp
 		modelio.cpp
 		task.cpp
-		sdlcore.cpp
-		sdlevent.cpp
-		sdlgfx.cpp
-		sdlsync.cpp
 		sync.cpp
 		_cliprectstack.cpp
-		_sdlthreads.cpp
-		_sdltls.cpp
 		_submgr.cpp
+		sdl/core.cpp
+		sdl/event.cpp
+		sdl/gfx.cpp
+		sdl/sync.cpp
+		sdl/_threads.cpp
+		sdl/_tls.cpp
 )
 
 install(TARGETS WombatCore DESTINATION lib)
