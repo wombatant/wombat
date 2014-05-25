@@ -1,11 +1,11 @@
 make:
-	make -j8 -C build
+	./scripts/runmake 
 preinstall:
-	make -j8 -C build preinstall
+	./scripts/runmake preinstall
 install:
-	make -j8 -C build install
+	./scripts/runmake install
 clean:
-	make -j8 -C build clean
+	./scripts/runmake clean
 build: release
 release:
 	./scripts/setup_build

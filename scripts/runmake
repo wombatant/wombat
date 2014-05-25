@@ -1,0 +1,14 @@
+#! /usr/bin/env bash
+
+cmd=$1
+
+function runMake {
+	dir=$1
+	cmd=$2
+	if [ -d $dir ]; then
+		make -j`nproc` -C $dir $cmd
+	fi
+}
+
+runMake "build/sdl" $cmd
+runMake "build/gba" $cmd
