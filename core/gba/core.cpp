@@ -28,12 +28,6 @@ extern bool _running;
 
 TaskProcessor _taskProcessor;
 
-const auto Event_DrawEvent = 1;
-const auto Event_SemaporePost = 2;
-const auto Event_SemaphoreTimeout = 3;
-
-// Main TaskProcessor modifiers
-
 void addTask(std::function<TaskState(Event)> task, TaskState state) {
 	_taskProcessor.addTask(task, state);
 }
