@@ -13,40 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifdef USE_SDL
-
-#include <SDL.h>
+#ifdef USE_GBA
 #include "../core.hpp"
 
 namespace wombat {
 namespace core {
 
-void startThread(std::function<void()> f) {
-	static int threadCount = 0;
+// Mutex
 
-	char thrdNm[10];
-	snprintf(thrdNm, 10, "Thread %d", threadCount);
-
-
-	auto fp = new std::function<void()>(f);
-	auto thread = SDL_CreateThread([](void *func) -> int {
-		if (func) {
-			auto f = (std::function<void()>*) func;
-			(*f)();
-			delete f;
-		}
-		return 0;
-	}, thrdNm, (void*) fp);
-	SDL_DetachThread(thread);
-
-	threadCount++;
+Mutex::Mutex() {
+	m_mutex = 0;
 }
 
-void sleep(uint64 ms) {
-	SDL_Delay(ms);
+Mutex::~Mutex() {
+	if (m_mutex) {
+	}
+}
+
+int Mutex::lock() {
+	return 0;
+}
+
+int Mutex::unlock() {
+	return 0;
+}
+
+// EventQueue
+
+EventQueue::EventQueue() {
+	m_semaphore = 0;
+}
+
+EventQueue::~EventQueue() {
+}
+
+Event EventQueue::wait() {
+	Event post;
+	return post;
+}
+
+Event EventQueue::wait(uint64 timeout) {
+	Event post;
+	return post;
+}
+
+void EventQueue::post(Event wakeup) {
+	m_mutex.lock();
+	m_posts.push(wakeup);
+	m_mutex.unlock();
 }
 
 }
 }
-
 #endif

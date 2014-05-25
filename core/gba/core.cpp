@@ -1,0 +1,65 @@
+/*
+ * Copyright 2013-2014 gtalent2@gmail.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#ifdef USE_GBA
+
+#include <vector>
+
+#include "../core.hpp"
+
+namespace wombat {
+namespace core {
+
+extern SubscriptionManager _submgr;
+extern std::vector<std::pair<Drawer*, Graphics*>> _drawers;
+extern bool _running;
+
+TaskProcessor _taskProcessor;
+
+const auto Event_DrawEvent = 1;
+const auto Event_SemaporePost = 2;
+const auto Event_SemaphoreTimeout = 3;
+
+// Main TaskProcessor modifiers
+
+void addTask(std::function<TaskState(Event)> task, TaskState state) {
+	_taskProcessor.addTask(task, state);
+}
+
+void addTask(Task *task, TaskState state) {
+	_taskProcessor.addTask(task, state);
+}
+
+void draw() {
+}
+
+void _draw() {
+	for (auto d : _drawers) {
+		d.first->draw(*d.second);
+		d.second->resetViewport();
+	}
+}
+
+void main() {
+}
+
+int init(models::Settings settings) {
+	return 0;
+}
+
+}
+}
+
+#endif

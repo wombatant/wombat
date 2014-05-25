@@ -19,6 +19,13 @@
 namespace wombat {
 namespace core {
 
+std::vector<std::pair<Drawer*, Graphics*>> _drawers;
+
+
+void addDrawer(Drawer *d) {
+	_drawers.push_back(std::pair<Drawer*, Graphics*>(d, new Graphics()));
+}
+
 //Image
 
 Flyweight<models::Image> imageCache([](models::cyborgbear::Model &key) -> Image* {

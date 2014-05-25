@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 if(WOMBAT_BUILD_TYPE STREQUAL "GBA")
 	add_definitions(-DUSE_GBA)
 elseif(WOMBAT_BUILD_TYPE STREQUAL "Native")
-	add_definitions(-DWITH_SDL)
+	add_definitions(-DUSE_SDL)
 endif()
 
 add_library(
@@ -16,6 +16,12 @@ add_library(
 		sync.cpp
 		_cliprectstack.cpp
 		_submgr.cpp
+		gba/core.cpp
+		gba/event.cpp
+		gba/gfx.cpp
+		gba/sync.cpp
+		gba/_threads.cpp
+		gba/_tls.cpp
 		sdl/core.cpp
 		sdl/event.cpp
 		sdl/gfx.cpp

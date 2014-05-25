@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifdef WITH_SDL
+#ifdef USE_SDL
 #include <vector>
 
 #include <SDL.h>
@@ -24,6 +24,8 @@ namespace wombat {
 namespace core {
 
 extern SubscriptionManager _submgr;
+extern std::vector<std::pair<Drawer*, Graphics*>> _drawers;
+extern bool _running;
 
 class SdlMainEventQueue: public BaseEventQueue {
 	private:
@@ -63,19 +65,11 @@ const auto Event_DrawEvent = SDL_RegisterEvents(1);
 const auto Event_SemaporePost = SDL_RegisterEvents(1);
 const auto Event_SemaphoreTimeout = SDL_RegisterEvents(1);
 
-std::vector<std::pair<Drawer*, Graphics*>> _drawers;
 SDL_Window *_display = 0;
 SDL_Renderer *_renderer = 0;
 
-extern bool _running;
-
-
 Key toWombatKey(SDL_Event);
 void _updateEventTime();
-
-void addDrawer(Drawer *d) {
-	_drawers.push_back(std::pair<Drawer*, Graphics*>(d, new Graphics()));
-}
 
 // SdlMainEventQueue Implementation
 

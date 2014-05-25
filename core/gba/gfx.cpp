@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifdef USE_SDL
-
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
+#ifdef USE_GBA
 
 #include "../core.hpp"
 
@@ -26,50 +22,29 @@ namespace core {
 
 using std::string;
 
-extern SDL_Window *_display;
-extern SDL_Renderer *_renderer;
-
 
 int displayWidth() {
-	int w;
-	SDL_GetWindowSize(_display, &w, 0);
-	return w;
+	return 0;
 }
 
 int displayHeight() {
-	int h;
-	SDL_GetWindowSize(_display, 0, &h);
-	return h;
+	return 0;
 }
 
 //Image
 
 Image::Image(models::Image img) {
-	models::SpriteSheet ss;
-	read(ss, img.SpriteSheet);
-	SDL_Surface *s = IMG_Load(path(ss.SrcFile).c_str());
-	m_img = SDL_CreateTextureFromSurface(_renderer, s);
-	SDL_FreeSurface(s);
-	m_bounds = ss.Images[img.ImgId].SrcBounds;
-	m_defaultSize.Width = img.DefaultSize.Width;
-	m_defaultSize.Height = img.DefaultSize.Height;
-	m_key = img.toJson();
 }
 
 Image::~Image() {
-	SDL_DestroyTexture((SDL_Texture*) m_img);
 }
 
 int Image::width() {
-	int out;
-	SDL_QueryTexture((SDL_Texture*) m_img, 0, 0, &out, 0);
-	return out;
+	return 0;
 }
 
 int Image::height() {
-	int out;
-	SDL_QueryTexture((SDL_Texture*) m_img, 0, 0, 0, &out);
-	return out;
+	return 0;
 }
 
 bool Image::loaded() {
@@ -81,57 +56,18 @@ bool Image::loaded() {
 
 void Graphics::draw(Image *img, int x, int y, int w, int h) {
 	if (img->loaded()) {
-		SDL_SetTextureAlphaMod((SDL_Texture*) img->m_img, 255);
-		SDL_Rect dest, src;
-		dest.x = m_origin.X = x;
-		dest.y = m_origin.Y = y;
-		dest.w = w;
-		dest.h = h;
-
-		src.x = img->m_bounds.X;
-		src.y = img->m_bounds.Y;
-		src.w = img->m_bounds.Width;
-		src.h = img->m_bounds.Height;
-
-		SDL_RenderCopy(_renderer, (SDL_Texture*) img->m_img, &src, &dest);
 	}
 }
 
 void Graphics::draw(Image *img, int x, int y) {
 	if (img->loaded()) {
-		int w, h;
-		if (img->defaultWidth() == -1)
-			w = img->width();
-		else
-			w = img->defaultWidth();
-
-		if (img->defaultHeight() == -1)
-			h = img->height();
-		else
-			h = img->defaultHeight();
-
-		SDL_SetTextureAlphaMod((SDL_Texture*) img->m_img, 255);
-		SDL_Rect dest, src;
-		dest.x = m_origin.X + x;
-		dest.y = m_origin.Y + y;
-		dest.w = w;
-		dest.h = h;
-
-		src.x = img->m_bounds.X;
-		src.y = img->m_bounds.Y;
-		src.w = img->m_bounds.Width;
-		src.h = img->m_bounds.Height;
-
-		SDL_RenderCopy(_renderer, (SDL_Texture*) img->m_img, &src, &dest);
 	}
 }
 
 void Graphics::setRGBA(int r, int g, int b, int a) {
-	SDL_SetRenderDrawColor(_renderer, r, g, b, a);
 }
 
 void Graphics::setRGB(int r, int g, int b) {
-	SDL_SetRenderDrawColor(_renderer, r, g, b, 255);
 }
 
 void Graphics::pushClipRect(int x, int y, int w, int h) {
@@ -146,13 +82,13 @@ void Graphics::pushClipRect(int x, int y, int w, int h) {
 	m_cliprect.push(bnds);
 	auto r = m_cliprect.bounds();
 
-	SDL_Rect sdlRct;
-	sdlRct.x = r.X;
-	sdlRct.y = r.Y;
-	sdlRct.w = r.Width;
-	sdlRct.h = r.Height;
+	//SDL_Rect sdlRct;
+	//sdlRct.x = r.X;
+	//sdlRct.y = r.Y;
+	//sdlRct.w = r.Width;
+	//sdlRct.h = r.Height;
 
-	SDL_RenderSetClipRect(_renderer, &sdlRct);
+	//SDL_RenderSetClipRect(_renderer, &sdlRct);
 
 	m_origin.X = m_cliprect.bounds().X;
 	m_origin.Y = m_cliprect.bounds().Y;
@@ -174,12 +110,12 @@ void Graphics::popClipRect() {
 			r.Height = displayHeight();
 		}
 
-		SDL_Rect sdlRct;
-		sdlRct.x = r.X;
-		sdlRct.y = r.Y;
-		sdlRct.w = r.Width;
-		sdlRct.h = r.Height;
-		SDL_RenderSetClipRect(_renderer, &sdlRct);
+		//SDL_Rect sdlRct;
+		//sdlRct.x = r.X;
+		//sdlRct.y = r.Y;
+		//sdlRct.w = r.Width;
+		//sdlRct.h = r.Height;
+		//SDL_RenderSetClipRect(_renderer, &sdlRct);
 
 		m_origin.X = m_cliprect.bounds().X;
 		m_origin.Y = m_cliprect.bounds().Y;
