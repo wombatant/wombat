@@ -17,12 +17,14 @@ add_library(
 		_cliprectstack.cpp
 		_submgr.cpp
 		gba/core.cpp
+		gba/corecapabilities.cpp
 		gba/event.cpp
 		gba/gfx.cpp
 		gba/sync.cpp
 		gba/_threads.cpp
 		gba/_tls.cpp
 		sdl/core.cpp
+		sdl/corecapabilities.cpp
 		sdl/event.cpp
 		sdl/gfx.cpp
 		sdl/sync.cpp
@@ -35,6 +37,7 @@ install(
 	FILES
 		channel.hpp
 		core.hpp
+		corecapabilities.hpp
 		event.hpp
 		gfx.hpp
 		modelio.hpp

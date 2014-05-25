@@ -19,6 +19,7 @@
 #include <iostream>
 #include <common/common.hpp>
 #include <models/models.hpp>
+#include "corecapabilities.hpp"
 #include "event.hpp"
 #include "gfx.hpp"
 #include "misc.hpp"
