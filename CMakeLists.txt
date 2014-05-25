@@ -2,15 +2,14 @@ cmake_minimum_required(VERSION 2.6)
 
 project(wombat)
 
+set(WOMBAT_BUILD_TYPE "Native" CACHE STRING "The type of build to produce(Native/GBA)")
+#set(WOMBAT_BUILD_TYPE "GBA")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 include(address_sanitizer)
 
-set(WOMBATCORE_TYPE SDL)
-
 add_definitions(
 	-std=c++11
-	#-g
 	#--analyze
 	#-Os # GCC size optimization flag
 )
@@ -21,13 +20,19 @@ find_package(Jansson REQUIRED)
 include_directories(${JANSSON_INCLUDE_DIR})
 set(LIBS ${LIBS} ${JANSSON_LIBRARY})
 
-find_package(SDL REQUIRED)
-include_directories(${SDL_INCLUDE_DIR})
-set(LIBS ${LIBS} ${SDL_LIBRARY})
+if(WOMBAT_BUILD_TYPE STREQUAL "Native")
+	find_package(SDL REQUIRED)
+	include_directories(${SDL_INCLUDE_DIR})
+	set(LIBS ${LIBS} ${SDL_LIBRARY})
 
-find_package(SDL_IMAGE REQUIRED)
-include_directories(${SDL_IMAGE_INCLUDE_DIR})
-set(LIBS ${LIBS} ${SDL_IMAGE_LIBRARY})
+	find_package(SDL_IMAGE REQUIRED)
+	include_directories(${SDL_IMAGE_INCLUDE_DIR})
+	set(LIBS ${LIBS} ${SDL_IMAGE_LIBRARY})
+elseif(WOMBAT_BUILD_TYPE STREQUAL "GBA")
+	set(LIBS ${LIBS} ${GBA})
+	set(LIBS ${LIBS} ${FILESYSTEM})
+	set(LIBS ${LIBS} ${FAT})
+endif()
 
 
 #project packages

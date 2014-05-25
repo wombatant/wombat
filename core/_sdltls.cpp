@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifdef WITH_SDL
+
 #include <SDL.h>
 #include "_tls.hpp"
 
@@ -54,3 +56,5 @@ TaskProcessor *activeTaskProcessor() {
 
 }
 }
+
+#endif

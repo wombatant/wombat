@@ -2,5 +2,5 @@
 rm -rf build
 mkdir build
 pushd build
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug ../
+cmake -DUSE_ASAN=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug ../
 popd

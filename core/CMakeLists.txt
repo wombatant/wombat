@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 
-if(WOMBATCORE_TYPE STREQUAL "SDL")
+if(WOMBAT_BUILD_TYPE STREQUAL "GBA")
+	add_definitions(-DUSE_GBA)
+elseif(WOMBAT_BUILD_TYPE STREQUAL "Native")
 	add_definitions(-DWITH_SDL)
 endif()
 

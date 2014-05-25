@@ -24,11 +24,18 @@
 #  JANSSON_DEFINITIONS - Compiler switches required for using Jansson
 
 find_path(JANSSON_INCLUDE_DIR jansson.h
-          /usr/include
-          /usr/local/include)
+	PATHS
+		/usr/include
+		/usr/local/include
+)
 
-find_library(JANSSON_LIBRARY NAMES jansson
-             PATHS /usr/lib /usr/local/lib)
+find_library(JANSSON_LIBRARY
+	NAMES
+		jansson
+	PATHS
+		/usr/lib
+		/usr/local/lib
+)
 
 set(JANSSON_LIBRARIES ${JANSSON_LIBRARY})
 set(JANSSON_INCLUDE_DIRS ${JANSSON_INCLUDE_DIR})
