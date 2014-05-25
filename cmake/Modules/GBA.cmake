@@ -17,14 +17,9 @@ set(CMAKE_FIND_ROOT_PATH ${DEVKITARM} ${DEVKITPRO}/libgba)
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-#set(CMAKE_INCLUDE_PATH ${DEVKITPRO}/libgba)
-#set(CMAKE_LIBRARY_PATH ${DEVKITPRO}/libgba)
-#set(CMAKE_PREFIX_PATH ${DEVKITPRO}/libgba)
 
 set(CMAKE_FIND_LIBRARY_PREFIXES lib)
 set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
-#include_directories(${DEVKITPRO}/libgba/include)
-#link_directories(${DEVKITPRO}/libgba/lib)
 
 find_library(GBA_LIBRARY
 	NAMES
@@ -44,7 +39,6 @@ find_library(FAT_LIBRARY
 	PATHS
 		${DEVKITPRO}/libgba/lib
 )
-#find_library(JANSSON_LIBRARY jansson)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GBA DEFAULT_MSG
