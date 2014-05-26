@@ -17,4 +17,4 @@ build/sdl_debug:
 
 gba: build/gba
 build/gba:
-	./scripts/setup_gba
+	./scripts/setup_build_gba
