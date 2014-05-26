@@ -39,6 +39,10 @@ find_library(FAT_LIBRARY
 	PATHS
 		/lib
 )
+find_path(GBA_INCLUDE_DIR gba.h
+	PATHS
+		/include
+)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GBA DEFAULT_MSG

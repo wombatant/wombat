@@ -28,9 +28,10 @@ if(WOMBAT_BUILD_TYPE STREQUAL "Native")
 	include_directories(${SDL_IMAGE_INCLUDE_DIR})
 	set(LIBS ${LIBS} ${SDL_IMAGE_LIBRARY})
 elseif(WOMBAT_BUILD_TYPE STREQUAL "GBA")
-	set(LIBS ${LIBS} ${GBA})
-	set(LIBS ${LIBS} ${FILESYSTEM})
-	set(LIBS ${LIBS} ${FAT})
+	set(LIBS ${LIBS} ${GBA_LIBRARY})
+	set(LIBS ${LIBS} ${FILESYSTEM_LIBRARY})
+	set(LIBS ${LIBS} ${FAT_LIBRARY})
+	include_directories(${GBA_INCLUDE_DIR})
 endif()
 
 

@@ -17,6 +17,8 @@
 
 #include <vector>
 
+#include <gba.h>
+
 #include "../core.hpp"
 
 namespace wombat {
@@ -50,6 +52,9 @@ void main() {
 }
 
 int init(models::Settings settings) {
+	irqInit();
+	irqSet(IRQ_TIMER3, []() {});
+	irqEnable(IRQ_TIMER3);
 	return 0;
 }
 
