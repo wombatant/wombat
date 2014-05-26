@@ -1,8 +1,16 @@
 all: gba_build sdl_build sdl_debug_build
 
 gba_build:
-	make -j`nproc` -C gba ${ARGS}
+	@if [ -d gba ]; then \
+		make -j`nproc` -C gba ${ARGS}; \
+	fi
+
 sdl_build:
-	make -j`nproc` -C sdl ${ARGS}
+	@if [ -d sdl ]; then \
+		make -j`nproc` -C sdl ${ARGS}; \
+	fi
+
 sdl_debug_build:
-	make -j`nproc` -C sdl_debug ${ARGS}
+	@if [ -d sdl_debug ]; then \
+		make -j`nproc` -C sdl_debug ${ARGS}; \
+	fi
