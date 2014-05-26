@@ -1,4 +1,5 @@
-build
+build/gba
+build/sdl
 tags
 cmake_install.cmake
 wombat

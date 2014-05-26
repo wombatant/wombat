@@ -1,13 +1,14 @@
 make:
-	./scripts/runmake 
+	make -j`nproc` -C build ARGS="" 
 preinstall:
-	./scripts/runmake preinstall
+	make -j`nproc` -C build ARGS="preinstall"
 install:
-	./scripts/runmake install
+	make -j`nproc` -C build ARGS="install"
 clean:
-	./scripts/runmake clean
-build: release
-release:
+	make -j`nproc` -C build ARGS="clean"
+sdl: build/sdl
+build/sdl:
 	./scripts/setup_build
-debug:
+gba: build/gba
+build/gba:
 	./scripts/setup_build_debug
