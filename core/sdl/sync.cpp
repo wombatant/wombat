@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifdef USE_SDL
 #include <SDL.h>
 #include "../core.hpp"
 
@@ -100,4 +99,3 @@ void EventQueue::post(Event wakeup) {
 
 }
 }
-#endif

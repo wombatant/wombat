@@ -1,5 +1,5 @@
 make:
-	make -j -C build ARGS="" 
+	make -j -C build
 preinstall:
 	make -j -C build ARGS="preinstall"
 install:

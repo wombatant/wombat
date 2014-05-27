@@ -1,13 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
-if(WOMBAT_BUILD_TYPE STREQUAL "GBA")
-	add_definitions(-DUSE_GBA)
-elseif(WOMBAT_BUILD_TYPE STREQUAL "Native")
-	add_definitions(-DUSE_SDL)
-endif()
-
-add_library(
-	WombatCore
+set(
+	CPP
 		event.cpp
 		gfx.cpp
 		misc.cpp
@@ -16,21 +10,35 @@ add_library(
 		sync.cpp
 		_cliprectstack.cpp
 		_submgr.cpp
-		gba/core.cpp
-		gba/corecapabilities.cpp
-		gba/event.cpp
-		gba/gfx.cpp
-		gba/sync.cpp
-		gba/_threads.cpp
-		gba/_tls.cpp
-		sdl/core.cpp
-		sdl/corecapabilities.cpp
-		sdl/event.cpp
-		sdl/gfx.cpp
-		sdl/sync.cpp
-		sdl/_threads.cpp
-		sdl/_tls.cpp
 )
+
+if(WOMBAT_BUILD_TYPE STREQUAL "GBA")
+	set(
+		CPP
+			${CPP}
+			gba/core.cpp
+			gba/corecapabilities.cpp
+			gba/event.cpp
+			gba/gfx.cpp
+			gba/sync.cpp
+			gba/_threads.cpp
+			gba/_tls.cpp
+	)
+elseif(WOMBAT_BUILD_TYPE STREQUAL "Native")
+	set(
+		CPP
+			${CPP}
+			sdl/core.cpp
+			sdl/corecapabilities.cpp
+			sdl/event.cpp
+			sdl/gfx.cpp
+			sdl/sync.cpp
+			sdl/_threads.cpp
+			sdl/_tls.cpp
+	)
+endif()
+
+add_library(WombatCore ${CPP})
 
 install(TARGETS WombatCore DESTINATION lib)
 install(
