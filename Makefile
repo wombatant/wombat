@@ -1,11 +1,11 @@
 make:
-	make -j`nproc` -C build ARGS="" 
+	make -j -C build ARGS="" 
 preinstall:
-	make -j`nproc` -C build ARGS="preinstall"
+	make -j -C build ARGS="preinstall"
 install:
-	make -j`nproc` -C build ARGS="install"
+	make -j -C build ARGS="install"
 clean:
-	make -j`nproc` -C build ARGS="clean"
+	make -j -C build ARGS="clean"
 
 sdl: build/sdl
 build/sdl:
