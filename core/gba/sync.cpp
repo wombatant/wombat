@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <gba.h>
+#include "../_misc.hpp"
 #include "../core.hpp"
 
 namespace wombat {
@@ -25,8 +27,6 @@ Mutex::Mutex() {
 }
 
 Mutex::~Mutex() {
-	if (m_mutex) {
-	}
 }
 
 int Mutex::lock() {
@@ -48,11 +48,24 @@ EventQueue::~EventQueue() {
 
 Event EventQueue::wait() {
 	Event post;
+	while (1) {
+		IntrWait(0, 0);
+		if (popPost(post) == 0) {
+			break;
+		}
+	}
 	return post;
 }
 
 Event EventQueue::wait(uint64 timeout) {
 	Event post;
+	auto sleepEnd = _schedTime() + timeout;
+	while (_schedTime() < sleepEnd) {
+		IntrWait(0, 0);
+		if (popPost(post) == 0) {
+			break;
+		}
+	}
 	return post;
 }
 

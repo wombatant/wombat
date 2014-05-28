@@ -21,6 +21,7 @@ if(WOMBAT_BUILD_TYPE STREQUAL "GBA")
 			gba/event.cpp
 			gba/gfx.cpp
 			gba/sync.cpp
+			gba/_misc.cpp
 			gba/_threads.cpp
 			gba/_tls.cpp
 	)
@@ -33,6 +34,7 @@ elseif(WOMBAT_BUILD_TYPE STREQUAL "Native")
 			sdl/event.cpp
 			sdl/gfx.cpp
 			sdl/sync.cpp
+			sdl/_misc.cpp
 			sdl/_threads.cpp
 			sdl/_tls.cpp
 	)

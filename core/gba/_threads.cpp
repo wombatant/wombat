@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <gba.h>
+#include "../_misc.hpp"
 #include "../core.hpp"
 
 namespace wombat {
 namespace core {
 
-void startThread(std::function<void()> f) {
+void startThread(std::function<void()>) {
+	// not supported
 }
 
 void sleep(uint64 ms) {
+	auto sleepEnd = _schedTime() + ms;
+	while (_schedTime() < sleepEnd) {
+		IntrWait(0, 0);
+	}
 }
 
 }

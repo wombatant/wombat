@@ -9,6 +9,8 @@ include(address_sanitizer)
 
 add_definitions(
 	-std=c++11
+	-Wall
+	-Werror
 	#--analyze
 	#-Os # GCC size optimization flag
 )
@@ -59,3 +61,9 @@ add_executable(
 )
 
 target_link_libraries(wombat ${LIBS})
+set_target_properties(wombat
+	PROPERTIES
+	LINK_FLAGS ${LINKER_FLAGS}
+	COMPILER_FLAGS "-mthumb -mthumb-interwork"
+)
+#objcopy_file(wombat)

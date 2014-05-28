@@ -78,7 +78,7 @@ void Graphics::pushClipRect(int x, int y, int w, int h) {
 	m_origin.X -= m_cliprect.translate().X;
 	m_origin.Y -= m_cliprect.translate().Y;
 	m_cliprect.push(bnds);
-	auto r = m_cliprect.bounds();
+	//auto r = m_cliprect.bounds();
 
 	//SDL_Rect sdlRct;
 	//sdlRct.x = r.X;

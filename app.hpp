@@ -25,7 +25,6 @@ namespace wombat {
 class App: public core::Task {
 	private:
 		world::World *m_world;
-		world::Camera *m_camera;
 
 	public:
 		/**

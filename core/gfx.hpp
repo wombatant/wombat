@@ -87,8 +87,8 @@ class Image: public Flyweight<models::Image>::Value {
 class Animation: public Flyweight<models::Animation>::Value {
 	private:
 		std::vector<Image*> m_imgs;
-		time_t m_lastUpdate;
-		time_t m_interval;
+		uint64 m_lastUpdate;
+		uint64 m_interval;
 		int m_slide;
 		std::string m_key;
 

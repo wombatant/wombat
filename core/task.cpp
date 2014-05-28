@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "_misc.hpp"
 #include "_tls.hpp"
 #include "_threads.hpp"
 #include "task.hpp"
@@ -143,7 +144,7 @@ TaskState TaskProcessor::run(Event event) {
 
 	TaskProcessor::ScheduleItem nt;
 	if (nextTask(nt) == 0) {
-		auto time = core::time();
+		auto time = _schedTime();
 		if (time < nt.wakeupTime) {
 			return nt.wakeupTime - time;
 		} else {
@@ -207,7 +208,7 @@ Task *TaskProcessor::popActiveTask() {
 	TaskProcessor::ScheduleItem nt;
 	m_mutex.lock();
 	if (nextTask(nt) == 0) {
-		auto time = core::time();
+		auto time = _schedTime();
 		if (time >= nt.wakeupTime) {
 			m_schedule.pop_back();
 			m_mutex.unlock();
@@ -237,11 +238,11 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 			// remove old wake up time
 			deschedule(task);
 
-			const auto wakeup = time() + state.sleepDuration;
+			const auto wakeup = _schedTime() + state.sleepDuration;
 			const auto val = TaskProcessor::ScheduleItem(task, wakeup);
 
 			bool inserted = false;
-			for (auto i = 0; i < m_schedule.size(); i++) {
+			for (uint i = 0; i < m_schedule.size(); i++) {
 				auto ptr = m_schedule.begin() + i;
 				if (wakeup > ptr->wakeupTime) {
 					m_schedule.insert(ptr, val);
@@ -285,7 +286,7 @@ void TaskProcessor::runTask(Task *task, Event event) {
 
 void TaskProcessor::deschedule(Task *task) {
 	// remove from schedule
-	for (auto i = 0; i < m_schedule.size(); i++) {
+	for (uint i = 0; i < m_schedule.size(); i++) {
 		if (m_schedule[i].task == task) {
 			m_schedule.erase(m_schedule.begin() + i);
 		}

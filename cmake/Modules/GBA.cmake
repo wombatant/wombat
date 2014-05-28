@@ -21,6 +21,11 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_LIBRARY_PREFIXES lib)
 set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
 
+set(LINKER_FLAGS -specs=gba.specs)
+add_definitions (
+	-DARM7
+)
+
 find_library(GBA_LIBRARY
 	NAMES
 		gba

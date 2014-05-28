@@ -30,7 +30,7 @@ void SubscriptionManager::removeFromAllSubs(Task *task) {
 	// yes, this is inefficient, but I'll fix it later if it's really a problem
 	for (auto l : m_subs) {
 		auto begin = l.begin();
-		for (int i = 0; i < l.size(); i++) {
+		for (uint i = 0; i < l.size(); i++) {
 			if (task == l[i]) {
 				l.erase(begin + i);
 				break;

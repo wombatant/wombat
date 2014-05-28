@@ -25,8 +25,13 @@ namespace core {
 extern SubscriptionManager _submgr;
 extern std::vector<std::pair<Drawer*, Graphics*>> _drawers;
 extern bool _running;
+const uint64 _timer3Interval = 61040;
+uint64 _time = 0;   // time in milliseconds
+uint64 _timeMs = 0; // time in microseconds
 
-TaskProcessor _taskProcessor;
+EventQueue _mainEventQueue;
+
+TaskProcessor _taskProcessor(&_mainEventQueue);
 
 void addTask(std::function<TaskState(Event)> task, TaskState state) {
 	_taskProcessor.addTask(task, state);
@@ -46,12 +51,21 @@ void _draw() {
 	}
 }
 
+void _timer3Int() {
+	_timeMs += _timer3Interval;
+	_time = _timeMs / 1000;
+	REG_IF = IRQ_TIMER3;
+}
+
 void main() {
+	while (_running) {
+		IntrWait(0, 0);
+	}
 }
 
 int init(models::Settings settings) {
 	irqInit();
-	irqSet(IRQ_TIMER3, []() {});
+	irqSet(IRQ_TIMER3, _timer3Int);
 	irqEnable(IRQ_TIMER3);
 	return 0;
 }
