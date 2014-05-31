@@ -21,7 +21,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_LIBRARY_PREFIXES lib)
 set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
 
-set(LINKER_FLAGS -specs=gba.specs)
+set(LINKER_FLAGS "-specs=gba.specs")
 add_definitions (
 	-DARM7
 )
@@ -50,5 +50,5 @@ find_path(GBA_INCLUDE_DIR gba.h
 )
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(GBA DEFAULT_MSG
-                                  GBA_LIBRARY FAT_LIBRARY FILESYSTEM_LIBRARY)
+find_package_handle_standard_args(GBA DEFAULT_MSG GBA_LIBRARY
+											 FAT_LIBRARY FILESYSTEM_LIBRARY)

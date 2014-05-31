@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.8)
 
 project(wombat)
 
@@ -42,22 +42,23 @@ endif()
 include_directories(".")
 
 add_subdirectory(models)
-set(LIBS WombatModels ${LIBS})
+set(OBJS ${OBJS} $<TARGET_OBJECTS:WombatModels>)
 
 add_subdirectory(common)
-set(LIBS WombatCommon ${LIBS})
+set(OBJS ${OBJS} $<TARGET_OBJECTS:WombatCommon>)
 
 add_subdirectory(core)
-set(LIBS WombatCore ${LIBS})
+set(OBJS ${OBJS} $<TARGET_OBJECTS:WombatCore>)
 
 add_subdirectory(world)
-set(LIBS WombatWorld ${LIBS})
+set(OBJS ${OBJS} $<TARGET_OBJECTS:WombatWorld>)
 
 add_executable(
 	wombat
 		app.cpp
 		main.cpp
 		tests.cpp
+		${OBJS}
 )
 
 target_link_libraries(wombat ${LIBS})

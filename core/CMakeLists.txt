@@ -40,9 +40,9 @@ elseif(WOMBAT_BUILD_TYPE STREQUAL "Native")
 	)
 endif()
 
-add_library(WombatCore ${CPP})
+add_library(WombatCore OBJECT ${CPP})
 
-install(TARGETS WombatCore DESTINATION lib)
+#install(TARGETS WombatCore DESTINATION lib)
 install(
 	FILES
 		channel.hpp

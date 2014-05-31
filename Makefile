@@ -7,14 +7,11 @@ install:
 clean:
 	make -j -C build ARGS="clean"
 
-sdl: build/sdl
-build/sdl:
+sdl:
 	./scripts/setup_build
 
-sdl_debug: build/sdl_debug
-build/sdl_debug:
+sdl_debug:
 	./scripts/setup_build_debug
 
-gba: build/gba
-build/gba:
+gba:
 	./scripts/setup_build_gba

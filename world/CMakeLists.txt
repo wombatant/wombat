@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 add_library(
-	WombatWorld
+	WombatWorld OBJECT
 		animlayer.cpp
 		camera.cpp
 		tile.cpp
@@ -10,7 +10,7 @@ add_library(
 		zone.cpp
 )
 
-install(TARGETS WombatWorld DESTINATION lib)
+#install(TARGETS WombatWorld DESTINATION lib)
 install(
 	FILES
 		camera.hpp

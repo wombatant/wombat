@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 2.6)
 
 add_library(
-	WombatCommon
+	WombatCommon OBJECT
 		bounds.cpp
 		point.cpp
 )
 
-install(TARGETS WombatCommon DESTINATION lib)
+#install(TARGETS WombatCommon DESTINATION lib)
 install(
 	FILES
 		bounds.hpp
