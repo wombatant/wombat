@@ -9,6 +9,7 @@ set(
 		task.cpp
 		sync.cpp
 		_cliprectstack.cpp
+		_memfs.cpp
 		_submgr.cpp
 )
 
