@@ -53,18 +53,4 @@ set(OBJS ${OBJS} $<TARGET_OBJECTS:WombatCore>)
 add_subdirectory(world)
 set(OBJS ${OBJS} $<TARGET_OBJECTS:WombatWorld>)
 
-add_executable(
-	wombat
-		app.cpp
-		main.cpp
-		tests.cpp
-		${OBJS}
-)
-
-target_link_libraries(wombat ${LIBS})
-#set_target_properties(wombat
-#	PROPERTIES
-#	LINK_FLAGS ${LINKER_FLAGS}
-#	COMPILER_FLAGS "-mthumb -mthumb-interwork"
-#)
-#objcopy_file(wombat)
+add_subdirectory(wombat)

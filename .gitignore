@@ -3,7 +3,6 @@ build/sdl
 build/sdl_debug
 tags
 cmake_install.cmake
-wombat
 CMakeCache.txt
 CMakeFiles
 compile_commands.json
