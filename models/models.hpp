@@ -596,7 +596,7 @@ class Model {
 		/**
 		 * Reads fields of this Model from file of the given path.
 		 */
-		cyborgbear::Error readJsonFile(string path);
+		int readJsonFile(string path);
 
 		/**
 		 * Writes JSON representation of this Model to JSON file of the given path.
@@ -606,7 +606,7 @@ class Model {
 		/**
 		 * Loads fields of this Model from the given JSON text.
 		 */
-		cyborgbear::Error fromJson(string json);
+		int fromJson(string json);
 
 		/**
 		 * Returns JSON representation of this Model.
@@ -1162,19 +1162,19 @@ namespace models {
 
 using cyborgbear::string;
 
-class Tile: public cyborgbear::Model {
+class TileClass: public cyborgbear::Model {
 
 	public:
 
-		Tile();
+		TileClass();
 
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
 
-		bool operator==(const Tile&) const;
+		bool operator==(const TileClass&) const;
 
-		bool operator!=(const Tile&) const;
+		bool operator!=(const TileClass&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -1324,26 +1324,26 @@ namespace models {
 
 using cyborgbear::string;
 
-class TileInstance: public cyborgbear::Model {
+class Tile: public cyborgbear::Model {
 
 	public:
 
-		TileInstance();
+		Tile();
 
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
 
-		bool operator==(const TileInstance&) const;
+		bool operator==(const Tile&) const;
 
-		bool operator!=(const TileInstance&) const;
+		bool operator!=(const Tile&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
 
 		virtual void fromBoostBinary(string dat);
 #endif
-		models::Tile Tile;
+		models::TileClass TileClass;
 		models::Sprite Occupant;
 };
 
@@ -1373,7 +1373,7 @@ class Zone: public cyborgbear::Model {
 
 		virtual void fromBoostBinary(string dat);
 #endif
-		std::vector< std::vector< std::vector< models::TileInstance > > > Tiles;
+		std::vector< std::vector< std::vector< models::Tile > > > Tiles;
 };
 
 }
@@ -1487,7 +1487,7 @@ void serialize(Archive &ar, models::World &model, const unsigned int) {
 }
 
 template<class Archive>
-void serialize(Archive &ar, models::Tile &model, const unsigned int) {
+void serialize(Archive &ar, models::TileClass &model, const unsigned int) {
 	ar & model.Import;
 	ar & model.TerrainType;
 	ar & model.LowerAnim;
@@ -1529,8 +1529,8 @@ void serialize(Archive &ar, models::Person &model, const unsigned int) {
 }
 
 template<class Archive>
-void serialize(Archive &ar, models::TileInstance &model, const unsigned int) {
-	ar & model.Tile;
+void serialize(Archive &ar, models::Tile &model, const unsigned int) {
+	ar & model.TileClass;
 	ar & model.Occupant;
 }
 

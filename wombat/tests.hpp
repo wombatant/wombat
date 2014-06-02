@@ -35,7 +35,7 @@ class AnimationTest: public core::Drawer {
 
 class TileClassTest: public core::Drawer {
 	private:
-		world::Tile *m_tileClass;
+		world::TileClass *m_tileClass;
 	public:
 		TileClassTest(std::string path);
 		void draw(core::Graphics&);

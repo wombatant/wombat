@@ -18,7 +18,7 @@
 
 #include <common/common.hpp>
 #include <core/core.hpp>
-#include "tileinstance.hpp"
+#include "tile.hpp"
 
 namespace wombat {
 namespace world {
@@ -27,7 +27,7 @@ class Zone: public core::Task {
 	private:
 		class TileGrid {
 			private:
-				TileInstance ***m_tiles;
+				Tile ***m_tiles;
 				int m_tilesWide;
 				int m_tilesHigh;
 				int m_layers;
@@ -44,7 +44,7 @@ class Zone: public core::Task {
 				~TileGrid();
 
 				/**
-				 * Sets the dimensions of the TileInstance grid.
+				 * Sets the dimensions of the Tile grid.
 				 * @param w width of grid
 				 * @param h height of grid
 				 * @param layers layers of grid
@@ -52,23 +52,23 @@ class Zone: public core::Task {
 				void setDimensions(int w, int h, int layers);
 
 				/**
-				 * Allocates TileInstance grid.
+				 * Allocates Tile grid.
 				 */
 				void allocate();
 
 				/**
-				 * Frees TileInstance grid.
+				 * Frees Tile grid.
 				 */
 				void free();
 
 				/**
-				 * Gets the TileInstance at the given address.
-				 * @param x X address of desired TileInstance
-				 * @param y Y address of desired TileInstance
-				 * @param layer layer of desired TileInstance
-				 * @return pointer to the TileInstance at the given address
+				 * Gets the Tile at the given address.
+				 * @param x X address of desired Tile
+				 * @param y Y address of desired Tile
+				 * @param layer layer of desired Tile
+				 * @return pointer to the Tile at the given address
 				 */
-				inline TileInstance &at(int x, int y, int layer) {
+				inline Tile &at(int x, int y, int layer) {
 					return m_tiles[layer][y][x];
 				}
 

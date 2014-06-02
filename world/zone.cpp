@@ -37,12 +37,12 @@ void Zone::TileGrid::setDimensions(int w, int h, int layers) {
 }
 
 void Zone::TileGrid::allocate() {
-	m_tiles = (TileInstance***) malloc(sizeof(TileInstance**) * m_layers);
+	m_tiles = (Tile***) malloc(sizeof(Tile**) * m_layers);
 	for (int l = 0; l < m_layers; l++) {
-		m_tiles[l] = (TileInstance**) malloc(sizeof(TileInstance*) * m_tilesHigh);
+		m_tiles[l] = (Tile**) malloc(sizeof(Tile*) * m_tilesHigh);
 		for (int y = 0; y < m_tilesHigh; y++) {
-			m_tiles[l][y] = (TileInstance*) malloc(sizeof(TileInstance) * m_tilesWide);
-			TileInstance t;
+			m_tiles[l][y] = (Tile*) malloc(sizeof(Tile) * m_tilesWide);
+			Tile t;
 			for (int x = 0; x < m_tilesWide; x++) {
 				m_tiles[l][y][x] = t;
 			}
@@ -130,19 +130,19 @@ void Zone::unload() {
 
 common::Bounds Zone::bounds() {
 	common::Bounds bnds;
-	bnds.X = Tile::Width * m_address.X;
-	bnds.Y = Tile::Height * m_address.Y;
-	bnds.Width = Tile::Width * m_tiles.tilesWide();
-	bnds.Height = Tile::Height * m_tiles.tilesHigh();
+	bnds.X = TileClass::Width * m_address.X;
+	bnds.Y = TileClass::Height * m_address.Y;
+	bnds.Width = TileClass::Width * m_tiles.tilesWide();
+	bnds.Height = TileClass::Height * m_tiles.tilesHigh();
 	return bnds;
 }
 
 void Zone::draw(core::Graphics &g, common::Bounds bnds, common::Point translation) {
 	auto loc = common::Point(bounds().X, bounds().Y);
 	for (int l = 0; l < m_tiles.layers(); l++) {
-		for (int y = bnds.Y; y < bnds.y2(); y += Tile::Height) {
-			for (int x = bnds.X; x < bnds.x2(); x += Tile::Width) {
-				auto &tile = m_tiles.at(x / Tile::Width, y / Tile::Height, l);
+		for (int y = bnds.Y; y < bnds.y2(); y += TileClass::Height) {
+			for (int x = bnds.X; x < bnds.x2(); x += TileClass::Width) {
+				auto &tile = m_tiles.at(x / TileClass::Width, y / TileClass::Height, l);
 				tile.draw(g, common::Point(x, y) + loc + translation);
 			}
 		}
@@ -150,7 +150,7 @@ void Zone::draw(core::Graphics &g, common::Bounds bnds, common::Point translatio
 }
 
 common::Point Zone::loc() {
-	return common::Point(Tile::Width * m_address.X, Tile::Height * m_address.Y);
+	return common::Point(TileClass::Width * m_address.X, TileClass::Height * m_address.Y);
 }
 
 void Zone::incDeps() {

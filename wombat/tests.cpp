@@ -44,11 +44,11 @@ void AnimationTest::draw(Graphics &g) {
 	}
 }
 
-// Tile Test
+// TileClass Test
 TileClassTest::TileClassTest(std::string path) {
-	models::Tile model;
+	models::TileClass model;
 	core::read(model, path);
-	m_tileClass = world::Tile::checkout(path);
+	m_tileClass = world::TileClass::checkout(path);
 }
 
 void TileClassTest::draw(Graphics &g) {

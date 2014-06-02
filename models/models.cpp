@@ -23,7 +23,7 @@ using namespace models::cyborgbear;
 
 string models::cyborgbear::version = "1.1.1";
 
-cyborgbear::Error Model::readJsonFile(string path) {
+int Model::readJsonFile(string path) {
 	try {
 		std::ifstream in;
 		in.open(cyborgbear::toStdString(path).c_str());
@@ -45,7 +45,7 @@ void Model::writeJsonFile(string path, cyborgbear::JsonSerializationSettings stt
 	out.close();
 }
 
-cyborgbear::Error Model::fromJson(string json) {
+int Model::fromJson(string json) {
 	cyborgbear::JsonValOut obj = cyborgbear::read(json);
 	cyborgbear::Error retval = loadJsonObj(obj);
 	cyborgbear::decref(obj);
@@ -320,7 +320,7 @@ Animation::Animation() {
 World::World() {
 }
 
-Tile::Tile() {
+TileClass::TileClass() {
 	this->Import = "";
 	this->TerrainType = 0;
 }
@@ -348,7 +348,7 @@ PersonClass::PersonClass() {
 Person::Person() {
 }
 
-TileInstance::TileInstance() {
+Tile::Tile() {
 }
 
 Zone::Zone() {
@@ -1059,7 +1059,7 @@ cyborgbear::Error World::loadJsonObj(cyborgbear::JsonVal in) {
 	return retval;
 }
 
-cyborgbear::Error Tile::loadJsonObj(cyborgbear::JsonVal in) {
+cyborgbear::Error TileClass::loadJsonObj(cyborgbear::JsonVal in) {
 	cyborgbear::Error retval = cyborgbear::Error_Ok;
 	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
 
@@ -1474,16 +1474,16 @@ cyborgbear::Error Person::loadJsonObj(cyborgbear::JsonVal in) {
 	return retval;
 }
 
-cyborgbear::Error TileInstance::loadJsonObj(cyborgbear::JsonVal in) {
+cyborgbear::Error Tile::loadJsonObj(cyborgbear::JsonVal in) {
 	cyborgbear::Error retval = cyborgbear::Error_Ok;
 	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
 
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Tile");
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "TileClass");
 		{
 			cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj0);
 			if (cyborgbear::isObj(finalObj)) {
-				retval |= this->Tile.loadJsonObj(obj0);
+				retval |= this->TileClass.loadJsonObj(obj0);
 			} else {
 				if (cyborgbear::isNull(obj0)) {
 					retval |= cyborgbear::Error_MissingField;
@@ -1880,7 +1880,7 @@ cyborgbear::JsonValOut World::buildJsonObj() {
 	return obj;
 }
 
-cyborgbear::JsonValOut Tile::buildJsonObj() {
+cyborgbear::JsonValOut TileClass::buildJsonObj() {
 	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
 	{
 		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Import);
@@ -2053,12 +2053,12 @@ cyborgbear::JsonValOut Person::buildJsonObj() {
 	return obj;
 }
 
-cyborgbear::JsonValOut TileInstance::buildJsonObj() {
+cyborgbear::JsonValOut Tile::buildJsonObj() {
 	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
 	{
-		cyborgbear::JsonValOut obj0 = this->Tile.buildJsonObj();
+		cyborgbear::JsonValOut obj0 = this->TileClass.buildJsonObj();
 		cyborgbear::JsonValOut out0 = obj0;
-		cyborgbear::objSet(obj, "Tile", out0);
+		cyborgbear::objSet(obj, "TileClass", out0);
 		cyborgbear::decref(out0);
 	}
 	{
@@ -2208,7 +2208,7 @@ bool World::operator==(const World &o) const {
 	return true;
 }
 
-bool Tile::operator==(const Tile &o) const {
+bool TileClass::operator==(const TileClass &o) const {
 	if (Import != o.Import) return false;
 	if (TerrainType != o.TerrainType) return false;
 	if (LowerAnim != o.LowerAnim) return false;
@@ -2255,8 +2255,8 @@ bool Person::operator==(const Person &o) const {
 	return true;
 }
 
-bool TileInstance::operator==(const TileInstance &o) const {
-	if (Tile != o.Tile) return false;
+bool Tile::operator==(const Tile &o) const {
+	if (TileClass != o.TileClass) return false;
 	if (Occupant != o.Occupant) return false;
 
 	return true;
@@ -2381,7 +2381,7 @@ bool World::operator!=(const World &o) const {
 	return false;
 }
 
-bool Tile::operator!=(const Tile &o) const {
+bool TileClass::operator!=(const TileClass &o) const {
 	if (Import != o.Import) return true;
 	if (TerrainType != o.TerrainType) return true;
 	if (LowerAnim != o.LowerAnim) return true;
@@ -2428,8 +2428,8 @@ bool Person::operator!=(const Person &o) const {
 	return false;
 }
 
-bool TileInstance::operator!=(const TileInstance &o) const {
-	if (Tile != o.Tile) return true;
+bool Tile::operator!=(const Tile &o) const {
+	if (TileClass != o.TileClass) return true;
 	if (Occupant != o.Occupant) return true;
 
 	return false;
@@ -2820,13 +2820,13 @@ string World::toBoostBinary() {
 namespace models {
 
 #ifdef CYBORGBEAR_BOOST_ENABLED
-void Tile::fromBoostBinary(string dat) {
+void TileClass::fromBoostBinary(string dat) {
 	std::stringstream in(dat);
 	boost::archive::binary_iarchive ia(in);
 	ia >> *this;
 }
 
-string Tile::toBoostBinary() {
+string TileClass::toBoostBinary() {
 	std::stringstream out;
 	{
 		boost::archive::binary_oarchive oa(out);
@@ -2945,13 +2945,13 @@ string Person::toBoostBinary() {
 namespace models {
 
 #ifdef CYBORGBEAR_BOOST_ENABLED
-void TileInstance::fromBoostBinary(string dat) {
+void Tile::fromBoostBinary(string dat) {
 	std::stringstream in(dat);
 	boost::archive::binary_iarchive ia(in);
 	ia >> *this;
 }
 
-string TileInstance::toBoostBinary() {
+string Tile::toBoostBinary() {
 	std::stringstream out;
 	{
 		boost::archive::binary_oarchive oa(out);

@@ -13,28 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_WORLD_TILE_HPP
-#define WOMBAT_WORLD_TILE_HPP
-
-#include <string>
 #include <common/common.hpp>
-#include <core/core.hpp>
-#include "animlayer.hpp"
+#include "tileclass.hpp"
+
+#ifndef WOMBAT_WORLD_TILEINSTANCE_HPP
+#define WOMBAT_WORLD_TILEINSTANCE_HPP
 
 namespace wombat {
 namespace world {
 
-class Tile: public core::Flyweight<models::Tile>::GenericValue {
-	public:
-		static const int Width;
-		static const int Height;
-
+class Tile {
 	private:
-		static core::Flyweight<models::Tile> c_tileClasses;
-
-		int m_terrainFlags;
-		AnimLayer m_upperAnim;
-		AnimLayer m_lowerAnim;
+		TileClass *m_tileClass;
 
 	public:
 		/**
@@ -42,38 +32,9 @@ class Tile: public core::Flyweight<models::Tile>::GenericValue {
 		 */
 		Tile();
 
-		/**
-		 * Destructor
-		 */
-		~Tile();
+		void load(models::Tile model);
 
-		void drawUpper(core::Graphics &g, common::Point p);
-		void drawLower(core::Graphics &g, common::Point p);
-
-		/**
-		 * Checks out the Tile object matching the given model.
-		 * @param model model representing the desired Tile
-		 */
-		static Tile *checkout(models::Tile model);
-
-		/**
-		 * Checks out the Tile object stored at the given path.
-		 * @param path path of the Tile to checkout
-		 */
-		static Tile *checkout(std::string path);
-
-		/**
-		 * Checks in the given Tile object.
-		 * @param tc Tile object to checkin
-		 */
-		static void checkin(Tile*);
-
-	private:
-		void draw(core::Graphics &g, int x, int y, AnimLayer &anims);
-
-		// prevent copies
-		Tile(const Tile&);
-		Tile &operator=(const Tile&);
+		void draw(core::Graphics &gfx, common::Point pt);
 };
 
 }

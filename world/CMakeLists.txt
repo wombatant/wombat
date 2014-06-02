@@ -5,7 +5,7 @@ add_library(
 		animlayer.cpp
 		camera.cpp
 		tile.cpp
-		tileinstance.cpp
+		tileclass.cpp
 		world.cpp
 		zone.cpp
 )
@@ -15,7 +15,7 @@ install(
 	FILES
 		camera.hpp
 		tile.hpp
-		tileinstance.hpp
+		tileclass.hpp
 		world.hpp
 		zone.hpp
 	DESTINATION
