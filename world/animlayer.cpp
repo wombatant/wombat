@@ -19,11 +19,23 @@ namespace wombat {
 namespace world {
 
 AnimLayer::AnimLayer() {
+	animation = 0;
 }
 
-AnimLayer::AnimLayer(core::Animation *anim, models::Point point) {
-	this->animation = anim;
-	this->point = point;
+AnimLayer::AnimLayer(models::AnimLayer model) {
+	animation = core::checkoutAnimation(model.Animation);
+	point = model.Point;
+}
+
+AnimLayer::~AnimLayer() {
+	if (animation) {
+		core::checkinAnimation(animation);
+	}
+}
+
+void AnimLayer::load(models::AnimLayer model) {
+	animation = core::checkoutAnimation(model.Animation);
+	point = model.Point;
 }
 
 }

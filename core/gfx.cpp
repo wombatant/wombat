@@ -48,13 +48,13 @@ Image *checkoutImage(Path path) {
 	return (Image*) imageCache.checkout(img);
 }
 
-Image *checkoutImage(models::Image &img) {
+Image *checkoutImage(models::Image img) {
 	return (Image*) imageCache.checkout(img);
 }
 
 
-void checkinImage(Image &i) {
-	imageCache.checkin(i.key());
+void checkinImage(Image *i) {
+	imageCache.checkin(i->key());
 }
 
 std::string Image::key() {
@@ -91,6 +91,10 @@ Animation *checkoutAnimation(std::string path) {
 
 Animation *checkoutAnimation(models::Animation &anim) {
 	return (Animation*) animCache.checkout(anim);
+}
+
+void checkinAnimation(Animation *i) {
+	animCache.checkin(i->key());
 }
 
 Animation::Animation(models::Animation model) {

@@ -33,8 +33,20 @@ class AnimLayer {
 
 		/**
 		 * Constructor
+		 * @model model representing what this AnimLayer should contain
 		 */
-		AnimLayer(core::Animation *anim, models::Point point);
+		AnimLayer(models::AnimLayer model);
+
+		/**
+		 * Destructor
+		 */
+		~AnimLayer();
+
+		/**
+		 * Loads the AnimLayer data from the given model.
+		 * @model model representing what this AnimLayer should contain
+		 */
+		void load(models::AnimLayer model);
 };
 
 }

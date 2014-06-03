@@ -28,17 +28,10 @@ core::Flyweight<models::TileClass> TileClass::c_tileClasses([](models::TileClass
 		core::read(model, model.Import);
 	}
 
-	AnimLayer al;
 	auto tc = new TileClass();
 	tc->m_terrainFlags = model.TerrainType;
-
-	al.animation = core::checkoutAnimation(model.UpperAnim.Animation);
-	al.point = model.UpperAnim.Point;
-	tc->m_upperAnim = al;
-
-	al.animation = core::checkoutAnimation(model.LowerAnim.Animation);
-	al.point = model.LowerAnim.Point;
-	tc->m_lowerAnim = al;
+	tc->m_upperAnim.load(model.UpperAnim);
+	tc->m_lowerAnim.load(model.LowerAnim);
 
 	return tc;
 });

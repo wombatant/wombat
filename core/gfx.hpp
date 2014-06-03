@@ -182,9 +182,11 @@ Animation *checkoutAnimation(Path path);
 
 Animation *checkoutAnimation(models::Animation &anim);
 
-Image *checkoutImage(models::Image &img);
+void checkinAnimation(Animation *i);
 
-void checkinImage(Image &img);
+Image *checkoutImage(models::Image img);
+
+void checkinImage(Image *img);
 
 }
 }

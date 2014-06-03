@@ -921,6 +921,35 @@ namespace models {
 
 using cyborgbear::string;
 
+class Sprite: public cyborgbear::Model {
+
+	public:
+
+		Sprite();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Sprite&) const;
+
+		bool operator!=(const Sprite&) const;
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		string SpriteClass;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
 class AnimationSlide: public cyborgbear::Model {
 
 	public:
@@ -1194,19 +1223,19 @@ namespace models {
 
 using cyborgbear::string;
 
-class Sprite: public cyborgbear::Model {
+class SpriteClass: public cyborgbear::Model {
 
 	public:
 
-		Sprite();
+		SpriteClass();
 
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
 
-		bool operator==(const Sprite&) const;
+		bool operator==(const SpriteClass&) const;
 
-		bool operator!=(const Sprite&) const;
+		bool operator!=(const SpriteClass&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
@@ -1215,11 +1244,7 @@ class Sprite: public cyborgbear::Model {
 #endif
 		std::vector< std::vector< models::AnimLayer > > AnimLayers;
 		int SpriteType;
-		int PersonID;
-		int Speed;
-		string Name;
-		string Path;
-		string ScriptPath;
+		string Attributes;
 };
 
 }
@@ -1283,38 +1308,9 @@ class PersonClass: public cyborgbear::Model {
 		string Import;
 		std::map< string, string > Name;
 		std::vector< string > Creatures;
-		std::vector< models::Animation > Overhead;
+		std::vector< std::vector< models::Animation > > Overhead;
 		models::Animation FrontView;
 		models::Animation BackView;
-};
-
-}
-
-
-namespace models {
-
-using cyborgbear::string;
-
-class Person: public cyborgbear::Model {
-
-	public:
-
-		Person();
-
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
-		bool operator==(const Person&) const;
-
-		bool operator!=(const Person&) const;
-#ifdef CYBORGBEAR_BOOST_ENABLED
-
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		models::PersonClass PersonClass;
 };
 
 }
@@ -1379,6 +1375,35 @@ class Zone: public cyborgbear::Model {
 }
 
 
+namespace models {
+
+using cyborgbear::string;
+
+class Person: public cyborgbear::Model {
+
+	public:
+
+		Person();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Person&) const;
+
+		bool operator!=(const Person&) const;
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		models::PersonClass PersonClass;
+};
+
+}
+
+
 #ifdef CYBORGBEAR_BOOST_ENABLED
 #include <boost/serialization/list.hpp>
 #include <boost/serialization/string.hpp>
@@ -1435,6 +1460,11 @@ void serialize(Archive &ar, models::Image &model, const unsigned int) {
 	ar & model.SpriteSheet;
 	ar & model.ImgId;
 	ar & model.DefaultSize;
+}
+
+template<class Archive>
+void serialize(Archive &ar, models::Sprite &model, const unsigned int) {
+	ar & model.SpriteClass;
 }
 
 template<class Archive>
@@ -1495,14 +1525,10 @@ void serialize(Archive &ar, models::TileClass &model, const unsigned int) {
 }
 
 template<class Archive>
-void serialize(Archive &ar, models::Sprite &model, const unsigned int) {
+void serialize(Archive &ar, models::SpriteClass &model, const unsigned int) {
 	ar & model.AnimLayers;
 	ar & model.SpriteType;
-	ar & model.PersonID;
-	ar & model.Speed;
-	ar & model.Name;
-	ar & model.Path;
-	ar & model.ScriptPath;
+	ar & model.Attributes;
 }
 
 template<class Archive>
@@ -1524,11 +1550,6 @@ void serialize(Archive &ar, models::PersonClass &model, const unsigned int) {
 }
 
 template<class Archive>
-void serialize(Archive &ar, models::Person &model, const unsigned int) {
-	ar & model.PersonClass;
-}
-
-template<class Archive>
 void serialize(Archive &ar, models::Tile &model, const unsigned int) {
 	ar & model.TileClass;
 	ar & model.Occupant;
@@ -1537,6 +1558,11 @@ void serialize(Archive &ar, models::Tile &model, const unsigned int) {
 template<class Archive>
 void serialize(Archive &ar, models::Zone &model, const unsigned int) {
 	ar & model.Tiles;
+}
+
+template<class Archive>
+void serialize(Archive &ar, models::Person &model, const unsigned int) {
+	ar & model.PersonClass;
 }
 
 }

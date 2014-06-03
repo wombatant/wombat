@@ -4,6 +4,8 @@ add_library(
 	WombatWorld OBJECT
 		animlayer.cpp
 		camera.cpp
+		sprite.cpp
+		spriteclass.cpp
 		tile.cpp
 		tileclass.cpp
 		world.cpp
