@@ -16,7 +16,7 @@
 //Generated Code
 
 #include <fstream>
-#include "models.hpp"
+#include "generated.hpp"
 
 using namespace models;
 using namespace models::cyborgbear;
@@ -242,7 +242,7 @@ string unknown::toBoostBinary() {
 
 
 #include "string.h"
-#include "models.hpp"
+#include "generated.hpp"
 
 using namespace models;
 using std::stringstream;
