@@ -23,8 +23,7 @@ AnimLayer::AnimLayer() {
 }
 
 AnimLayer::AnimLayer(models::AnimLayer model) {
-	animation = core::checkoutAnimation(model.Animation);
-	point = model.Point;
+	load(model);
 }
 
 AnimLayer::~AnimLayer() {

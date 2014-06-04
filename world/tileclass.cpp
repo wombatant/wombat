@@ -23,7 +23,7 @@ namespace world {
 const int TileClass::Width = 32;
 const int TileClass::Height = 32;
 
-core::Flyweight<models::TileClass> TileClass::c_tileClasses([](models::TileClass &model) {
+core::Flyweight<models::TileClass> TileClass::c_tileClasses([](models::TileClass model) {
 	if (model.Import != "") {
 		core::read(model, model.Import);
 	}
