@@ -28,6 +28,15 @@ namespace core {
 // used to track "event time"
 time_t refTime;
 bool _running = false;
+std::string _language = "english";
+
+void setLanguage(std::string lang) {
+	_language = lang;
+}
+
+std::string getLanguage() {
+	return _language;
+}
 
 bool running() {
 	return _running;

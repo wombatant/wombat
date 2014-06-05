@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_MODELS_ENUMS_HPP
-#define WOMBAT_MODELS_ENUMS_HPP
+#ifndef WOMBAT_WORLD_WORLDOBJECT_HPP
+#define WOMBAT_WORLD_WORLDOBJECT_HPP
 
-namespace models {
+namespace wombat {
+namespace world {
 
-enum SpriteType {
-	SpriteType_Inanimate = 0,
-	SpriteType_Person = 1,
-	SpriteType_Creature = 2
+class WorldObject {
+	public:
+		virtual ~WorldObject();
 };
 
+}
 }
 
 #endif

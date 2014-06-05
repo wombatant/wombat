@@ -1308,7 +1308,7 @@ class PersonClass: public cyborgbear::Model {
 		string Import;
 		std::map< string, string > Name;
 		std::vector< string > Creatures;
-		std::vector< std::vector< models::Animation > > Overhead;
+		std::vector< std::vector< models::AnimLayer > > Overhead;
 		models::Animation FrontView;
 		models::Animation BackView;
 };

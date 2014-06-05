@@ -13,12 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "person.hpp"
 #include "spriteclass.hpp"
 
 namespace wombat {
 namespace world {
 
+SpriteClass::SpriteClass() {
+	m_attr = 0;
+}
+
+SpriteClass::~SpriteClass() {
+	if (m_attr) {
+		delete m_attr;
+	}
+}
+
 void SpriteClass::load(models::SpriteClass model) {
+	m_spriteType = model.SpriteType;
+	switch (m_spriteType) {
+	case models::SpriteType_Inanimate:
+		break;
+	case models::SpriteType_Person:
+		m_attr = new Person(model.Attributes);
+		break;
+	case models::SpriteType_Creature:
+		break;
+	}
 }
 
 }

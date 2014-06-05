@@ -26,6 +26,19 @@ namespace wombat {
 namespace core {
 
 /**
+ * Sets the language used by this application.
+ * Defaults to "english".
+ * @param lang the language used by this application
+ */
+void setLanguage(std::string lang);
+
+/**
+ * Gets the language used by this application.
+ * @return the language used by this application
+ */
+std::string getLanguage();
+
+/**
  * Initializes graphics, user input, and audio
  * @return 0 if successful
  */

@@ -13,17 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_MODELS_ENUMS_HPP
-#define WOMBAT_MODELS_ENUMS_HPP
+#ifndef WOMBAT_WORLD_PERSON_HPP
+#define WOMBAT_WORLD_PERSON_HPP
 
-namespace models {
+#include <core/core.hpp>
+#include "worldobject.hpp"
 
-enum SpriteType {
-	SpriteType_Inanimate = 0,
-	SpriteType_Person = 1,
-	SpriteType_Creature = 2
+namespace wombat {
+namespace world {
+
+class Person: public WorldObject {
+	private:
+	public:
+		/**
+		 * Constructor
+		 */
+		Person();
+
+		/**
+		 * Constructor
+		 * @param path path to the Person model
+		 */
+		Person(std::string path);
+
+		/**
+		 * Destructor
+		 */
+		~Person();
 };
 
+}
 }
 
 #endif

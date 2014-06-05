@@ -17,6 +17,7 @@
 #define WOMBAT_WORLD_SPRITECLASS_HPP
 
 #include <core/core.hpp>
+#include "worldobject.hpp"
 #include "animlayer.hpp"
 
 namespace wombat {
@@ -25,10 +26,20 @@ namespace world {
 class SpriteClass {
 	private:
 		std::vector<std::vector<AnimLayer>> m_anims;
-		//int m_spriteType;
-		//void *m_attr;
+		int m_spriteType;
+		WorldObject *m_attr;
 
 	public:
+		/**
+		 * Constructor
+		 */
+		SpriteClass();
+
+		/**
+		 * Destructor
+		 */
+		~SpriteClass();
+
 		void load(models::SpriteClass);
 };
 

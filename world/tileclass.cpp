@@ -23,18 +23,20 @@ namespace world {
 const int TileClass::Width = 32;
 const int TileClass::Height = 32;
 
-core::Flyweight<models::TileClass> TileClass::c_tileClasses([](models::TileClass model) {
-	if (model.Import != "") {
-		core::read(model, model.Import);
+core::Flyweight<models::TileClass> TileClass::c_tileClasses(
+	[](models::TileClass model) {
+		if (model.Import != "") {
+			core::read(model, model.Import);
+		}
+
+		auto tc = new TileClass();
+		tc->m_terrainFlags = model.TerrainType;
+		tc->m_upperAnim.load(model.UpperAnim);
+		tc->m_lowerAnim.load(model.LowerAnim);
+
+		return tc;
 	}
-
-	auto tc = new TileClass();
-	tc->m_terrainFlags = model.TerrainType;
-	tc->m_upperAnim.load(model.UpperAnim);
-	tc->m_lowerAnim.load(model.LowerAnim);
-
-	return tc;
-});
+);
 
 TileClass::TileClass() {
 }
