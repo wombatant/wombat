@@ -17,6 +17,7 @@
 #define WOMBAT_CORE_EVENT_HPP
 
 #include <functional>
+#include <stdlib.h>
 #include "types.hpp"
 
 namespace wombat {
@@ -28,6 +29,7 @@ enum EventType {
 	ChannelMessage,
 	GenericPost,
 	InitTask,
+	AppEvent, // Should always be the highest value listed here
 
 	// Optional EventTypes
 	QuitEvent = 0,
@@ -59,6 +61,7 @@ class Event {
 			Task *task;
 			Key key;
 			void *channel;
+			void *other;
 		} m_body;
 
 	public:
@@ -81,6 +84,29 @@ class Event {
 		 * @param task the Task for the event to reference
 		 */
 		Event(EventType type, Task *task);
+
+		/**
+		 * Constructor
+		 * @param val the value that the event carries
+		 */
+		template<typename T>
+		Event(T val) {
+			m_body.other = malloc(sizeof(T));
+			*((T*) m_body.other) = val;
+			m_type = AppEvent;
+		}
+
+		/**
+		 * Constructor
+		 * @param type the value for the type value of the Event
+		 * @param val the value that the event carries
+		 */
+		template<typename T>
+		Event(EventType type, T val) {
+			m_body.other = malloc(sizeof(T));
+			*((T*) m_body.other) = val;
+			m_type = type;
+		}
 
 		/**
 		 * Gets the EventType describing this Event.
@@ -114,6 +140,23 @@ class Event {
 		 */
 		void *channel() {
 			return m_body.channel;
+		}
+
+		/**
+		 * Reads the other data into the given value.
+		 * Should only be used if type is >= AppEvent.
+		 * @param val reference to the value to write to
+		 * @return 0 if successful
+		 */
+		template<typename T>
+		int read(T &val) {
+			auto data = dynamic_cast<T*>(m_body.other);
+			if (data) {
+				val = *data;
+				free((T*) data);
+				return 0;
+			}
+			return 1;
 		}
 };
 
