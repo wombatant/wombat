@@ -77,6 +77,10 @@ bool Image::loaded() {
 
 //Graphics
 
+void Graphics::drawLine(int x1, int y1, int x2, int y2) {
+	SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
+}
+
 void Graphics::draw(Image *img, int x, int y, int w, int h) {
 	if (img->loaded()) {
 		SDL_SetTextureAlphaMod((SDL_Texture*) img->m_img, 255);

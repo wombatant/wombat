@@ -18,6 +18,8 @@
 namespace wombat {
 namespace world {
 
+extern bool _debugMode;
+
 Tile::Tile() {
 	m_tileClass = 0;
 }
@@ -30,6 +32,10 @@ void Tile::draw(core::Graphics &gfx, common::Point pt) {
 	if (m_tileClass) {
 		m_tileClass->drawLower(gfx, pt);
 		m_tileClass->drawUpper(gfx, pt);
+	}
+	if (_debugMode) {
+		gfx.drawLine(pt.X, pt.Y, pt.X, pt.Y + TileClass::Height);
+		gfx.drawLine(pt.X, pt.Y, pt.X + TileClass::Width, pt.Y);
 	}
 }
 

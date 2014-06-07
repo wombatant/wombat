@@ -19,6 +19,13 @@
 namespace wombat {
 namespace core {
 
+ClipRectStack::Viewport::Viewport() {
+}
+
+ClipRectStack::Viewport::Viewport(common::Bounds bounds) {
+	this->bounds = bounds;
+}
+
 ClipRectStack::ClipRectStack() {
 	Viewport v;
 	v.bounds.X = 0;
@@ -46,7 +53,7 @@ void ClipRectStack::pop() {
 	if (m_pt < 1) {
 		return;
 	}
-	m_viewports.erase(m_viewports.end());
+	m_viewports.erase(m_viewports.begin() + m_viewports.size() - 1);
 	m_pt--;
 }
 
