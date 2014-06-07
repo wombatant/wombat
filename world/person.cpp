@@ -32,5 +32,8 @@ Person::~Person() {
 	PersonClass::checkin(m_class);
 }
 
+void Person::draw(core::Graphics &gfx, common::Point pt) {
+}
+
 }
 }

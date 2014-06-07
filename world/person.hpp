@@ -18,12 +18,13 @@
 
 #include <core/core.hpp>
 #include "personclass.hpp"
+#include "spriteclass.hpp"
 #include "destructable.hpp"
 
 namespace wombat {
 namespace world {
 
-class Person: public Destructable {
+class Person: public Destructable, public SpriteClass {
 	private:
 		PersonClass *m_class;
 
@@ -43,6 +44,8 @@ class Person: public Destructable {
 		 * Destructor
 		 */
 		~Person();
+
+		void draw(core::Graphics &gfx, common::Point pt);
 };
 
 }

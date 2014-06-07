@@ -20,33 +20,18 @@ namespace wombat {
 namespace world {
 
 core::Flyweight<models::SpriteClass> SpriteClass::c_spriteClasses(
-	[](models::SpriteClass model) {
-		return new SpriteClass(model);
+	[](models::SpriteClass model) -> SpriteClass* {
+		switch (model.SpriteType) {
+		case models::SpriteType_Inanimate:
+			break;
+		case models::SpriteType_Person:
+			return new Person(model.Attributes);
+		case models::SpriteType_Creature:
+			break;
+		}
+		return 0;
 	}
 );
-
-SpriteClass::SpriteClass(models::SpriteClass model) {
-	load(model);
-}
-
-SpriteClass::~SpriteClass() {
-	if (m_attr) {
-		delete m_attr;
-	}
-}
-
-void SpriteClass::load(models::SpriteClass model) {
-	m_spriteType = model.SpriteType;
-	switch (m_spriteType) {
-	case models::SpriteType_Inanimate:
-		break;
-	case models::SpriteType_Person:
-		m_attr = new Person(model.Attributes);
-		break;
-	case models::SpriteType_Creature:
-		break;
-	}
-}
 
 SpriteClass *SpriteClass::checkout(models::SpriteClass model) {
 	return dynamic_cast<SpriteClass*>(c_spriteClasses.checkout(model));
@@ -60,6 +45,12 @@ void SpriteClass::checkin(SpriteClass *pc) {
 	c_spriteClasses.checkin(pc);
 }
 
+
+SpriteClass::SpriteClass(models::SpriteClass model) {
+}
+
+SpriteClass::~SpriteClass() {
+}
 
 }
 }

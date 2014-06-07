@@ -27,8 +27,6 @@ class SpriteClass: public core::Flyweight<models::SpriteClass>::GenericValue {
 	private:
 		static core::Flyweight<models::SpriteClass> c_spriteClasses;
 		std::vector<std::vector<AnimLayer>> m_anims;
-		int m_spriteType;
-		Destructable *m_attr;
 
 	public:
 		/**
@@ -42,7 +40,7 @@ class SpriteClass: public core::Flyweight<models::SpriteClass>::GenericValue {
 		 */
 		~SpriteClass();
 
-		void load(models::SpriteClass);
+		virtual void draw(core::Graphics &gfx, common::Point pt) = 0;
 
 		/**
 		 * Checks out the SpriteClass object from the given model.
