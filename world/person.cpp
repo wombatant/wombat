@@ -19,14 +19,17 @@ namespace wombat {
 namespace world {
 
 Person::Person() {
+	m_class = 0;
 }
 
 Person::Person(std::string path) {
 	models::Person model;
 	core::read(model, path);
+	m_class = PersonClass::checkout(model.PersonClass);
 }
 
 Person::~Person() {
+	PersonClass::checkin(m_class);
 }
 
 }

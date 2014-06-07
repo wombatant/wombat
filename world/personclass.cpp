@@ -43,6 +43,10 @@ PersonClass::PersonClass(models::PersonClass model) {
 	}
 }
 
+PersonClass *PersonClass::checkout(models::PersonClass model) {
+	return dynamic_cast<PersonClass*>(c_personClasses.checkout(model));
+}
+
 PersonClass *PersonClass::checkout(std::string path) {
 	return dynamic_cast<PersonClass*>(c_personClasses.checkout(path));
 }

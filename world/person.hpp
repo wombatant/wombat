@@ -17,6 +17,7 @@
 #define WOMBAT_WORLD_PERSON_HPP
 
 #include <core/core.hpp>
+#include "personclass.hpp"
 #include "worldobject.hpp"
 
 namespace wombat {
@@ -24,6 +25,8 @@ namespace world {
 
 class Person: public WorldObject {
 	private:
+		PersonClass *m_class;
+
 	public:
 		/**
 		 * Constructor

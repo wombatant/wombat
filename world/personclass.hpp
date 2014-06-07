@@ -42,6 +42,12 @@ class PersonClass: public core::Flyweight<models::PersonClass>::GenericValue {
 		PersonClass(models::PersonClass model);
 
 		/**
+		 * Checks out the PersonClass object from the given model.
+		 * @param model model representing the desired PersonClass
+		 */
+		static PersonClass *checkout(models::PersonClass model);
+
+		/**
 		 * Checks out the PersonClass object stored at the given path.
 		 * @param path path of the PersonClass to checkout
 		 */
