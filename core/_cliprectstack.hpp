@@ -27,10 +27,8 @@ class ClipRectStack {
 			common::Bounds bounds;
 			common::Point point;
 
-			Viewport() {}
-			Viewport(common::Bounds bounds) {
-				this->bounds = bounds;
-			}
+			Viewport();
+			Viewport(common::Bounds bounds);
 		};
 		std::vector<Viewport> m_viewports;
 		int m_pt;

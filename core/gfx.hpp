@@ -121,6 +121,8 @@ class Graphics {
 		ClipRectStack m_cliprect;
 
 	public:
+		void drawLine(int x1, int y1, int x2, int y2);
+
 		void draw(Image *img, int x, int y, int w, int h);
 
 		void draw(Image *img, int x, int y);
