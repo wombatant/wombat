@@ -17,23 +17,25 @@
 #define WOMBAT_WORLD_SPRITECLASS_HPP
 
 #include <core/core.hpp>
-#include "worldobject.hpp"
+#include "destructable.hpp"
 #include "animlayer.hpp"
 
 namespace wombat {
 namespace world {
 
-class SpriteClass {
+class SpriteClass: public core::Flyweight<models::SpriteClass>::GenericValue {
 	private:
+		static core::Flyweight<models::SpriteClass> c_spriteClasses;
 		std::vector<std::vector<AnimLayer>> m_anims;
 		int m_spriteType;
-		WorldObject *m_attr;
+		Destructable *m_attr;
 
 	public:
 		/**
 		 * Constructor
+		 * @param model the model that the SpriteClass will reflect
 		 */
-		SpriteClass();
+		SpriteClass(models::SpriteClass model = models::SpriteClass());
 
 		/**
 		 * Destructor
@@ -41,6 +43,24 @@ class SpriteClass {
 		~SpriteClass();
 
 		void load(models::SpriteClass);
+
+		/**
+		 * Checks out the SpriteClass object from the given model.
+		 * @param model model representing the desired SpriteClass
+		 */
+		static SpriteClass *checkout(models::SpriteClass model);
+
+		/**
+		 * Checks out the SpriteClass object stored at the given path.
+		 * @param path path of the SpriteClass to checkout
+		 */
+		static SpriteClass *checkout(std::string path);
+
+		/**
+		 * Checks in the given SpriteClass object.
+		 * @param pc SpriteClass object to checkin
+		 */
+		static void checkin(SpriteClass *pc);
 };
 
 }

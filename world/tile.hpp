@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include <common/common.hpp>
+#include "sprite.hpp"
 #include "tileclass.hpp"
 
 #ifndef WOMBAT_WORLD_TILEINSTANCE_HPP
@@ -24,6 +25,7 @@ namespace world {
 
 class Tile {
 	private:
+		Sprite *m_occupant;
 		TileClass *m_tileClass;
 
 	public:

@@ -18,5 +18,16 @@
 namespace wombat {
 namespace world {
 
+Sprite::Sprite() {
+	m_spriteClass = 0;
+}
+
+void Sprite::load(models::Sprite model) {
+	m_spriteClass = SpriteClass::checkout(model.SpriteClass);
+}
+
+void Sprite::draw(core::Graphics &gfx, common::Point pt) {
+}
+
 }
 }

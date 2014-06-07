@@ -18,12 +18,12 @@
 
 #include <core/core.hpp>
 #include "personclass.hpp"
-#include "worldobject.hpp"
+#include "destructable.hpp"
 
 namespace wombat {
 namespace world {
 
-class Person: public WorldObject {
+class Person: public Destructable {
 	private:
 		PersonClass *m_class;
 

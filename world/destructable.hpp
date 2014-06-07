@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "worldobject.hpp"
+#ifndef WOMBAT_WORLD_WORLDOBJECT_HPP
+#define WOMBAT_WORLD_WORLDOBJECT_HPP
 
 namespace wombat {
 namespace world {
 
-WorldObject::~WorldObject() {
-}
+class Destructable {
+	public:
+		virtual ~Destructable();
+};
 
 }
 }
+
+#endif

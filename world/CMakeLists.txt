@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.8)
 
 add_library(
 	WombatWorld OBJECT
 		animlayer.cpp
 		camera.cpp
+		destructable.cpp
 		person.cpp
 		personclass.cpp
 		sprite.cpp
@@ -11,7 +12,6 @@ add_library(
 		tile.cpp
 		tileclass.cpp
 		world.cpp
-		worldobject.cpp
 		zone.cpp
 )
 
@@ -20,13 +20,13 @@ install(
 	FILES
 		animlayer.hpp
 		camera.hpp
+		destructable.hpp
 		person.hpp
 		sprite.hpp
 		spriteclass.hpp
 		tile.hpp
 		tileclass.hpp
 		world.hpp
-		worldobject.hpp
 		zone.hpp
 	DESTINATION
 		include/wombat/world

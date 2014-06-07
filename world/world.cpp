@@ -18,7 +18,7 @@
 namespace wombat {
 namespace world {
 
-bool _debugMode = false;
+bool _debugMode = true;
 
 World::World(models::World world) {
 	m_taskProc.start();

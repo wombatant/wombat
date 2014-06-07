@@ -19,8 +19,14 @@
 namespace wombat {
 namespace world {
 
-SpriteClass::SpriteClass() {
-	m_attr = 0;
+core::Flyweight<models::SpriteClass> SpriteClass::c_spriteClasses(
+	[](models::SpriteClass model) {
+		return new SpriteClass(model);
+	}
+);
+
+SpriteClass::SpriteClass(models::SpriteClass model) {
+	load(model);
 }
 
 SpriteClass::~SpriteClass() {
@@ -41,6 +47,19 @@ void SpriteClass::load(models::SpriteClass model) {
 		break;
 	}
 }
+
+SpriteClass *SpriteClass::checkout(models::SpriteClass model) {
+	return dynamic_cast<SpriteClass*>(c_spriteClasses.checkout(model));
+}
+
+SpriteClass *SpriteClass::checkout(std::string path) {
+	return dynamic_cast<SpriteClass*>(c_spriteClasses.checkout(path));
+}
+
+void SpriteClass::checkin(SpriteClass *pc) {
+	c_spriteClasses.checkin(pc);
+}
+
 
 }
 }

@@ -21,6 +21,7 @@ namespace world {
 extern bool _debugMode;
 
 Tile::Tile() {
+	m_occupant = 0;
 	m_tileClass = 0;
 }
 

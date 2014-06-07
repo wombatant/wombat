@@ -16,8 +16,25 @@
 #ifndef WOMBAT_WORLD_SPRITE_HPP
 #define WOMBAT_WORLD_SPRITE_HPP
 
+#include "spriteclass.hpp"
+
 namespace wombat {
 namespace world {
+
+class Sprite {
+	private:
+		SpriteClass *m_spriteClass;
+
+	public:
+		/**
+		 * Constructor
+		 */
+		Sprite();
+
+		void load(models::Sprite model);
+
+		void draw(core::Graphics &gfx, common::Point pt);
+};
 
 }
 }
