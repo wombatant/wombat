@@ -21,7 +21,7 @@
 namespace wombat {
 namespace world {
 
-class Sprite {
+class Sprite: public core::Task {
 	private:
 		SpriteClass *m_spriteClass;
 
@@ -30,6 +30,8 @@ class Sprite {
 		 * Constructor
 		 */
 		Sprite();
+
+		core::TaskState run(core::Event);
 
 		void load(models::Sprite model);
 

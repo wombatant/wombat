@@ -13,27 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "sprite.hpp"
+#ifndef WOMBAT_CORE__CORECAPABILITIES_HPP
+#define WOMBAT_CORE__CORECAPABILITIES_HPP
 
-namespace wombat {
-namespace world {
+// These defines are only for use inside core, other packages
+//  should use the variables defined in corecapabilities.hpp.
 
-using core::TaskState;
-
-Sprite::Sprite() {
-	m_spriteClass = 0;
-}
-
-TaskState Sprite::run(core::Event) {
-	return TaskState::Continue;
-}
-
-void Sprite::load(models::Sprite model) {
-	m_spriteClass = SpriteClass::checkout(model.SpriteClass);
-}
-
-void Sprite::draw(core::Graphics &gfx, common::Point pt) {
-}
-
-}
-}
+#endif

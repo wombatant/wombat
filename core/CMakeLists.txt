@@ -26,6 +26,7 @@ if(WOMBAT_BUILD_TYPE STREQUAL "GBA")
 			gba/_threads.cpp
 			gba/_tls.cpp
 	)
+	include_directories("gba")
 elseif(WOMBAT_BUILD_TYPE STREQUAL "Native")
 	set(
 		CPP
@@ -39,11 +40,11 @@ elseif(WOMBAT_BUILD_TYPE STREQUAL "Native")
 			sdl/_threads.cpp
 			sdl/_tls.cpp
 	)
+	include_directories("sdl")
 endif()
 
 add_library(WombatCore OBJECT ${CPP})
 
-#install(TARGETS WombatCore DESTINATION lib)
 install(
 	FILES
 		channel.hpp

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "_corecapabilities.hpp"
 #include "_misc.hpp"
 #include "_tls.hpp"
 #include "_threads.hpp"
@@ -167,6 +168,7 @@ void TaskProcessor::addTask(Task *task, TaskState state) {
 void TaskProcessor::start() {
 	if (!m_running) {
 		m_running = true;
+#ifdef SUPPORTS_THREADS
 		startThread([this]() {
 			TaskState taskState;
 			while (m_running) {
@@ -180,6 +182,9 @@ void TaskProcessor::start() {
 			}
 			m_done.write(true);
 		});
+#else
+		core::addTask(this);
+#endif
 	}
 }
 
