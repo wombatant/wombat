@@ -61,7 +61,10 @@ class Event {
 			Task *task;
 			Key key;
 			void *channel;
-			void *other;
+			struct {
+				int size;
+				void *data;
+			} other;
 		} m_body;
 
 	public:
@@ -91,8 +94,9 @@ class Event {
 		 */
 		template<typename T>
 		Event(T val) {
-			m_body.other = malloc(sizeof(T));
-			*((T*) m_body.other) = val;
+			m_body.other.size = sizeof(T);
+			m_body.other.data = malloc(m_body.other.size);
+			memcpy(m_body.other.data, &val, sizeof(T));
 			m_type = AppEvent;
 		}
 
@@ -103,10 +107,16 @@ class Event {
 		 */
 		template<typename T>
 		Event(EventType type, T val) {
-			m_body.other = malloc(sizeof(T));
-			*((T*) m_body.other) = val;
+			m_body.other.size = sizeof(T);
+			m_body.other.data = malloc(m_body.other.size);
+			memcpy(m_body.other.data, &val, sizeof(T));
 			m_type = type;
 		}
+
+		/**
+		 * Destructor
+		 */
+		~Event();
 
 		/**
 		 * Gets the EventType describing this Event.
@@ -150,10 +160,11 @@ class Event {
 		 */
 		template<typename T>
 		int read(T &val) {
-			auto data = dynamic_cast<T*>(m_body.other);
-			if (data) {
+			auto &data = (T*) m_body.other.data;
+			if (data && m_body.other.size == sizeof(T)) {
 				val = *data;
-				free((T*) data);
+				free(data);
+				data = 0;
 				return 0;
 			}
 			return 1;

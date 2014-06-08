@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include <vector>
+#include <stdlib.h>
 #include "event.hpp"
 
 namespace wombat {
@@ -23,6 +24,7 @@ namespace core {
 
 Event::Event(EventType type) {
 	m_type = type;
+	memset(&m_body, 0, sizeof(m_body));
 }
 
 Event::Event(EventType type, void *channel) {
@@ -33,6 +35,12 @@ Event::Event(EventType type, void *channel) {
 Event::Event(EventType type, Task *task) {
 	m_type = type;
 	m_body.task = task;
+}
+
+Event::~Event() {
+	if (type() >= AppEvent) {
+		free(m_body.other.data);
+	}
 }
 
 }
