@@ -54,15 +54,16 @@ class Event {
 	friend void main();
 	protected:
 		EventType m_type;
+		/**
+		 * Used to specify the Task that received a message.
+		 */
+		Task *m_task;
 		union {
-			/**
-			 * Used to specify the Task that received a message.
-			 */
-			Task *task;
 			Key key;
 			void *channel;
 			struct {
 				int size;
+				Task *task;
 				void *data;
 			} other;
 		} m_body;
@@ -87,6 +88,12 @@ class Event {
 		 * @param task the Task for the event to reference
 		 */
 		Event(EventType type, Task *task);
+
+		/**
+		 * Constructor
+		 * @param event Event to copy
+		 */
+		Event(const Event &event);
 
 		/**
 		 * Constructor
@@ -141,7 +148,7 @@ class Event {
 		 * @return the EventType describing this Event
 		 */
 		inline Task *task() const {
-			return m_body.task;
+			return m_task;
 		}
 
 		/**

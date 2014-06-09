@@ -67,6 +67,7 @@ class Task {
 	friend class TaskProcessor;
 	private:
 		bool m_autoDelete;
+		class TaskProcessor *m_taskProcessor;
 
 	public:
 		/**
@@ -95,6 +96,12 @@ class Task {
 		 * @return value indicating whether or not the Task should be auto-deleted when it completes
 		 */
 		bool autoDelete();
+
+		/**
+		 * Posts an Event for this Task to receive.
+		 * @param event Event for this Task to receive
+		 */
+		void post(Event event);
 };
 
 class FunctionTask: public Task {
@@ -157,7 +164,7 @@ class TaskProcessor: public Task {
 		 * Constructor
 		 * @param sem allows specifying an external EventQueue for this TaskProcessor
 		 */
-		TaskProcessor(class BaseEventQueue *sem = 0);
+		TaskProcessor(class BaseEventQueue *sem = nullptr);
 
 		/**
 		 * Destructor

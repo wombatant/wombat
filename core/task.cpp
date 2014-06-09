@@ -51,6 +51,7 @@ TaskState::TaskState(TaskState::State state) {
 
 Task::Task() {
 	m_autoDelete = false;
+	m_taskProcessor = nullptr;
 }
 
 Task::~Task() {
@@ -62,6 +63,12 @@ void Task::setAutoDelete(bool autoDelete) {
 
 bool Task::autoDelete() {
 	return m_autoDelete;
+}
+
+void Task::post(Event event) {
+	if (m_taskProcessor != nullptr) {
+		m_taskProcessor->post(event);
+	}
 }
 
 // FunctionTask
@@ -82,8 +89,8 @@ TaskState FunctionTask::run(Event e) {
 
 TaskProcessor::TaskProcessor(BaseEventQueue *sem) {
 	m_running = false;
-	m_currentTask = 0;
-	if (sem) {
+	m_currentTask = nullptr;
+	if (sem != nullptr) {
 		m_events = sem;
 		m_semInternal = false;
 	} else {
@@ -131,7 +138,7 @@ TaskState TaskProcessor::run(Event event) {
 		m_currentTask = event.task();
 		event.task()->init();
 		processTaskState(event.task(), TaskState::Running);
-		m_currentTask = 0;
+		m_currentTask = nullptr;
 		break;
 	case GenericPost:
 		// GenericPost is already designated for use only as a
@@ -286,7 +293,7 @@ void TaskProcessor::runTask(Task *task, Event event) {
 	m_currentTask = task;
 	auto state = task->run(event);
 	processTaskState(task, state);
-	m_currentTask = 0;
+	m_currentTask = nullptr;
 }
 
 void TaskProcessor::deschedule(Task *task) {

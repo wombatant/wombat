@@ -34,7 +34,16 @@ Event::Event(EventType type, void *channel) {
 
 Event::Event(EventType type, Task *task) {
 	m_type = type;
-	m_body.task = task;
+	m_task = task;
+}
+
+Event::Event(const Event &event) {
+	*this = event;
+	if (event.type() >= AppEvent) {
+		auto size = event.m_body.other.size;
+		m_body.other.data = malloc(size);
+		memcpy(m_body.other.data, event.m_body.other.data, size);
+	}
 }
 
 Event::~Event() {
