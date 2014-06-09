@@ -46,24 +46,22 @@ enum Key {
 	Key_Q,
 };
 
-class Task;
-
 void main();
 
 class Event {
-	friend void main();
+	friend void core::main();
+	friend class TaskProcessor;
 	protected:
 		EventType m_type;
 		/**
 		 * Used to specify the Task that received a message.
 		 */
-		Task *m_task;
+		class Task *m_task;
 		union {
 			Key key;
 			void *channel;
 			struct {
 				int size;
-				Task *task;
 				void *data;
 			} other;
 		} m_body;
@@ -87,7 +85,7 @@ class Event {
 		 * @param type the value for the type value of the Event
 		 * @param task the Task for the event to reference
 		 */
-		Event(EventType type, Task *task);
+		Event(EventType type, class Task *task);
 
 		/**
 		 * Constructor
@@ -97,7 +95,7 @@ class Event {
 
 		/**
 		 * Constructor
-		 * @param val the value that the event carries
+		 * @param val the value that the event carries, this needs to be a memcpy friendly type
 		 */
 		template<typename T>
 		Event(T val) {
@@ -110,7 +108,7 @@ class Event {
 		/**
 		 * Constructor
 		 * @param type the value for the type value of the Event
-		 * @param val the value that the event carries
+		 * @param val the value that the event carries, this needs to be a memcpy friendly type
 		 */
 		template<typename T>
 		Event(EventType type, T val) {
@@ -147,7 +145,7 @@ class Event {
 		 * This method assumes type() returns KeyUpEvent, KeyDownEvent, or InitTask.
 		 * @return the EventType describing this Event
 		 */
-		inline Task *task() const {
+		inline class Task *task() const {
 			return m_task;
 		}
 
@@ -176,6 +174,13 @@ class Event {
 			}
 			return 1;
 		}
+
+	protected:
+		/**
+		 * Sets the Task that this Event is meant for.
+		 * @param task the Task that this Event is meant for
+		 */
+		void setTask(class Task *task);
 };
 
 }

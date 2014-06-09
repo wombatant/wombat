@@ -71,6 +71,10 @@ void Task::post(Event event) {
 	}
 }
 
+void Task::_setTaskProcessor(TaskProcessor *tp) {
+	this->m_taskProcessor = tp;
+}
+
 // FunctionTask
 
 FunctionTask::FunctionTask(std::function<TaskState(Event)> func) {
@@ -168,6 +172,7 @@ void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState stat
 }
 
 void TaskProcessor::addTask(Task *task, TaskState state) {
+	task->_setTaskProcessor(this);
 	// post to the semaphore to refresh the sleep time
 	m_events->post(Event(InitTask, task));
 }

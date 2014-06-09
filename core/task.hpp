@@ -102,6 +102,12 @@ class Task {
 		 * @param event Event for this Task to receive
 		 */
 		void post(Event event);
+
+		/**
+		 * Used internally by core to set the TaskProcessor that manages this Task.
+		 * @param tp the TaskProcessor that manages this Task
+		 */
+		void _setTaskProcessor(class TaskProcessor *tp);
 };
 
 class FunctionTask: public Task {
