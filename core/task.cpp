@@ -149,6 +149,9 @@ TaskState TaskProcessor::run(Event event) {
 		//  sleep refresh in this switch or exit the thread loop
 		break;
 	default:
+		if (event.type() >= AppEvent) {
+			runTask(event.task(), event.type());
+		}
 		break;
 	}
 
