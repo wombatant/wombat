@@ -57,7 +57,7 @@ class Event {
 		 * Used to specify the Task that received a message.
 		 */
 		class Task *m_task;
-		union {
+		union Body {
 			Key key;
 			void *channel;
 			struct {
@@ -65,6 +65,12 @@ class Event {
 				void *data;
 			} other;
 		} m_body;
+		std::function<void(void *dest, Body src)> m_copy;
+		std::function<void(void *dest)> m_free;
+
+	private:
+		static const std::function<void(void *dest, union Body src)> DefaultCopy;
+		static const std::function<void(void *dest, union Body src)> AppEventCopy;
 
 	public:
 		/**
@@ -98,12 +104,7 @@ class Event {
 		 * @param val the value that the event carries, this needs to be a memcpy friendly type
 		 */
 		template<typename T>
-		Event(T val) {
-			m_body.other.size = sizeof(T);
-			m_body.other.data = malloc(m_body.other.size);
-			memcpy(m_body.other.data, &val, sizeof(T));
-			m_type = AppEvent;
-		}
+		Event(T val);
 
 		/**
 		 * Constructor
@@ -111,12 +112,7 @@ class Event {
 		 * @param val the value that the event carries, this needs to be a memcpy friendly type
 		 */
 		template<typename T>
-		Event(EventType type, T val) {
-			m_body.other.size = sizeof(T);
-			m_body.other.data = malloc(m_body.other.size);
-			memcpy(m_body.other.data, &val, sizeof(T));
-			m_type = type;
-		}
+		Event(EventType type, T val);
 
 		/**
 		 * Destructor
@@ -164,16 +160,7 @@ class Event {
 		 * @return 0 if successful
 		 */
 		template<typename T>
-		int read(T &val) {
-			auto &data = (T*) m_body.other.data;
-			if (data && m_body.other.size == sizeof(T)) {
-				val = *data;
-				free(data);
-				data = 0;
-				return 0;
-			}
-			return 1;
-		}
+		int read(T &val);
 
 	protected:
 		/**
@@ -181,7 +168,60 @@ class Event {
 		 * @param task the Task that this Event is meant for
 		 */
 		void setTask(class Task *task);
+
+	private:
+		void defaultCopy(void *dest, union Event::Body src);
+
+		template<typename T>
+		void appEventCopy(void *dest, union Event::Body src);
 };
+
+template<typename T>
+Event::Event(T val) {
+	m_body.other.size = sizeof(T);
+	m_body.other.data = new T;
+	*((T*) m_body.other.data) = val;
+	m_copy = [this](void *dest, Event::Body src) {
+		appEventCopy<T>(dest, src);
+	};
+	m_free = [](void *data) {
+		delete (T*) data;
+	};
+	m_type = AppEvent;
+}
+
+template<typename T>
+Event::Event(EventType type, T val) {
+	m_body.other.size = sizeof(T);
+	m_body.other.data = new T;
+	*((T*) m_body.other.data) = val;
+	m_copy = [this](void *dest, Event::Body src) {
+		appEventCopy<T>(dest, src);
+	};
+	m_free = [](void *data) {
+		delete (T*) data;
+	};
+	m_type = type;
+}
+
+template<typename T>
+void Event::appEventCopy(void *dest, union Event::Body src) {
+	m_body.other.size = src.other.size;
+	m_body.other.data = new T;
+	*((T*) m_body.other.data) = *((T*) src.other.data);
+}
+
+template<typename T>
+int Event::read(T &val) {
+	auto &data = (T*) m_body.other.data;
+	if (data && m_body.other.size == sizeof(T)) {
+		val = *data;
+		m_free(data);
+		data = 0;
+		return 0;
+	}
+	return 1;
+}
 
 }
 }
