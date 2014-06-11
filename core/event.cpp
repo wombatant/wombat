@@ -15,6 +15,7 @@
  */
 #include <vector>
 #include <stdlib.h>
+#include <string.h>
 #include "event.hpp"
 
 namespace wombat {
