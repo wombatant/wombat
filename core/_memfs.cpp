@@ -156,7 +156,9 @@ bool MemFs::insert(Record *root, Record *insertValue, MemFsPtr *rootParentPtr) {
 		if (root->next) {
 			ptr<Record*>(root->next)->prev = ivAddr;
 		}
-		*rootParentPtr = ivAddr;
+		if (rootParentPtr) {
+			*rootParentPtr = ivAddr;
+		}
 		return true;
 	}
 	return false;
