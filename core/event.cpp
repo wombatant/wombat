@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <vector>
 #include <stdlib.h>
 #include <string.h>
 #include "event.hpp"
@@ -56,7 +55,7 @@ Event::Event(const Event &event) {
 }
 
 Event::~Event() {
-	if (type() >= AppEvent) {
+	if (type() >= EventType::AppEvent) {
 		m_free(m_body.other.data);
 	}
 }

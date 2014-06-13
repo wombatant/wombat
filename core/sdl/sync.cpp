@@ -71,7 +71,7 @@ Event EventQueue::wait(uint64 timeout) {
 		auto wakeup = SDL_SemWaitTimeout((SDL_sem*) m_semaphore, timeout);
 
 		if (wakeup == SDL_MUTEX_TIMEDOUT) {
-			return Timeout;
+			return EventType::Timeout;
 		} else if (popPost(post) == 0) {
 			break;
 		} else {
@@ -79,7 +79,7 @@ Event EventQueue::wait(uint64 timeout) {
 			auto time = core::time();
 			// recheck timeout based on current time
 			if (time > startTime + origTimeout) {
-				post = Timeout;
+				post = EventType::Timeout;
 				break;
 			} else {
 				// adjust timeout

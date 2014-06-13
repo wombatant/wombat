@@ -941,6 +941,10 @@ class Sprite: public cyborgbear::Model {
 		virtual void fromBoostBinary(string dat);
 #endif
 		string SpriteClass;
+		int Motion;
+		int Facing;
+		int SpriteType;
+		string Data;
 };
 
 }
@@ -1306,8 +1310,7 @@ class PersonClass: public cyborgbear::Model {
 		virtual void fromBoostBinary(string dat);
 #endif
 		string Import;
-		std::map< string, string > Name;
-		std::vector< string > Creatures;
+		std::map< string, string > Title;
 		std::vector< std::vector< models::AnimLayer > > Overhead;
 		models::Animation FrontView;
 		models::Animation BackView;
@@ -1399,6 +1402,8 @@ class Person: public cyborgbear::Model {
 		virtual void fromBoostBinary(string dat);
 #endif
 		models::PersonClass PersonClass;
+		std::map< string, string > Name;
+		std::vector< string > Creatures;
 };
 
 }
@@ -1465,6 +1470,10 @@ void serialize(Archive &ar, models::Image &model, const unsigned int) {
 template<class Archive>
 void serialize(Archive &ar, models::Sprite &model, const unsigned int) {
 	ar & model.SpriteClass;
+	ar & model.Motion;
+	ar & model.Facing;
+	ar & model.SpriteType;
+	ar & model.Data;
 }
 
 template<class Archive>
@@ -1542,8 +1551,7 @@ void serialize(Archive &ar, models::ZoneHeader &model, const unsigned int) {
 template<class Archive>
 void serialize(Archive &ar, models::PersonClass &model, const unsigned int) {
 	ar & model.Import;
-	ar & model.Name;
-	ar & model.Creatures;
+	ar & model.Title;
 	ar & model.Overhead;
 	ar & model.FrontView;
 	ar & model.BackView;
@@ -1563,6 +1571,8 @@ void serialize(Archive &ar, models::Zone &model, const unsigned int) {
 template<class Archive>
 void serialize(Archive &ar, models::Person &model, const unsigned int) {
 	ar & model.PersonClass;
+	ar & model.Name;
+	ar & model.Creatures;
 }
 
 }

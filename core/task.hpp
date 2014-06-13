@@ -66,8 +66,8 @@ class TaskState {
 class Task {
 	friend class TaskProcessor;
 	private:
-		bool m_autoDelete;
-		class TaskProcessor *m_taskProcessor;
+		bool m_autoDelete = false;
+		class TaskProcessor *m_taskProcessor = nullptr;
 
 	public:
 		/**
@@ -134,7 +134,7 @@ class TaskProcessor: public Task {
 	friend int subscribe(EventType);
 	private:
 		struct ScheduleItem {
-			Task *task;
+			Task *task = nullptr;
 			uint64 wakeupTime;
 
 			/**

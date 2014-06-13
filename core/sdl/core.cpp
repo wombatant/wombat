@@ -46,7 +46,7 @@ class SdlMainEventQueue: public BaseEventQueue {
 
 		Event wait(uint64 timeout);
 
-		void post(Event wakeup = GenericPost);
+		void post(Event wakeup = EventType::GenericPost);
 
 		int popPost(Event &post);
 
@@ -79,11 +79,11 @@ SdlMainEventQueue::~SdlMainEventQueue() {
 }
 
 Event SdlMainEventQueue::wait() {
-	return UnknownEvent;
+	return EventType::UnknownEvent;
 }
 
 Event SdlMainEventQueue::wait(uint64 timeout) {
-	return UnknownEvent;
+	return EventType::UnknownEvent;
 }
 
 void SdlMainEventQueue::post(Event post) {
@@ -160,7 +160,7 @@ void main() {
 		if (t == Event_DrawEvent) {
 			_draw();
 		} else if (sev.type == Event_SemaphoreTimeout) {
-			ev.m_type = Timeout;
+			ev.m_type = EventType::Timeout;
 			taskState = _taskProcessor.run(ev);
 		} else if (sev.type == Event_SemaporePost) {
 			if (_mainEventQueue.popPost(ev) == 0) {
@@ -168,18 +168,18 @@ void main() {
 			}
 		} else if (t == SDL_WINDOWEVENT) {
 			if (sev.window.event == SDL_WINDOWEVENT_RESIZED) {
-				ev.m_type = ScreenSizeChange;
+				ev.m_type = EventType::ScreenSizeChange;
 				_submgr.post(ev);
 			}
 		} else if (t == SDL_QUIT) {
-			ev.m_type = QuitEvent;
+			ev.m_type = EventType::Quit;
 			_submgr.post(ev);
 		} else if (t == SDL_KEYUP) {
-			ev.m_type = KeyUpEvent;
+			ev.m_type = EventType::KeyUp;
 			ev.m_body.key = toWombatKey(sev);
 			_submgr.post(ev);
 		} else if (t == SDL_KEYDOWN) {
-			ev.m_type = KeyDownEvent;
+			ev.m_type = EventType::KeyDown;
 			ev.m_body.key = toWombatKey(sev);
 			_submgr.post(ev);
 		}

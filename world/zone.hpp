@@ -27,17 +27,12 @@ class Zone: public core::Task {
 	private:
 		class TileGrid {
 			private:
-				Tile ***m_tiles;
-				int m_tilesWide;
-				int m_tilesHigh;
-				int m_layers;
+				Tile ***m_tiles = nullptr;
+				int m_tilesWide = 0;
+				int m_tilesHigh = 0;
+				int m_layers = 0;
 
 			public:
-				/**
-				 * Constructor
-				 */
-				TileGrid();
-
 				/**
 				 * Destructor
 				 */

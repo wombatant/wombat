@@ -23,9 +23,10 @@ namespace wombat {
 namespace core {
 
 class Mutex {
-	public:
+	private:
 		void *m_mutex;
 
+	public:
 		/**
 		 * Constructor
 		 */
@@ -58,7 +59,7 @@ class BaseEventQueue {
 		/**
 		 * Destructor
 		 */
-		virtual ~BaseEventQueue();
+		virtual ~BaseEventQueue() = default;
 
 		/**
 		 * Waits until there is a post to process.
@@ -114,7 +115,7 @@ class EventQueue: public BaseEventQueue {
 
 		Event wait(uint64 timeout);
 
-		void post(Event wakeup = GenericPost);
+		void post(Event wakeup = EventType::GenericPost);
 
 		int popPost(Event &post);
 

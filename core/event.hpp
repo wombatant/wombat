@@ -23,7 +23,7 @@
 namespace wombat {
 namespace core {
 
-enum EventType {
+enum class EventType {
 	UnknownEvent = 1024,
 	Timeout,
 	ChannelMessage,
@@ -32,18 +32,18 @@ enum EventType {
 	AppEvent, // Should always be the highest value listed here
 
 	// Optional EventTypes
-	QuitEvent = 0,
-	KeyUpEvent,
-	KeyDownEvent,
+	Quit = 0,
+	KeyUp,
+	KeyDown,
 	ScreenSizeChange,
 	OptionalEventTypeRange
 };
 
-enum Key {
-	Key_Unknown,
-	Key_Escape,
-	Key_A,
-	Key_Q,
+enum class Key {
+	Unknown,
+	Escape,
+	A,
+	Q,
 };
 
 void main();
@@ -77,7 +77,7 @@ class Event {
 		 * Constructor
 		 * @param type the value for the type value of the Event
 		 */
-		Event(EventType type = UnknownEvent);
+		Event(EventType type = EventType::UnknownEvent);
 
 		/**
 		 * Constructor
@@ -187,7 +187,7 @@ Event::Event(T val) {
 	m_free = [](void *data) {
 		delete (T*) data;
 	};
-	m_type = AppEvent;
+	m_type = EventType::AppEvent;
 }
 
 template<typename T>

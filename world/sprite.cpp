@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "person.hpp"
 #include "sprite.hpp"
 
 namespace wombat {
@@ -20,8 +21,8 @@ namespace world {
 
 using core::TaskState;
 
-Sprite::Sprite() {
-	m_spriteClass = 0;
+Sprite::Sprite(models::Sprite model) {
+	load(model);
 }
 
 TaskState Sprite::run(core::Event) {
@@ -29,10 +30,21 @@ TaskState Sprite::run(core::Event) {
 }
 
 void Sprite::load(models::Sprite model) {
-	m_spriteClass = SpriteClass::checkout(model.SpriteClass);
 }
 
-void Sprite::draw(core::Graphics &gfx, common::Point pt) {
+void Sprite::unload() {
+}
+
+Sprite *loadSprite(models::Sprite model) {
+	switch ((models::SpriteType) model.SpriteType) {
+	case models::SpriteType::Inanimate:
+		break;
+	case models::SpriteType::Person:
+		return new Person(model);
+	case models::SpriteType::Creature:
+		break;
+	}
+	return 0;
 }
 
 }

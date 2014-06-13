@@ -18,14 +18,14 @@
 namespace wombat {
 namespace world {
 
-Person::Person() {
-	m_class = 0;
-}
+Person::Person(models::Sprite model) {
+	m_facing = (models::SpriteDirection) model.Facing;
+	m_motion = (models::SpriteMotion) model.Motion;
 
-Person::Person(std::string path) {
-	models::Person model;
-	core::read(model, path);
-	m_class = PersonClass::checkout(model.PersonClass);
+	models::Person person;
+	core::read(person, model.Data);
+	m_class = PersonClass::checkout(person.PersonClass);
+	m_creatures = person.Creatures;
 }
 
 Person::~Person() {
@@ -33,6 +33,7 @@ Person::~Person() {
 }
 
 void Person::draw(core::Graphics &gfx, common::Point pt) {
+	m_class->draw(gfx, pt, m_facing, m_motion);
 }
 
 }

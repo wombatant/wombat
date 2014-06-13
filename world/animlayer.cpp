@@ -18,10 +18,6 @@
 namespace wombat {
 namespace world {
 
-AnimLayer::AnimLayer() {
-	animation = 0;
-}
-
 AnimLayer::AnimLayer(models::AnimLayer model) {
 	load(model);
 }

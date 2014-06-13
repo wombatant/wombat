@@ -19,11 +19,11 @@
 namespace wombat {
 namespace core {
 
-SubscriptionManager::SubscriptionManager(): m_subs(OptionalEventTypeRange) {
+SubscriptionManager::SubscriptionManager(): m_subs((int) EventType::OptionalEventTypeRange) {
 }
 
 void SubscriptionManager::addSubscription(EventType et, Task *task) {
-	m_subs[et].push_back(task);
+	m_subs[(int) et].push_back(task);
 }
 
 void SubscriptionManager::removeFromAllSubs(Task *task) {
@@ -40,7 +40,7 @@ void SubscriptionManager::removeFromAllSubs(Task *task) {
 }
 
 void SubscriptionManager::post(Event e) {
-	for (auto t : m_subs[e.type()]) {
+	for (auto t : m_subs[(int) e.type()]) {
 		auto tp = dynamic_cast<TaskProcessor*>(t);
 		if (tp) {
 			tp->post(e);
@@ -49,13 +49,13 @@ void SubscriptionManager::post(Event e) {
 }
 
 void SubscriptionManager::run(Event e) {
-	for (auto t : m_subs[e.type()]) {
+	for (auto t : m_subs[(int) e.type()]) {
 		t->run(e);
 	}
 }
 
 int SubscriptionManager::subs(EventType et) {
-	return m_subs[et].size();
+	return m_subs[(int) et].size();
 }
 
 }

@@ -18,27 +18,24 @@
 
 #include <core/core.hpp>
 #include "personclass.hpp"
-#include "spriteclass.hpp"
-#include "destructable.hpp"
+#include "sprite.hpp"
 
 namespace wombat {
 namespace world {
 
-class Person: public Destructable, public SpriteClass {
+class Person: public Sprite {
 	private:
-		PersonClass *m_class;
+		models::SpriteDirection m_facing = models::SpriteDirection::North;
+		models::SpriteMotion m_motion = models::SpriteMotion::Still;
+		PersonClass *m_class = nullptr;
+		std::vector<std::string> m_creatures;
 
 	public:
 		/**
 		 * Constructor
-		 */
-		Person();
-
-		/**
-		 * Constructor
 		 * @param path path to the Person model
 		 */
-		Person(std::string path);
+		Person(models::Sprite model);
 
 		/**
 		 * Destructor

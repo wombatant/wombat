@@ -16,8 +16,6 @@
 #ifndef WOMBAT_WORLD_TILE_HPP
 #define WOMBAT_WORLD_TILE_HPP
 
-#include <string>
-#include <common/common.hpp>
 #include <core/core.hpp>
 #include "animlayer.hpp"
 
@@ -32,7 +30,7 @@ class TileClass: public core::Flyweight<models::TileClass>::GenericValue {
 	private:
 		static core::Flyweight<models::TileClass> c_tileClasses;
 
-		int m_terrainFlags;
+		int m_terrainFlags = 0;
 		AnimLayer m_upperAnim;
 		AnimLayer m_lowerAnim;
 
@@ -66,7 +64,7 @@ class TileClass: public core::Flyweight<models::TileClass>::GenericValue {
 		 * Checks in the given TileClass object.
 		 * @param tc TileClass object to checkin
 		 */
-		static void checkin(TileClass*);
+		static void checkin(TileClass *&tc);
 
 	private:
 		void draw(core::Graphics &g, int x, int y, AnimLayer &anims);

@@ -28,14 +28,14 @@ Camera::Camera(World *world) {
 
 void Camera::init() {
 	updateSize();
-	core::subscribe(core::ScreenSizeChange);
+	core::subscribe(core::EventType::ScreenSizeChange);
 }
 
 TaskState Camera::run(core::Event e) {
 	TaskState retval = TaskState::Continue;
 
 	switch (e.type()) {
-	case core::ScreenSizeChange:
+	case core::EventType::ScreenSizeChange:
 		updateSize();
 		break;
 	default:

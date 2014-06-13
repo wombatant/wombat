@@ -4,7 +4,6 @@ add_library(
 	WombatWorld OBJECT
 		animlayer.cpp
 		camera.cpp
-		destructable.cpp
 		person.cpp
 		personclass.cpp
 		sprite.cpp
@@ -20,7 +19,6 @@ install(
 	FILES
 		animlayer.hpp
 		camera.hpp
-		destructable.hpp
 		person.hpp
 		sprite.hpp
 		spriteclass.hpp

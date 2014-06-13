@@ -13,7 +13,20 @@
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
-				{"TileClass": {"Import": "World/Tiles/Tile1"}},
+				{
+					"TileClass": {
+						"Import": "World/Tiles/Tile1",
+						"Occupant": {
+							"AnimLayers": [
+								[
+									{"Animation": "Animations/Animation1"}
+								]
+							],
+							"SpriteType": 1,
+							"Attributes": "People/User"
+						}
+					}
+				},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},

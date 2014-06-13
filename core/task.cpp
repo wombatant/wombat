@@ -116,40 +116,40 @@ TaskState TaskProcessor::run(Event event) {
 
 	setActiveTaskProcessor(this);
 
-	if (event.type() < OptionalEventTypeRange) {
+	if (event.type() < EventType::OptionalEventTypeRange) {
 		m_submgr.run(event);
 	}
 
 	switch (event.type()) {
-	case Timeout:
+	case EventType::Timeout:
 		// Timeout means something wants to run
 		{
 			// put a limit on the number of Tasks processed in a single iteration
 			for (int i = 0; i < 100; i++) {
 				auto nt = popActiveTask();
 				if (nt) {
-					runTask(nt, Timeout);
+					runTask(nt, EventType::Timeout);
 				} else {
 					break;
 				}
 			}
 		}
 		break;
-	case ChannelMessage:
-		runTask(event.task(), ChannelMessage);
+	case EventType::ChannelMessage:
+		runTask(event.task(), EventType::ChannelMessage);
 		break;
-	case InitTask:
+	case EventType::InitTask:
 		m_currentTask = event.task();
 		event.task()->init();
 		processTaskState(event.task(), TaskState::Running);
 		m_currentTask = nullptr;
 		break;
-	case GenericPost:
+	case EventType::GenericPost:
 		// GenericPost is already designated for use only as a
 		//  sleep refresh in this switch or exit the thread loop
 		break;
 	default:
-		if (event.type() >= AppEvent) {
+		if (event.type() >= EventType::AppEvent) {
 			runTask(event.task(), event.type());
 		}
 		break;
@@ -177,7 +177,7 @@ void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState stat
 void TaskProcessor::addTask(Task *task, TaskState state) {
 	task->_setTaskProcessor(this);
 	// post to the semaphore to refresh the sleep time
-	m_events->post(Event(InitTask, task));
+	m_events->post(Event(EventType::InitTask, task));
 }
 
 void TaskProcessor::start() {

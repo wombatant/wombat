@@ -21,11 +21,6 @@ namespace world {
 using core::TaskState;
 
 
-Zone::TileGrid::TileGrid() {
-	m_tiles = 0;
-	m_tilesWide = m_tilesHigh = m_layers = 0;
-}
-
 Zone::TileGrid::~TileGrid() {
 	free();
 }
@@ -91,7 +86,7 @@ Zone::~Zone() {
 
 TaskState Zone::run(core::Event e) {
 	switch (e.type()) {
-	case core::Timeout:
+	case core::EventType::Timeout:
 		if (m_dependents == 0) {
 			unload();
 		}
