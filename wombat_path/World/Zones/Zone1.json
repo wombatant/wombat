@@ -15,16 +15,16 @@
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{
 					"TileClass": {
-						"Import": "World/Tiles/Tile1",
-						"Occupant": {
-							"AnimLayers": [
-								[
-									{"Animation": "Animations/Animation1"}
-								]
-							],
-							"SpriteType": 1,
-							"Attributes": "People/User"
-						}
+						"Import": "World/Tiles/Tile1"
+					},
+					"Occupant": {
+						"AnimLayers": [
+							[
+								{"Animation": "Animations/Animation1"}
+							]
+						],
+						"SpriteType": 2,
+						"Data": "Person/User"
 					}
 				},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},

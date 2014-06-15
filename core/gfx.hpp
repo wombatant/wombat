@@ -18,8 +18,6 @@
 
 #include <string>
 
-#include <common/common.hpp>
-
 #include "_cliprectstack.hpp"
 #include "modelio.hpp"
 #include "core.hpp"
@@ -50,7 +48,7 @@ class Image: public Flyweight<models::Image>::Value {
 		 * Constructor
 		 * @param model Model to build the Image from
 		 */
-		Image(models::Image);
+		explicit Image(models::Image);
 
 		/**
 		 * Destructor
@@ -91,7 +89,7 @@ class Animation: public Flyweight<models::Animation>::Value {
 		std::string m_key;
 
 	public:
-		Animation(models::Animation);
+		explicit Animation(models::Animation);
 
 		~Animation();
 

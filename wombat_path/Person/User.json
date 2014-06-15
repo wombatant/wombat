@@ -1,0 +1,5 @@
+{
+	"PersonClass": {"Import": "PersonClass/User"},
+	"Name": {"english": "Gary"},
+	"Creatures": []
+}

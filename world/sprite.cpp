@@ -44,7 +44,7 @@ Sprite *loadSprite(models::Sprite model) {
 	case models::SpriteType::Creature:
 		break;
 	}
-	return 0;
+	return nullptr;
 }
 
 }

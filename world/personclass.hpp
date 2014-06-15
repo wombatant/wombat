@@ -33,7 +33,7 @@ class PersonClass: public core::Flyweight<models::PersonClass>::GenericValue {
 		 * Constructor
 		 * @param model the model that the PersonClass will reflect
 		 */
-		PersonClass(models::PersonClass model);
+		explicit PersonClass(models::PersonClass model);
 
 		void draw(core::Graphics &gfx, common::Point pt, models::SpriteDirection facing, models::SpriteMotion motion);
 

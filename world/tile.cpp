@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "person.hpp"
 #include "tile.hpp"
 
 namespace wombat {
@@ -27,7 +28,7 @@ Tile::Tile() {
 
 void Tile::load(models::Tile model) {
 	m_tileClass = TileClass::checkout(model.TileClass);
-	//m_occupant = new Sprite(model.Occupant);
+	m_occupant = loadSprite(model.Occupant);
 }
 
 void Tile::draw(core::Graphics &gfx, common::Point pt) {
