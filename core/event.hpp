@@ -43,7 +43,14 @@ enum class Key {
 	Unknown,
 	Escape,
 	A,
+	D,
+	H,
+	J,
+	K,
+	L,
 	Q,
+	S,
+	W,
 };
 
 void main();
