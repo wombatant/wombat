@@ -43,30 +43,30 @@ App::~App() {
 }
 
 void App::init() {
-	core::subscribe(core::KeyDownEvent);
-	core::subscribe(core::KeyUpEvent);
-	core::subscribe(core::ScreenSizeChange);
-	core::subscribe(core::QuitEvent);
+	core::subscribe(core::EventType::KeyDown);
+	core::subscribe(core::EventType::KeyUp);
+	core::subscribe(core::EventType::ScreenSizeChange);
+	core::subscribe(core::EventType::Quit);
 }
 
 TaskState App::run(core::Event e) {
 	TaskState retval = TaskState::Continue;
 
 	switch (e.type()) {
-	case core::ScreenSizeChange:
+	case core::EventType::ScreenSizeChange:
 		core::draw();
 		break;
-	case core::Timeout:
+	case core::EventType::Timeout:
 		core::draw();
 		retval = 16;
 		break;
-	case core::QuitEvent:
+	case core::EventType::Quit:
 		quit();
 		break;
-	case core::KeyDownEvent:
+	case core::EventType::KeyDown:
 		switch (e.key()) {
-		case core::Key_Escape:
-		case core::Key_Q:
+		case core::Key::Escape:
+		case core::Key::Q:
 			quit();
 			retval = TaskState::Done;
 			break;

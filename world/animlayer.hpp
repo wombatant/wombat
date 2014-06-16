@@ -23,13 +23,13 @@ namespace world {
 
 class AnimLayer {
 	public:
-		core::Animation *animation;
+		core::Animation *animation = nullptr;
 		models::Point point;
 
 		/**
 		 * Constructor
 		 */
-		AnimLayer();
+		AnimLayer() = default;
 
 		/**
 		 * Constructor

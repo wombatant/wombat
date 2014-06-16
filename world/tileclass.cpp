@@ -72,8 +72,9 @@ TileClass *TileClass::checkout(std::string path) {
 	return dynamic_cast<TileClass*>(c_tileClasses.checkout(path));
 }
 
-void TileClass::checkin(TileClass *tc) {
+void TileClass::checkin(TileClass *&tc) {
 	c_tileClasses.checkin(tc);
+	tc = 0;
 }
 
 }

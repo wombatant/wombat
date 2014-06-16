@@ -18,6 +18,9 @@
 namespace wombat {
 namespace world {
 
+using models::SpriteDirection;
+using models::SpriteMotion;
+
 core::Flyweight<models::PersonClass> PersonClass::c_personClasses(
 	[](models::PersonClass model) {
 		if (model.Import != "") {
@@ -27,12 +30,8 @@ core::Flyweight<models::PersonClass> PersonClass::c_personClasses(
 	}
 );
 
-PersonClass::PersonClass() {
-}
-
 PersonClass::PersonClass(models::PersonClass model) {
-	m_name = model.Name[core::getLanguage()];
-	m_creatures = model.Creatures;
+	m_title = model.Title[core::getLanguage()];
 
 	m_animations.resize(model.Overhead.size());
 	for (int i = 0; i < model.Overhead.size(); i++) {
@@ -41,6 +40,20 @@ PersonClass::PersonClass(models::PersonClass model) {
 			m_animations[i][ii].load(model.Overhead[i][ii]);
 		}
 	}
+}
+
+void PersonClass::draw(core::Graphics &gfx, common::Point pt, SpriteDirection facing, SpriteMotion motion) {
+	auto anim = this->anim(facing, motion);
+	if (anim.animation) {
+		gfx.draw(anim.animation->getImage(), pt + anim.point);
+	}
+}
+
+AnimLayer PersonClass::anim(models::SpriteDirection facing, models::SpriteMotion motion) {
+	if ((int) facing < m_animations.size() && (int) motion < m_animations[(int) facing].size()) {
+		return m_animations[(int) facing][(int) motion];
+	}
+	return AnimLayer();
 }
 
 PersonClass *PersonClass::checkout(models::PersonClass model) {

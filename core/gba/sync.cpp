@@ -22,10 +22,6 @@ namespace core {
 
 // Mutex
 
-Mutex::Mutex() {
-	m_mutex = 0;
-}
-
 Mutex::~Mutex() {
 }
 

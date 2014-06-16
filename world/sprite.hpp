@@ -22,21 +22,28 @@ namespace wombat {
 namespace world {
 
 class Sprite: public core::Task {
-	private:
-		SpriteClass *m_spriteClass;
-
 	public:
 		/**
 		 * Constructor
 		 */
-		Sprite();
+		Sprite() = default;
+
+		/**
+		 * Constructor
+		 * @param model model to build Sprite off of
+		 */
+		Sprite(models::Sprite model);
 
 		core::TaskState run(core::Event);
 
 		void load(models::Sprite model);
 
-		void draw(core::Graphics &gfx, common::Point pt);
+		void unload();
+
+		virtual void draw(core::Graphics &gfx, common::Point pt) = 0;
 };
+
+Sprite *loadSprite(models::Sprite model);
 
 }
 }

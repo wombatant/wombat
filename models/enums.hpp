@@ -18,10 +18,22 @@
 
 namespace models {
 
-enum SpriteType {
-	SpriteType_Inanimate = 0,
-	SpriteType_Person = 1,
-	SpriteType_Creature = 2
+enum class SpriteType: int {
+	Inanimate = 1,
+	Person,
+	Creature
+};
+
+enum class SpriteDirection: int {
+	North = 0,
+	South,
+	East,
+	West
+};
+
+enum class SpriteMotion: int {
+	Still = 1,
+	Walking
 };
 
 }

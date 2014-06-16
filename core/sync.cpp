@@ -18,9 +18,6 @@
 namespace wombat {
 namespace core {
 
-BaseEventQueue::~BaseEventQueue() {
-}
-
 bool EventQueue::hasPosts() {
 	return !m_posts.empty();
 }

@@ -22,13 +22,25 @@ namespace core {
 Key toWombatKey(SDL_Event t) {
 	switch (t.key.keysym.sym) {
 	case SDLK_a:
-		return Key_A;
+		return Key::A;
+	case SDLK_d:
+		return Key::D;
+	case SDLK_h:
+		return Key::H;
+	case SDLK_j:
+		return Key::J;
+	case SDLK_k:
+		return Key::K;
+	case SDLK_l:
+		return Key::L;
 	case SDLK_q:
-		return Key_Q;
+		return Key::Q;
+	case SDLK_s:
+		return Key::S;
 	case SDLK_ESCAPE:
-		return Key_Escape;
+		return Key::Escape;
 	}
-	return Key_Unknown;
+	return Key::Unknown;
 }
 
 }

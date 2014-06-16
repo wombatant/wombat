@@ -21,12 +21,12 @@ namespace world {
 
 core::Flyweight<models::SpriteClass> SpriteClass::c_spriteClasses(
 	[](models::SpriteClass model) -> SpriteClass* {
-		switch (model.SpriteType) {
-		case models::SpriteType_Inanimate:
+		switch ((models::SpriteType) model.SpriteType) {
+		case models::SpriteType::Inanimate:
 			break;
-		case models::SpriteType_Person:
-			return new Person(model.Attributes);
-		case models::SpriteType_Creature:
+		case models::SpriteType::Person:
+			break;
+		case models::SpriteType::Creature:
 			break;
 		}
 		return nullptr;
@@ -41,12 +41,13 @@ SpriteClass *SpriteClass::checkout(std::string path) {
 	return dynamic_cast<SpriteClass*>(c_spriteClasses.checkout(path));
 }
 
-void SpriteClass::checkin(SpriteClass *pc) {
+void SpriteClass::checkin(SpriteClass *&pc) {
 	c_spriteClasses.checkin(pc);
+	pc = 0;
 }
 
 
-SpriteClass::SpriteClass(models::SpriteClass model) {
+SpriteClass::SpriteClass() {
 }
 
 SpriteClass::~SpriteClass() {

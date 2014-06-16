@@ -17,7 +17,6 @@
 #define WOMBAT_WORLD_SPRITECLASS_HPP
 
 #include <core/core.hpp>
-#include "destructable.hpp"
 #include "animlayer.hpp"
 
 namespace wombat {
@@ -31,16 +30,15 @@ class SpriteClass: public core::Flyweight<models::SpriteClass>::GenericValue {
 	public:
 		/**
 		 * Constructor
-		 * @param model the model that the SpriteClass will reflect
 		 */
-		SpriteClass(models::SpriteClass model = models::SpriteClass());
+		SpriteClass();
 
 		/**
 		 * Destructor
 		 */
 		~SpriteClass();
 
-		virtual void draw(core::Graphics &gfx, common::Point pt) = 0;
+		virtual void draw(core::Graphics &gfx, common::Point pt, models::SpriteDirection facing) = 0;
 
 		/**
 		 * Checks out the SpriteClass object from the given model.
@@ -58,7 +56,7 @@ class SpriteClass: public core::Flyweight<models::SpriteClass>::GenericValue {
 		 * Checks in the given SpriteClass object.
 		 * @param pc SpriteClass object to checkin
 		 */
-		static void checkin(SpriteClass *pc);
+		static void checkin(SpriteClass *&pc);
 };
 
 }

@@ -135,13 +135,15 @@ class Flyweight {
 		}
 
 		void checkin(Value *v) {
-			m_lock.lock();
-			v->dependents--;
-			if (!v->dependents) {
-				m_cache.erase(v->key());
-				delete v;
+			if (v) {
+				m_lock.lock();
+				v->dependents--;
+				if (!v->dependents) {
+					m_cache.erase(v->key());
+					delete v;
+				}
+				m_lock.unlock();
 			}
-			m_lock.unlock();
 		}
 };
 

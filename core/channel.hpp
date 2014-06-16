@@ -25,7 +25,7 @@ namespace core {
 template<typename T>
 class Channel {
 	private:
-		EventQueue *m_sem;
+		EventQueue *m_sem = nullptr;
 		Mutex m_mutex;
 		std::queue<T> m_msgs;
 
@@ -71,7 +71,7 @@ class Channel {
 		 */
 		EventType read() {
 			auto reason = m_sem->wait().type();
-			if (reason == ChannelMessage) {
+			if (reason == EventType::ChannelMessage) {
 				m_mutex.lock();
 				m_msgs.pop();
 				m_mutex.unlock();
@@ -88,7 +88,7 @@ class Channel {
 		EventType read(T &msg) {
 			while (1) {
 				auto reason = m_sem->wait().type();
-				if (reason == ChannelMessage) {
+				if (reason == EventType::ChannelMessage) {
 					if (getMessage(msg)) {
 						return reason;
 					}
@@ -110,7 +110,7 @@ class Channel {
 			auto currentTimeout = timeout;
 			while (1) {
 				auto reason = m_sem->wait(currentTimeout).type();
-				if (reason == ChannelMessage) {
+				if (reason == EventType::ChannelMessage) {
 					if (getMessage(msg)) {
 						return reason;
 					}
@@ -130,7 +130,7 @@ class Channel {
 			m_mutex.lock();
 			m_msgs.push(msg);
 			m_mutex.unlock();
-			m_sem->post(Event(ChannelMessage, this));
+			m_sem->post(Event(EventType::ChannelMessage, this));
 		}
 
 	// disallow copying

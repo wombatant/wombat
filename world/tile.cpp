@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "person.hpp"
 #include "tile.hpp"
 
 namespace wombat {
@@ -27,12 +28,16 @@ Tile::Tile() {
 
 void Tile::load(models::Tile model) {
 	m_tileClass = TileClass::checkout(model.TileClass);
+	m_occupant = loadSprite(model.Occupant);
 }
 
 void Tile::draw(core::Graphics &gfx, common::Point pt) {
 	if (m_tileClass) {
 		m_tileClass->drawLower(gfx, pt);
 		m_tileClass->drawUpper(gfx, pt);
+	}
+	if (m_occupant) {
+		m_occupant->draw(gfx, pt);
 	}
 	if (_debugMode) {
 		gfx.drawLine(pt.X, pt.Y, pt.X, pt.Y + TileClass::Height);

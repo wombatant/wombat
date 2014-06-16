@@ -26,7 +26,13 @@ void addDrawer(Drawer *d) {
 	_drawers.push_back(std::pair<Drawer*, Graphics*>(d, new Graphics()));
 }
 
-//Image
+// Graphics
+
+void Graphics::draw(Image *img, common::Point pt) {
+	draw(img, pt.X, pt.Y);
+}
+
+// Image
 
 Flyweight<models::Image> imageCache([](models::cyborgbear::Model &key) -> Image* {
 	models::Image &mod = (models::Image&) key;
@@ -70,7 +76,7 @@ int Image::defaultHeight() {
 }
 
 
-//Animation
+// Animation
 
 Flyweight<models::Animation> animCache([](models::Animation &key) -> Animation* {
 	if (key.Import != "") {

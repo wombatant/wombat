@@ -25,22 +25,22 @@ namespace world {
 class PersonClass: public core::Flyweight<models::PersonClass>::GenericValue {
 	private:
 		static core::Flyweight<models::PersonClass> c_personClasses;
-		std::string m_name;
-		std::vector<std::string> m_creatures;
+		std::string m_title;
 		std::vector<std::vector<AnimLayer>> m_animations;
 
 	public:
 		/**
 		 * Constructor
-		 */
-		PersonClass();
-
-		/**
-		 * Constructor
 		 * @param model the model that the PersonClass will reflect
 		 */
-		PersonClass(models::PersonClass model);
+		explicit PersonClass(models::PersonClass model);
 
+		void draw(core::Graphics &gfx, common::Point pt, models::SpriteDirection facing, models::SpriteMotion motion);
+
+	private:
+		AnimLayer anim(models::SpriteDirection, models::SpriteMotion);
+
+	public:
 		/**
 		 * Checks out the PersonClass object from the given model.
 		 * @param model model representing the desired PersonClass

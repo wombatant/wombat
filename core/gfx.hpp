@@ -18,8 +18,6 @@
 
 #include <string>
 
-#include <common/common.hpp>
-
 #include "_cliprectstack.hpp"
 #include "modelio.hpp"
 #include "core.hpp"
@@ -34,10 +32,8 @@ int displayHeight();
 
 class Image: public Flyweight<models::Image>::Value {
 	friend class Graphics;
-	public:
-		void *m_img;
-
 	private:
+		void *m_img = nullptr;
 		models::Size m_defaultSize;
 		std::string m_key;
 
@@ -52,7 +48,7 @@ class Image: public Flyweight<models::Image>::Value {
 		 * Constructor
 		 * @param model Model to build the Image from
 		 */
-		Image(models::Image);
+		explicit Image(models::Image);
 
 		/**
 		 * Destructor
@@ -93,7 +89,7 @@ class Animation: public Flyweight<models::Animation>::Value {
 		std::string m_key;
 
 	public:
-		Animation(models::Animation);
+		explicit Animation(models::Animation);
 
 		~Animation();
 
@@ -126,6 +122,8 @@ class Graphics {
 		void draw(Image *img, int x, int y, int w, int h);
 
 		void draw(Image *img, int x, int y);
+
+		void draw(Image *img, common::Point pt);
 
 		/**
 		 * Sets the color for primitives to draw with.
