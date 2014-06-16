@@ -23,7 +23,7 @@ static SDL_SpinLock _tlsLock;
 static SDL_TLSID _tls;
 
 TlsData::TlsData() {
-	taskProcessor = 0;
+	taskProcessor = nullptr;
 }
 
 TlsData *getTls() {

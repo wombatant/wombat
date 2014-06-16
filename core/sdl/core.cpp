@@ -42,15 +42,15 @@ class SdlMainEventQueue: public BaseEventQueue {
 		 */
 		~SdlMainEventQueue();
 
-		Event wait();
+		Event wait() override;
 
-		Event wait(uint64 timeout);
+		Event wait(uint64 timeout) override;
 
-		void post(Event wakeup = GenericPost);
+		void post(Event wakeup = GenericPost) override;
 
-		int popPost(Event &post);
+		int popPost(Event &post) override;
 
-		bool hasPosts();
+		bool hasPosts() override;
 
 	// disallow copying
 	private:
@@ -64,8 +64,8 @@ const auto Event_DrawEvent = SDL_RegisterEvents(1);
 const auto Event_SemaporePost = SDL_RegisterEvents(1);
 const auto Event_SemaphoreTimeout = SDL_RegisterEvents(1);
 
-SDL_Window *_display = 0;
-SDL_Renderer *_renderer = 0;
+SDL_Window *_display = nullptr;
+SDL_Renderer *_renderer = nullptr;
 
 Key toWombatKey(SDL_Event);
 void _updateEventTime();

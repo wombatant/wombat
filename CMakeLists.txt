@@ -11,7 +11,7 @@ add_definitions(
 	-std=c++11
 	-Wall
 	#-Werror
-	#--analyze
+	--analyze
 	#-Os # GCC size optimization flag
 )
 

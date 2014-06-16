@@ -19,7 +19,7 @@ namespace wombat {
 namespace world {
 
 Person::Person() {
-	m_class = 0;
+	m_class = nullptr;
 }
 
 Person::Person(std::string path) {

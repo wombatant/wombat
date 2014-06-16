@@ -21,7 +21,7 @@ namespace tests {
 using namespace core;
 
 Drawer *test(std::vector<std::string> &args) {
-	Drawer *test = 0;
+	Drawer *test = nullptr;
 	if (args[2] == "animation") {
 		test = new AnimationTest(args[3]);
 	} else if (args[2] == "tile") {

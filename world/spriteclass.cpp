@@ -29,7 +29,7 @@ core::Flyweight<models::SpriteClass> SpriteClass::c_spriteClasses(
 		case models::SpriteType_Creature:
 			break;
 		}
-		return 0;
+		return nullptr;
 	}
 );
 

@@ -235,7 +235,7 @@ Task *TaskProcessor::popActiveTask() {
 			return nt.task;
 		}
 	}
-	return 0;
+	return nullptr;
 }
 
 int TaskProcessor::nextTask(TaskProcessor::ScheduleItem &t) {

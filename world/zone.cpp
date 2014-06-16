@@ -22,7 +22,7 @@ using core::TaskState;
 
 
 Zone::TileGrid::TileGrid() {
-	m_tiles = 0;
+	m_tiles = nullptr;
 	m_tilesWide = m_tilesHigh = m_layers = 0;
 }
 
@@ -59,7 +59,7 @@ void Zone::TileGrid::free() {
 			::free(m_tiles[l]);
 		}
 		::free(m_tiles);
-		m_tiles = 0;
+		m_tiles = nullptr;
 	}
 }
 

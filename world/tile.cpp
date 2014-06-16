@@ -21,8 +21,8 @@ namespace world {
 extern bool _debugMode;
 
 Tile::Tile() {
-	m_occupant = 0;
-	m_tileClass = 0;
+	m_occupant = nullptr;
+	m_tileClass = nullptr;
 }
 
 void Tile::load(models::Tile model) {

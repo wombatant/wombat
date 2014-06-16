@@ -19,7 +19,7 @@ namespace wombat {
 namespace world {
 
 AnimLayer::AnimLayer() {
-	animation = 0;
+	animation = nullptr;
 }
 
 AnimLayer::AnimLayer(models::AnimLayer model) {

@@ -21,7 +21,7 @@ namespace world {
 using core::TaskState;
 
 Sprite::Sprite() {
-	m_spriteClass = 0;
+	m_spriteClass = nullptr;
 }
 
 TaskState Sprite::run(core::Event) {
