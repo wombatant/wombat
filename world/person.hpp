@@ -44,7 +44,7 @@ class Person: public Sprite, public core::Task {
 		 */
 		~Person();
 
-		core::TaskState run(core::Event);
+		core::TaskState run(core::Event) override;
 
 		void draw(core::Graphics &gfx, common::Point pt);
 

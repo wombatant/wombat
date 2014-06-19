@@ -39,7 +39,7 @@ class World: public core::Task {
 		 */
 		~World();
 
-		core::TaskState run(core::Event);
+		core::TaskState run(core::Event) override;
 
 		/**
 		 * Gets the Zone with the given accessor ID.

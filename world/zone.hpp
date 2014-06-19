@@ -110,7 +110,7 @@ class Zone: public core::Task {
 		 */
 		~Zone();
 
-		core::TaskState run(core::Event);
+		core::TaskState run(core::Event) override;
 
 		/**
 		 * Indicates whether or not the Zone has been loaded yet.

@@ -37,9 +37,9 @@ class Camera: public core::Drawer, public core::Task {
 		 */
 		Camera(World *world);
 
-		void init();
+		void init() override;
 
-		core::TaskState run(core::Event);
+		core::TaskState run(core::Event) override;
 
 		/**
 		 * Draws what the Camera is currently hovering over.
