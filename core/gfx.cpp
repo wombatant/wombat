@@ -41,7 +41,7 @@ Flyweight<models::Image> imageCache([](models::cyborgbear::Model &key) -> Image*
 		return i;
 	} else {
 		delete i;
-		return 0;
+		return nullptr;
 	}
 });
 
@@ -87,7 +87,7 @@ Flyweight<models::Animation> animCache([](models::Animation &key) -> Animation* 
 		return a;
 	} else {
 		delete a;
-		return 0;
+		return nullptr;
 	}
 });
 
@@ -138,7 +138,7 @@ Image *Animation::getImage() {
 		}
 		return m_imgs[m_slide];
 	}
-	return 0;
+	return nullptr;
 }
 
 bool Animation::loaded() {

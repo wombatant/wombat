@@ -102,7 +102,7 @@ void *MemFs::alloc(MemFsPtr size) {
 	if ((iterator + size) > (uint64) m_end) {
 		compress();
 		if ((iterator + size) > (uint64) m_end) {
-			return 0;
+			return nullptr;
 		}
 	}
 	ptr<Record*>(m_lastRec)->next = iterator;

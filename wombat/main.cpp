@@ -37,7 +37,7 @@ int main(int argc, const char **args) {
 		return 1;
 	}
 
-	core::Drawer *test = 0;
+	core::Drawer *test = nullptr;
 
 	if (argc > 1 && !strcmp(args[1], "test")) {
 		std::vector<std::string> vargs;

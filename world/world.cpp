@@ -59,7 +59,7 @@ Zone *World::zoneAt(int x, int y) {
 			return z.second;
 		}
 	}
-	return 0;
+	return nullptr;
 }
 
 }

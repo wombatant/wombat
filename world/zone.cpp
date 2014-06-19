@@ -54,7 +54,7 @@ void Zone::TileGrid::free() {
 			::free(m_tiles[l]);
 		}
 		::free(m_tiles);
-		m_tiles = 0;
+		m_tiles = nullptr;
 	}
 }
 

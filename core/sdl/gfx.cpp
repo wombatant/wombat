@@ -30,13 +30,13 @@ extern SDL_Renderer *_renderer;
 
 int displayWidth() {
 	int w;
-	SDL_GetWindowSize(_display, &w, 0);
+	SDL_GetWindowSize(_display, &w, nullptr);
 	return w;
 }
 
 int displayHeight() {
 	int h;
-	SDL_GetWindowSize(_display, 0, &h);
+	SDL_GetWindowSize(_display, nullptr, &h);
 	return h;
 }
 
@@ -60,13 +60,13 @@ Image::~Image() {
 
 int Image::width() {
 	int out;
-	SDL_QueryTexture((SDL_Texture*) m_img, 0, 0, &out, 0);
+	SDL_QueryTexture((SDL_Texture*) m_img, nullptr, nullptr, &out, nullptr);
 	return out;
 }
 
 int Image::height() {
 	int out;
-	SDL_QueryTexture((SDL_Texture*) m_img, 0, 0, 0, &out);
+	SDL_QueryTexture((SDL_Texture*) m_img, nullptr, nullptr, nullptr, &out);
 	return out;
 }
 
