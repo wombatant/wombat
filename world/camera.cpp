@@ -46,6 +46,8 @@ TaskState Camera::run(core::Event e) {
 }
 
 void Camera::draw(core::Graphics &g) {
+	// TODO: set location based on location of m_person
+
 	findZones();
 
 	const auto cbnds = bounds();
@@ -73,13 +75,29 @@ common::Bounds Camera::bounds() {
 	return m_bounds;
 }
 
+void Camera::init(models::InitFile init) {
+	auto z = m_world->getZone(init.ZoneId);
+	if (z) {
+		z->incDeps();
+		auto person = dynamic_cast<Person*>(z->getSprite(init.SpriteId));
+		if (person) {
+			person->onZoneChange([z]() {
+				z->decDeps();
+			});
+			m_person = person;
+		}
+	}
+}
+
 void Camera::findZones() {
 	for (auto z : m_zones) {
 		z->decDeps();
 	}
-	m_world->zonesAt(m_zones, m_bounds);
-	for (auto z : m_zones) {
-		z->incDeps();
+	if (m_world) {
+		m_world->zonesAt(m_zones, m_bounds);
+		for (auto z : m_zones) {
+			z->incDeps();
+		}
 	}
 }
 

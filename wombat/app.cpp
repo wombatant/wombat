@@ -28,10 +28,11 @@ App::App() {
 
 	core::read(initFile, "Init");
 	core::read(user, initFile.User);
-	core::read(world, user.World);
+	core::read(world, initFile.World);
 	m_world = new world::World(world);
 
 	auto camera = new world::Camera(m_world);
+	camera->init(initFile);
 	core::addDrawer(camera);
 	core::addTask(camera);
 

@@ -1,3 +1,6 @@
 {
-	"User": "Users/User"
+	"SpriteId": "User",
+	"User": "Users/User",
+	"World": "World/Worlds/World1",
+	"ZoneId": "Zone1"
 }

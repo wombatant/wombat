@@ -18,9 +18,12 @@
 namespace wombat {
 namespace world {
 
+using core::TaskState;
+
 Person::Person(models::Sprite model) {
 	m_facing = (models::SpriteDirection) model.Facing;
 	m_motion = (models::SpriteMotion) model.Motion;
+	m_id = model.Id;
 
 	models::Person person;
 	core::read(person, model.Data);
@@ -32,8 +35,20 @@ Person::~Person() {
 	PersonClass::checkin(m_class);
 }
 
+TaskState Person::run(core::Event) {
+	return TaskState::Continue;
+}
+
 void Person::draw(core::Graphics &gfx, common::Point pt) {
 	m_class->draw(gfx, pt, m_facing, m_motion);
+}
+
+void Person::onZoneChange(std::function<void()> zc) {
+	m_onZoneChange = zc;
+}
+
+std::string Person::id() {
+	return m_id;
 }
 
 }

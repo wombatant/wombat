@@ -21,11 +21,6 @@ namespace world {
 
 extern bool _debugMode;
 
-Tile::Tile() {
-	m_occupant = 0;
-	m_tileClass = 0;
-}
-
 void Tile::load(models::Tile model) {
 	m_tileClass = TileClass::checkout(model.TileClass);
 	m_occupant = loadSprite(model.Occupant);
@@ -43,6 +38,10 @@ void Tile::draw(core::Graphics &gfx, common::Point pt) {
 		gfx.drawLine(pt.X, pt.Y, pt.X, pt.Y + TileClass::Height);
 		gfx.drawLine(pt.X, pt.Y, pt.X + TileClass::Width, pt.Y);
 	}
+}
+
+Sprite *Tile::getOccupant() {
+	return m_occupant;
 }
 
 }

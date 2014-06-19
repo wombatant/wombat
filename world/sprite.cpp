@@ -25,14 +25,14 @@ Sprite::Sprite(models::Sprite model) {
 	load(model);
 }
 
-TaskState Sprite::run(core::Event) {
-	return TaskState::Continue;
-}
-
 void Sprite::load(models::Sprite model) {
 }
 
 void Sprite::unload() {
+}
+
+std::string Sprite::id() {
+	return "";
 }
 
 Sprite *loadSprite(models::Sprite model) {

@@ -21,7 +21,7 @@
 namespace wombat {
 namespace world {
 
-class Sprite: public core::Task {
+class Sprite {
 	public:
 		/**
 		 * Constructor
@@ -34,11 +34,11 @@ class Sprite: public core::Task {
 		 */
 		Sprite(models::Sprite model);
 
-		core::TaskState run(core::Event);
-
 		void load(models::Sprite model);
 
 		void unload();
+
+		virtual std::string id();
 
 		virtual void draw(core::Graphics &gfx, common::Point pt) = 0;
 };

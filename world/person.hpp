@@ -23,12 +23,14 @@
 namespace wombat {
 namespace world {
 
-class Person: public Sprite {
+class Person: public Sprite, public core::Task {
 	private:
 		models::SpriteDirection m_facing = models::SpriteDirection::North;
 		models::SpriteMotion m_motion = models::SpriteMotion::Still;
 		PersonClass *m_class = nullptr;
 		std::vector<std::string> m_creatures;
+		std::function<void()> m_onZoneChange = []() {};
+		std::string m_id;
 
 	public:
 		/**
@@ -42,7 +44,17 @@ class Person: public Sprite {
 		 */
 		~Person();
 
+		core::TaskState run(core::Event);
+
 		void draw(core::Graphics &gfx, common::Point pt);
+
+		/**
+		 * Sets the function when the Person goes to a different Zone.
+		 * @param zc the function when the Person goes to a different Zone
+		 */
+		void onZoneChange(std::function<void()> zc);
+
+		std::string id();
 };
 
 }

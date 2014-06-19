@@ -940,6 +940,7 @@ class Sprite: public cyborgbear::Model {
 
 		virtual void fromBoostBinary(string dat);
 #endif
+		string Id;
 		string SpriteClass;
 		int Motion;
 		int Facing;
@@ -1033,8 +1034,6 @@ class User: public cyborgbear::Model {
 
 		virtual void fromBoostBinary(string dat);
 #endif
-		string World;
-		string ZoneInstance;
 		string Person;
 };
 
@@ -1096,6 +1095,9 @@ class InitFile: public cyborgbear::Model {
 		virtual void fromBoostBinary(string dat);
 #endif
 		string User;
+		string World;
+		string ZoneId;
+		string SpriteId;
 };
 
 }
@@ -1469,6 +1471,7 @@ void serialize(Archive &ar, models::Image &model, const unsigned int) {
 
 template<class Archive>
 void serialize(Archive &ar, models::Sprite &model, const unsigned int) {
+	ar & model.Id;
 	ar & model.SpriteClass;
 	ar & model.Motion;
 	ar & model.Facing;
@@ -1490,8 +1493,6 @@ void serialize(Archive &ar, models::AnimLayer &model, const unsigned int) {
 
 template<class Archive>
 void serialize(Archive &ar, models::User &model, const unsigned int) {
-	ar & model.World;
-	ar & model.ZoneInstance;
 	ar & model.Person;
 }
 
@@ -1505,6 +1506,9 @@ void serialize(Archive &ar, models::Settings &model, const unsigned int) {
 template<class Archive>
 void serialize(Archive &ar, models::InitFile &model, const unsigned int) {
 	ar & model.User;
+	ar & model.World;
+	ar & model.ZoneId;
+	ar & model.SpriteId;
 }
 
 template<class Archive>

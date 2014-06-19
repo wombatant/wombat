@@ -1,4 +1,5 @@
 {
+	"AccessorID": "Zone1",
 	"Tiles": [
 		[
 			[
@@ -18,6 +19,7 @@
 						"Import": "World/Tiles/Tile1"
 					},
 					"Occupant": {
+						"Id": "User",
 						"AnimLayers": [
 							[
 								{"Animation": "Animations/Animation1"}

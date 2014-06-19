@@ -18,6 +18,7 @@
 
 #include <common/common.hpp>
 #include <core/core.hpp>
+#include "person.hpp"
 #include "world.hpp"
 
 namespace wombat {
@@ -27,7 +28,8 @@ class Camera: public core::Drawer, public core::Task {
 	private:
 		common::Bounds m_bounds;
 		std::vector<Zone*> m_zones;
-		World *m_world;
+		World *m_world = nullptr;
+		Sprite *m_person = nullptr;
 
 	public:
 		/**
@@ -50,6 +52,8 @@ class Camera: public core::Drawer, public core::Task {
 		 * @return the bounds of this Camera
 		 */
 		common::Bounds bounds();
+
+		void init(models::InitFile user);
 
 	private:
 		void findZones();

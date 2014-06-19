@@ -37,9 +37,9 @@ class App: public core::Task {
 		 */
 		~App();
 
-		void init();
+		void init() override;
 
-		core::TaskState run(core::Event);
+		core::TaskState run(core::Event) override;
 
 	private:
 		/**

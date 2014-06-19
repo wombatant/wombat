@@ -1,5 +1,5 @@
 {
 	"World": "World/Worlds/World1",
-	"ZoneInstance": "Zone1",
+	"Zone": "Zone1",
 	"Person": "User"
 }

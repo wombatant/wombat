@@ -77,8 +77,6 @@ Zone::Zone(models::ZoneInstance model) {
 	m_address = model.Address;
 	m_tiles.setDimensions(header.TilesWide, header.TilesHigh, header.Layers);
 	m_path = header.Zone;
-	m_loaded = false;
-	m_dependents = 0;
 }
 
 Zone::~Zone() {
@@ -98,29 +96,6 @@ TaskState Zone::run(core::Event e) {
 
 bool Zone::loaded() {
 	return m_loaded;
-}
-
-void Zone::load() {
-	models::Zone zone;
-	core::read(zone, m_path);
-	m_tiles.allocate();
-
-	for (int l = 0; l < m_tiles.layers(); l++) {
-		for (int y = 0; y < m_tiles.tilesHigh(); y++) {
-			for (int x = 0; x < m_tiles.tilesWide(); x++) {
-				auto &tile = m_tiles.at(x, y, l);
-				auto model = zone.Tiles[l][y][x];
-				tile.load(model);
-			}
-		}
-	}
-
-	m_loaded = true;
-}
-
-void Zone::unload() {
-	m_tiles.free();
-	m_loaded = false;
 }
 
 common::Bounds Zone::bounds() {
@@ -163,6 +138,56 @@ void Zone::decDeps() {
 		m_dependents--;
 	}
 	m_mutex.unlock();
+}
+
+void Zone::add(Sprite *sprite) {
+	m_sprites[sprite->id()] = sprite;
+	auto p = dynamic_cast<Person*>(sprite);
+	if (p) {
+	}
+}
+
+void Zone::remove(Sprite *sprite) {
+	for (auto v : m_sprites) {
+		if (v.second == sprite) {
+			m_sprites.erase(v.first);
+		}
+	}
+}
+
+Sprite *Zone::getSprite(std::string id) {
+	return m_sprites[id];
+}
+
+void Zone::load() {
+	models::Zone zone;
+	core::read(zone, m_path);
+	m_tiles.allocate();
+
+	for (int l = 0; l < m_tiles.layers(); l++) {
+		for (int y = 0; y < m_tiles.tilesHigh(); y++) {
+			for (int x = 0; x < m_tiles.tilesWide(); x++) {
+				auto &tile = m_tiles.at(x, y, l);
+				auto model = zone.Tiles[l][y][x];
+				tile.load(model);
+
+				auto oc = tile.getOccupant();
+				if (oc && oc->id() != "") {
+					add(oc);
+				}
+			}
+		}
+	}
+
+	m_loaded = true;
+}
+
+void Zone::unload() {
+	for (auto s : m_sprites) {
+		m_sprites.erase(s.first);
+	}
+	m_tiles.free();
+	m_loaded = false;
 }
 
 }

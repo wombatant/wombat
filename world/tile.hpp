@@ -25,18 +25,15 @@ namespace world {
 
 class Tile {
 	private:
-		Sprite *m_occupant;
-		TileClass *m_tileClass;
+		Sprite *m_occupant = nullptr;
+		TileClass *m_tileClass = nullptr;
 
 	public:
-		/**
-		 * Constructor
-		 */
-		Tile();
-
 		void load(models::Tile model);
 
 		void draw(core::Graphics &gfx, common::Point pt);
+
+		Sprite *getOccupant();
 };
 
 }

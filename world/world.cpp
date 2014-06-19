@@ -47,7 +47,7 @@ Zone *World::getZone(std::string accessorId) {
 void World::zonesAt(std::vector<Zone*> &zones, common::Bounds bnds) {
 	zones.erase(zones.begin(), zones.end());
 	for (auto z : m_zones) {
-		if (z.second->bounds().intersects(bnds)) {
+		if (z.second && z.second->bounds().intersects(bnds)) {
 			zones.push_back(z.second);
 		}
 	}

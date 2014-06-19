@@ -285,6 +285,7 @@ Image::Image() {
 }
 
 Sprite::Sprite() {
+	this->Id = "";
 	this->SpriteClass = "";
 	this->Motion = 0;
 	this->Facing = 0;
@@ -301,8 +302,6 @@ AnimLayer::AnimLayer() {
 }
 
 User::User() {
-	this->World = "";
-	this->ZoneInstance = "";
 	this->Person = "";
 }
 
@@ -314,6 +313,9 @@ Settings::Settings() {
 
 InitFile::InitFile() {
 	this->User = "";
+	this->World = "";
+	this->ZoneId = "";
+	this->SpriteId = "";
 }
 
 ZoneInstance::ZoneInstance() {
@@ -745,6 +747,20 @@ cyborgbear::Error Sprite::loadJsonObj(cyborgbear::JsonVal in) {
 	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
 
 	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Id");
+		{
+			if (cyborgbear::isString(obj0)) {
+				this->Id = cyborgbear::toString(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
 		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "SpriteClass");
 		{
 			if (cyborgbear::isString(obj0)) {
@@ -894,34 +910,6 @@ cyborgbear::Error User::loadJsonObj(cyborgbear::JsonVal in) {
 	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
 
 	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "World");
-		{
-			if (cyborgbear::isString(obj0)) {
-				this->World = cyborgbear::toString(obj0);
-			} else {
-				if (cyborgbear::isNull(obj0)) {
-					retval |= cyborgbear::Error_MissingField;
-				} else {
-					retval |= cyborgbear::Error_TypeMismatch;
-				}
-			}
-		}
-	}
-	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "ZoneInstance");
-		{
-			if (cyborgbear::isString(obj0)) {
-				this->ZoneInstance = cyborgbear::toString(obj0);
-			} else {
-				if (cyborgbear::isNull(obj0)) {
-					retval |= cyborgbear::Error_MissingField;
-				} else {
-					retval |= cyborgbear::Error_TypeMismatch;
-				}
-			}
-		}
-	}
-	{
 		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Person");
 		{
 			if (cyborgbear::isString(obj0)) {
@@ -996,6 +984,48 @@ cyborgbear::Error InitFile::loadJsonObj(cyborgbear::JsonVal in) {
 		{
 			if (cyborgbear::isString(obj0)) {
 				this->User = cyborgbear::toString(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "World");
+		{
+			if (cyborgbear::isString(obj0)) {
+				this->World = cyborgbear::toString(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "ZoneId");
+		{
+			if (cyborgbear::isString(obj0)) {
+				this->ZoneId = cyborgbear::toString(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "SpriteId");
+		{
+			if (cyborgbear::isString(obj0)) {
+				this->SpriteId = cyborgbear::toString(obj0);
 			} else {
 				if (cyborgbear::isNull(obj0)) {
 					retval |= cyborgbear::Error_MissingField;
@@ -1811,6 +1841,11 @@ cyborgbear::JsonValOut Image::buildJsonObj() {
 cyborgbear::JsonValOut Sprite::buildJsonObj() {
 	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
 	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Id);
+		cyborgbear::objSet(obj, "Id", out0);
+		cyborgbear::decref(out0);
+	}
+	{
 		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->SpriteClass);
 		cyborgbear::objSet(obj, "SpriteClass", out0);
 		cyborgbear::decref(out0);
@@ -1873,16 +1908,6 @@ cyborgbear::JsonValOut AnimLayer::buildJsonObj() {
 cyborgbear::JsonValOut User::buildJsonObj() {
 	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
 	{
-		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->World);
-		cyborgbear::objSet(obj, "World", out0);
-		cyborgbear::decref(out0);
-	}
-	{
-		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->ZoneInstance);
-		cyborgbear::objSet(obj, "ZoneInstance", out0);
-		cyborgbear::decref(out0);
-	}
-	{
 		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Person);
 		cyborgbear::objSet(obj, "Person", out0);
 		cyborgbear::decref(out0);
@@ -1915,6 +1940,21 @@ cyborgbear::JsonValOut InitFile::buildJsonObj() {
 	{
 		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->User);
 		cyborgbear::objSet(obj, "User", out0);
+		cyborgbear::decref(out0);
+	}
+	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->World);
+		cyborgbear::objSet(obj, "World", out0);
+		cyborgbear::decref(out0);
+	}
+	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->ZoneId);
+		cyborgbear::objSet(obj, "ZoneId", out0);
+		cyborgbear::decref(out0);
+	}
+	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->SpriteId);
+		cyborgbear::objSet(obj, "SpriteId", out0);
 		cyborgbear::decref(out0);
 	}
 	return obj;
@@ -2251,6 +2291,7 @@ bool Image::operator==(const Image &o) const {
 }
 
 bool Sprite::operator==(const Sprite &o) const {
+	if (Id != o.Id) return false;
 	if (SpriteClass != o.SpriteClass) return false;
 	if (Motion != o.Motion) return false;
 	if (Facing != o.Facing) return false;
@@ -2275,8 +2316,6 @@ bool AnimLayer::operator==(const AnimLayer &o) const {
 }
 
 bool User::operator==(const User &o) const {
-	if (World != o.World) return false;
-	if (ZoneInstance != o.ZoneInstance) return false;
 	if (Person != o.Person) return false;
 
 	return true;
@@ -2292,6 +2331,9 @@ bool Settings::operator==(const Settings &o) const {
 
 bool InitFile::operator==(const InitFile &o) const {
 	if (User != o.User) return false;
+	if (World != o.World) return false;
+	if (ZoneId != o.ZoneId) return false;
+	if (SpriteId != o.SpriteId) return false;
 
 	return true;
 }
@@ -2431,6 +2473,7 @@ bool Image::operator!=(const Image &o) const {
 }
 
 bool Sprite::operator!=(const Sprite &o) const {
+	if (Id != o.Id) return true;
 	if (SpriteClass != o.SpriteClass) return true;
 	if (Motion != o.Motion) return true;
 	if (Facing != o.Facing) return true;
@@ -2455,8 +2498,6 @@ bool AnimLayer::operator!=(const AnimLayer &o) const {
 }
 
 bool User::operator!=(const User &o) const {
-	if (World != o.World) return true;
-	if (ZoneInstance != o.ZoneInstance) return true;
 	if (Person != o.Person) return true;
 
 	return false;
@@ -2472,6 +2513,9 @@ bool Settings::operator!=(const Settings &o) const {
 
 bool InitFile::operator!=(const InitFile &o) const {
 	if (User != o.User) return true;
+	if (World != o.World) return true;
+	if (ZoneId != o.ZoneId) return true;
+	if (SpriteId != o.SpriteId) return true;
 
 	return false;
 }

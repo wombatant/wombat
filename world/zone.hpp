@@ -16,12 +16,17 @@
 #ifndef WOMBAT_WORLD_ZONE_HPP
 #define WOMBAT_WORLD_ZONE_HPP
 
-#include <common/common.hpp>
 #include <core/core.hpp>
+#include "person.hpp"
 #include "tile.hpp"
 
 namespace wombat {
 namespace world {
+
+enum class ZoneEvent {
+	SpriteHandover = ((int) core::EventType::AppEvent) + 1,
+	SpriteHandoverAck
+};
 
 class Zone: public core::Task {
 	private:
@@ -89,8 +94,9 @@ class Zone: public core::Task {
 		common::Point m_address;
 		// used to count the number Cameras watching the Zone to
 		//  determine when to unload
-		int m_dependents;
-		bool m_loaded;
+		int m_dependents = 0;
+		bool m_loaded = false;
+		std::map<std::string, Sprite*> m_sprites;
 		core::Mutex m_mutex;
 
 	public:
@@ -135,6 +141,32 @@ class Zone: public core::Task {
 		 * Decrements the dependent counter.
 		 */
 		void decDeps();
+
+		/**
+		 * Adds the given Sprite to the sprite map.
+		 * @param sprite the sprite to add
+		 */
+		void add(Sprite *sprite);
+
+		/**
+		 * Removes the given Sprite from the sprite map.
+		 * @param sprite the sprite to remove
+		 */
+		void remove(Sprite *sprite);
+
+		/**
+		 * Gaets the Sprite with the given id.
+		 * @param id the id of the desired Sprite
+		 * @return the Sprite with the given id
+		 */
+		Sprite *getSprite(std::string id);
+
+		/**
+		 * Gaets the Sprite with the given id.
+		 * @param id the id of the desired Sprite
+		 * @return the Sprite with the given id
+		 */
+		class Person *getPerson(std::string id);
 
 	private:
 		void load();
