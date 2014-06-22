@@ -38,9 +38,10 @@ Point Point::operator+(common::Point p) const {
 }
 
 Point Point::operator-(common::Point p) const {
-	p.X -= X;
-	p.Y -= Y;
-	return p;
+	auto out = *this; 
+	out.X -= p.X;
+	out.Y -= p.Y;
+	return out;
 }
 
 Point Point::operator*(common::Point p) const {
@@ -50,9 +51,10 @@ Point Point::operator*(common::Point p) const {
 }
 
 Point Point::operator/(common::Point p) const {
-	p.X /= X;
-	p.Y /= Y;
-	return p;
+	auto out = *this; 
+	out.X /= p.X;
+	out.Y /= p.Y;
+	return out;
 }
 
 Point Point::operator+=(common::Point p) {
@@ -81,31 +83,31 @@ Point Point::operator/=(common::Point p) {
 
 
 Point Point::operator+(int i) const {
-	Point p;
-	p.X += i;
-	p.Y += i;
-	return p;
+	auto out = *this; 
+	out.X += i;
+	out.Y += i;
+	return out;
 }
 
 Point Point::operator-(int i) const {
-	Point p;
-	p.X -= i;
-	p.Y -= i;
-	return p;
+	auto out = *this; 
+	out.X -= i;
+	out.Y -= i;
+	return out;
 }
 
 Point Point::operator*(int i) const {
-	Point p;
-	p.X *= i;
-	p.Y *= i;
-	return p;
+	auto out = *this; 
+	out.X *= i;
+	out.Y *= i;
+	return out;
 }
 
 Point Point::operator/(int i) const {
-	Point p;
-	p.X /= i;
-	p.Y /= i;
-	return p;
+	auto out = *this; 
+	out.X /= i;
+	out.Y /= i;
+	return out;
 }
 
 Point Point::operator+=(int i) {
