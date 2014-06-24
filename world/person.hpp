@@ -28,9 +28,11 @@ class Person: public Sprite, public core::Task {
 		models::SpriteDirection m_facing = models::SpriteDirection::North;
 		models::SpriteMotion m_motion = models::SpriteMotion::Still;
 		PersonClass *m_class = nullptr;
+		class Zone *m_zone = nullptr;
 		std::vector<std::string> m_creatures;
 		std::function<void()> m_onZoneChange = []() {};
 		std::string m_id;
+		common::Point m_addr;
 
 	public:
 		/**
@@ -46,15 +48,37 @@ class Person: public Sprite, public core::Task {
 
 		core::TaskState run(core::Event) override;
 
-		void draw(core::Graphics &gfx, common::Point pt);
+		void draw(core::Graphics &gfx, common::Point pt) override;
+
+		std::string id() override;
+
+		void setZone(class Zone *zone) override;
+
+		void setAddress(common::Point pt) override;
+
+		/**
+		 * Gets the Zone of this Person.
+		 * @return the Zone of this Person
+		 */
+		Zone *getZone();
+
+		/**
+		 * Gets the address of this Person within its Zone.
+		 * @return the address of this Person within its Zone
+		 */
+		common::Point getAddress();
+
+		/**
+		 * Gets the location of point of this Person in the world.
+		 * @return the location of point of this Person in the world
+		 */
+		common::Point getWorldPoint();
 
 		/**
 		 * Sets the function when the Person goes to a different Zone.
 		 * @param zc the function when the Person goes to a different Zone
 		 */
 		void onZoneChange(std::function<void()> zc);
-
-		std::string id();
 };
 
 }

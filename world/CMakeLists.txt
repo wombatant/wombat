@@ -12,6 +12,7 @@ add_library(
 		tileclass.cpp
 		world.cpp
 		zone.cpp
+		_etc.cpp
 )
 
 #install(TARGETS WombatWorld DESTINATION lib)
@@ -26,6 +27,7 @@ install(
 		tileclass.hpp
 		world.hpp
 		zone.hpp
+		_etc.hpp
 	DESTINATION
 		include/wombat/world
 )

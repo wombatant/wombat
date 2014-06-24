@@ -22,10 +22,6 @@ namespace core {
 static SDL_SpinLock _tlsLock;
 static SDL_TLSID _tls;
 
-TlsData::TlsData() {
-	taskProcessor = nullptr;
-}
-
 TlsData *getTls() {
 	if (!_tls) {
 		SDL_AtomicLock(&_tlsLock);

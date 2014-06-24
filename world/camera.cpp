@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "_etc.hpp"
 #include "camera.hpp"
 
 namespace wombat {
 namespace world {
 
 using core::TaskState;
+using core::EventType;
 
 Camera::Camera(World *world) {
 	m_world = world;
@@ -28,14 +30,14 @@ Camera::Camera(World *world) {
 
 void Camera::init() {
 	updateSize();
-	core::subscribe(core::EventType::ScreenSizeChange);
+	core::subscribe(EventType::ScreenSizeChange);
 }
 
 TaskState Camera::run(core::Event e) {
 	TaskState retval = TaskState::Continue;
 
 	switch (e.type()) {
-	case core::EventType::ScreenSizeChange:
+	case EventType::ScreenSizeChange:
 		updateSize();
 		break;
 	default:
@@ -46,28 +48,36 @@ TaskState Camera::run(core::Event e) {
 }
 
 void Camera::draw(core::Graphics &g) {
-	// TODO: set location based on location of m_person
+	common::Point translation;
+	if (m_person) {
+		auto dispSize = common::Point(core::displayWidth(), core::displayHeight());
+		auto loc = (m_person->getWorldPoint() - (dispSize / 2));
+		loc += common::Point(TileWidth, TileHeight) / 2;
+		m_bounds.X = loc.X;
+		m_bounds.Y = loc.Y;
+		translation = loc * -1;
+	}
 
 	findZones();
 
 	const auto cbnds = bounds();
-	const auto cloc = common::Point(cbnds.X, cbnds.Y) * -1;
 	for (auto z : m_zones) {
-		auto bnds = z->bounds();
-		if (bnds.X > cbnds.X) {
-			bnds.X = cbnds.X;
+		auto bnds = cbnds;
+		auto zbnds = z->bounds();
+		if (bnds.X < zbnds.X) {
+			bnds.X = zbnds.X;
 		}
-		if (bnds.Y > cbnds.Y) {
-			bnds.Y = cbnds.Y;
+		if (bnds.Y < zbnds.Y) {
+			bnds.Y = zbnds.Y;
 		}
-		if (bnds.x2() > cbnds.x2()) {
-			bnds.Width = cbnds.x2() - bnds.X;
+		if (bnds.x2() > zbnds.x2()) {
+			bnds.Width = zbnds.x2() - bnds.X;
 		}
-		if (bnds.y2() > cbnds.y2()) {
-			bnds.Height = cbnds.y2() - bnds.Y;
+		if (bnds.y2() > zbnds.y2()) {
+			bnds.Height = zbnds.y2() - bnds.Y;
 		}
 
-		z->draw(g, bnds, cloc);
+		z->draw(g, bnds, translation);
 	}
 }
 

@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "_etc.hpp"
+#include "zone.hpp"
 #include "person.hpp"
 
 namespace wombat {
@@ -43,12 +45,32 @@ void Person::draw(core::Graphics &gfx, common::Point pt) {
 	m_class->draw(gfx, pt, m_facing, m_motion);
 }
 
-void Person::onZoneChange(std::function<void()> zc) {
-	m_onZoneChange = zc;
-}
-
 std::string Person::id() {
 	return m_id;
+}
+
+void Person::setZone(Zone *zone) {
+	m_zone = zone;
+}
+
+void Person::setAddress(common::Point pt) {
+	m_addr = pt;
+}
+
+Zone *Person::getZone() {
+	return m_zone;
+}
+
+common::Point Person::getAddress() {
+	return m_addr;
+}
+
+common::Point Person::getWorldPoint() {
+	return addrToPt(m_addr) + m_zone->bounds().pt1();
+}
+
+void Person::onZoneChange(std::function<void()> zc) {
+	m_onZoneChange = zc;
 }
 
 }

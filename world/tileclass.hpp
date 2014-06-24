@@ -23,10 +23,6 @@ namespace wombat {
 namespace world {
 
 class TileClass: public core::Flyweight<models::TileClass>::GenericValue {
-	public:
-		static const int Width;
-		static const int Height;
-
 	private:
 		static core::Flyweight<models::TileClass> c_tileClasses;
 

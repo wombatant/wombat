@@ -38,6 +38,18 @@ class Sprite {
 
 		void unload();
 
+		/**
+		 * Default setAddress does nothing, this is just here for classes based
+		 * on Sprite can acquire their address.
+		 */
+		virtual void setAddress(common::Point pt);
+
+		/**
+		 * Default setZone does nothing, this is just here for classes based
+		 * on Sprite can acquire a reference to their Zone.
+		 */
+		virtual void setZone(class Zone *zone);
+
 		virtual std::string id();
 
 		virtual void draw(core::Graphics &gfx, common::Point pt) = 0;

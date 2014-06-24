@@ -30,7 +30,9 @@ Bounds::Bounds(models::Bounds bnds) {
 
 bool Bounds::intersects(Bounds b) const {
 	return contains(b.X, b.Y) || contains(b.X, b.y2()) ||
-		contains(b.x2(), b.Y) || contains(b.x2(), b.y2());
+		contains(b.x2(), b.Y) || contains(b.x2(), b.y2()) ||
+		b.contains(X, Y) || b.contains(X, y2()) ||
+		b.contains(x2(), Y) || b.contains(x2(), y2());
 }
 
 bool Bounds::contains(int x, int y) const {
@@ -47,6 +49,14 @@ int Bounds::x2() const {
 
 int Bounds::y2() const {
 	return Y + Height;
+}
+
+Point Bounds::pt1() {
+	return Point(X, Y);
+}
+
+Point Bounds::pt2() {
+	return Point(x2(), y2());
 }
 
 }

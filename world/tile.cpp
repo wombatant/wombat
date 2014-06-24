@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "_etc.hpp"
 #include "person.hpp"
 #include "tile.hpp"
 
 namespace wombat {
 namespace world {
-
-extern bool _debugMode;
 
 void Tile::load(models::Tile model) {
 	m_tileClass = TileClass::checkout(model.TileClass);
@@ -34,9 +33,9 @@ void Tile::draw(core::Graphics &gfx, common::Point pt) {
 	if (m_occupant) {
 		m_occupant->draw(gfx, pt);
 	}
-	if (_debugMode) {
-		gfx.drawLine(pt.X, pt.Y, pt.X, pt.Y + TileClass::Height);
-		gfx.drawLine(pt.X, pt.Y, pt.X + TileClass::Width, pt.Y);
+	if (_debug) {
+		gfx.drawLine(pt.X, pt.Y, pt.X, pt.Y + TileHeight);
+		gfx.drawLine(pt.X, pt.Y, pt.X + TileWidth, pt.Y);
 	}
 }
 

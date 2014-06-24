@@ -13,4 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "_etc.hpp"
+#include "tileclass.hpp"
+#include "zone.hpp"
+
+namespace wombat {
+namespace world {
+
 bool _debug = true;
+
+int TileWidth = 32;
+int TileHeight = 32;
+
+std::map<core::TaskProcessor*, Zone*> m_zoneMap;
+
+ZoneProcessor::ZoneProcessor(Zone *zone) {
+	m_zone = zone;
+}
+
+Zone *ZoneProcessor::zone() {
+	return m_zone;
+}
+
+common::Point addrToPt(common::Point addr) {
+	addr.X *= TileWidth;
+	addr.Y *= TileHeight;
+	return addr;
+}
+
+common::Point ptToAddr(common::Point pt) {
+	pt.X /= TileWidth;
+	pt.Y /= TileHeight;
+	return pt;
+}
+
+}
+}

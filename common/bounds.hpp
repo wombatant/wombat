@@ -17,6 +17,7 @@
 #define WOMBAT_COMMON_BOUNDS_HPP
 
 #include <models/models.hpp>
+#include "point.hpp"
 
 namespace wombat {
 namespace common {
@@ -43,6 +44,10 @@ class Bounds: public models::Bounds {
 		int x2() const;
 
 		int y2() const;
+
+		Point pt1();
+
+		Point pt2();
 };
 
 }

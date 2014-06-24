@@ -29,7 +29,7 @@ class Camera: public core::Drawer, public core::Task {
 		common::Bounds m_bounds;
 		std::vector<Zone*> m_zones;
 		World *m_world = nullptr;
-		Sprite *m_person = nullptr;
+		Person *m_person = nullptr;
 
 	public:
 		/**
@@ -45,7 +45,7 @@ class Camera: public core::Drawer, public core::Task {
 		 * Draws what the Camera is currently hovering over.
 		 * @param g the Graphics instance to draw the Camera's sight with
 		 */
-		void draw(core::Graphics &g);
+		void draw(core::Graphics &g) override;
 
 		/**
 		 * Gets the bounds of this Camera.
@@ -53,7 +53,11 @@ class Camera: public core::Drawer, public core::Task {
 		 */
 		common::Bounds bounds();
 
-		void init(models::InitFile user);
+		/**
+		 * Takes an InitFile object to determine where to place the Camera on the map.
+		 * @param init the InitFile used to load the application
+		 */
+		void init(models::InitFile init);
 
 	private:
 		void findZones();

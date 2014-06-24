@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "_etc.hpp"
 #include "tileclass.hpp"
 
 namespace wombat {
 namespace world {
 
 // Static
-
-const int TileClass::Width = 32;
-const int TileClass::Height = 32;
 
 core::Flyweight<models::TileClass> TileClass::c_tileClasses(
 	[](models::TileClass model) {
@@ -54,7 +52,7 @@ void TileClass::drawLower(core::Graphics &g, common::Point p) {
 
 void TileClass::draw(core::Graphics &g, int x, int y, AnimLayer &anim) {
 	if (anim.animation) {
-		g.pushClipRect(x, y, Width, Height);
+		g.pushClipRect(x, y, TileWidth, TileHeight);
 		{
 			auto x = anim.point.X;
 			auto y = anim.point.Y;

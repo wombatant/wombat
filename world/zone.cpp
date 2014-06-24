@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "_etc.hpp"
 #include "zone.hpp"
 
 namespace wombat {
 namespace world {
 
+using core::EventType;
 using core::TaskState;
-
 
 Zone::TileGrid::~TileGrid() {
 	free();
@@ -84,7 +85,7 @@ Zone::~Zone() {
 
 TaskState Zone::run(core::Event e) {
 	switch (e.type()) {
-	case core::EventType::Timeout:
+	case EventType::Timeout:
 		if (m_dependents == 0) {
 			unload();
 		}
@@ -100,19 +101,24 @@ bool Zone::loaded() {
 
 common::Bounds Zone::bounds() {
 	common::Bounds bnds;
-	bnds.X = TileClass::Width * m_address.X;
-	bnds.Y = TileClass::Height * m_address.Y;
-	bnds.Width = TileClass::Width * m_tiles.tilesWide();
-	bnds.Height = TileClass::Height * m_tiles.tilesHigh();
+	bnds.X = TileWidth * m_address.X;
+	bnds.Y = TileHeight * m_address.Y;
+	bnds.Width = TileWidth * m_tiles.tilesWide();
+	bnds.Height = TileHeight * m_tiles.tilesHigh();
 	return bnds;
 }
 
 void Zone::draw(core::Graphics &g, common::Bounds bnds, common::Point translation) {
-	auto loc = common::Point(bounds().X, bounds().Y);
+	auto loc = bounds().pt1();
+	loc.X -= TileWidth * m_address.X;
+	loc.Y -= TileHeight * m_address.Y;
+	translation -= addrToPt(m_address);
+	translation -= bnds.pt1();
+
 	for (int l = 0; l < m_tiles.layers(); l++) {
-		for (int y = bnds.Y; y < bnds.y2(); y += TileClass::Height) {
-			for (int x = bnds.X; x < bnds.x2(); x += TileClass::Width) {
-				auto &tile = m_tiles.at(x / TileClass::Width, y / TileClass::Height, l);
+		for (int y = bnds.Y; y < bnds.y2(); y += TileHeight) {
+			for (int x = bnds.X; x < bnds.x2(); x += TileWidth) {
+				auto &tile = m_tiles.at(x / TileWidth, y / TileHeight, l);
 				tile.draw(g, common::Point(x, y) + loc + translation);
 			}
 		}
@@ -120,7 +126,7 @@ void Zone::draw(core::Graphics &g, common::Bounds bnds, common::Point translatio
 }
 
 common::Point Zone::loc() {
-	return common::Point(TileClass::Width * m_address.X, TileClass::Height * m_address.Y);
+	return common::Point(TileWidth * m_address.X, TileHeight * m_address.Y);
 }
 
 void Zone::incDeps() {
@@ -141,10 +147,8 @@ void Zone::decDeps() {
 }
 
 void Zone::add(Sprite *sprite) {
+	sprite->setZone(this);
 	m_sprites[sprite->id()] = sprite;
-	auto p = dynamic_cast<Person*>(sprite);
-	if (p) {
-	}
 }
 
 void Zone::remove(Sprite *sprite) {
@@ -173,6 +177,7 @@ void Zone::load() {
 
 				auto oc = tile.getOccupant();
 				if (oc && oc->id() != "") {
+					oc->setAddress(common::Point(x, y));
 					add(oc);
 				}
 			}

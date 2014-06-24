@@ -25,12 +25,7 @@ struct TlsData {
 	/**
 	 * The current TaskProcessor of the calling thread.
 	 */
-	TaskProcessor *taskProcessor;
-
-	/**
-	 * Constructor
-	 */
-	TlsData();
+	TaskProcessor *taskProcessor = nullptr;
 };
 
 /**

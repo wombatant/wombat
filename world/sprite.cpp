@@ -15,6 +15,7 @@
  */
 #include "person.hpp"
 #include "sprite.hpp"
+#include "zone.hpp"
 
 namespace wombat {
 namespace world {
@@ -29,6 +30,12 @@ void Sprite::load(models::Sprite model) {
 }
 
 void Sprite::unload() {
+}
+
+void Sprite::setAddress(common::Point pt) {
+}
+
+void Sprite::setZone(Zone *zone) {
 }
 
 std::string Sprite::id() {

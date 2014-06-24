@@ -17,6 +17,7 @@
 
 namespace wombat {
 
+using core::EventType;
 using core::TaskState;
 
 App::App() {
@@ -24,10 +25,8 @@ App::App() {
 	setAutoDelete(true);
 	models::InitFile initFile;
 	models::World world;
-	models::User user;
 
 	core::read(initFile, "Init");
-	core::read(user, initFile.User);
 	core::read(world, initFile.World);
 	m_world = new world::World(world);
 
@@ -44,27 +43,27 @@ App::~App() {
 }
 
 void App::init() {
-	core::subscribe(core::EventType::KeyDown);
-	core::subscribe(core::EventType::KeyUp);
-	core::subscribe(core::EventType::ScreenSizeChange);
-	core::subscribe(core::EventType::Quit);
+	core::subscribe(EventType::KeyDown);
+	core::subscribe(EventType::KeyUp);
+	core::subscribe(EventType::ScreenSizeChange);
+	core::subscribe(EventType::Quit);
 }
 
 TaskState App::run(core::Event e) {
 	TaskState retval = TaskState::Continue;
 
 	switch (e.type()) {
-	case core::EventType::ScreenSizeChange:
+	case EventType::ScreenSizeChange:
 		core::draw();
 		break;
-	case core::EventType::Timeout:
+	case EventType::Timeout:
 		core::draw();
 		retval = 16;
 		break;
-	case core::EventType::Quit:
+	case EventType::Quit:
 		quit();
 		break;
-	case core::EventType::KeyDown:
+	case EventType::KeyDown:
 		switch (e.key()) {
 		case core::Key::Escape:
 		case core::Key::Q:
