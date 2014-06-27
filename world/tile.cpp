@@ -20,12 +20,14 @@
 namespace wombat {
 namespace world {
 
+using common::Point;
+
 void Tile::load(models::Tile model) {
 	m_tileClass = TileClass::checkout(model.TileClass);
 	m_occupant = loadSprite(model.Occupant);
 }
 
-void Tile::draw(core::Graphics &gfx, common::Point pt) {
+void Tile::draw(core::Graphics &gfx, Point pt) {
 	if (m_tileClass) {
 		m_tileClass->drawLower(gfx, pt);
 		m_tileClass->drawUpper(gfx, pt);

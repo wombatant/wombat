@@ -19,6 +19,8 @@
 namespace wombat {
 namespace world {
 
+using common::Bounds;
+using common::Point;
 using core::TaskState;
 using core::EventType;
 
@@ -48,11 +50,11 @@ TaskState Camera::run(core::Event e) {
 }
 
 void Camera::draw(core::Graphics &g) {
-	common::Point translation;
+	Point translation;
 	if (m_person) {
-		auto dispSize = common::Point(core::displayWidth(), core::displayHeight());
+		auto dispSize = Point(core::displayWidth(), core::displayHeight());
 		auto loc = (m_person->getWorldPoint() - (dispSize / 2));
-		loc += common::Point(TileWidth, TileHeight) / 2;
+		loc += Point(TileWidth, TileHeight) / 2;
 		m_bounds.X = loc.X;
 		m_bounds.Y = loc.Y;
 		translation = loc * -1;
@@ -60,7 +62,9 @@ void Camera::draw(core::Graphics &g) {
 
 	findZones();
 
-	const auto cbnds = bounds();
+	auto cbnds = bounds();
+	cbnds.Width += TileWidth;
+	cbnds.Height += TileHeight;
 	for (auto z : m_zones) {
 		auto bnds = cbnds;
 		auto zbnds = z->bounds();
@@ -81,7 +85,7 @@ void Camera::draw(core::Graphics &g) {
 	}
 }
 
-common::Bounds Camera::bounds() {
+Bounds Camera::bounds() {
 	return m_bounds;
 }
 

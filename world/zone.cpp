@@ -19,6 +19,8 @@
 namespace wombat {
 namespace world {
 
+using common::Point;
+using common::Bounds;
 using core::EventType;
 using core::TaskState;
 
@@ -99,8 +101,8 @@ bool Zone::loaded() {
 	return m_loaded;
 }
 
-common::Bounds Zone::bounds() {
-	common::Bounds bnds;
+Bounds Zone::bounds() {
+	Bounds bnds;
 	bnds.X = TileWidth * m_address.X;
 	bnds.Y = TileHeight * m_address.Y;
 	bnds.Width = TileWidth * m_tiles.tilesWide();
@@ -108,22 +110,21 @@ common::Bounds Zone::bounds() {
 	return bnds;
 }
 
-void Zone::draw(core::Graphics &g, common::Bounds bnds, common::Point translation) {
-	auto loc = addrToPt(bounds().pt1());
-	loc += translation;
+void Zone::draw(core::Graphics &g, Bounds bnds, Point translation) {
+	auto loc = addrToPt(bounds().pt1()) + translation;
 
 	for (auto l = 0; l < m_tiles.layers(); l++) {
 		for (auto y = bnds.Y; y < bnds.y2(); y += TileHeight) {
 			for (auto x = bnds.X; x < bnds.x2(); x += TileWidth) {
 				auto &tile = m_tiles.at(x / TileWidth, y / TileHeight, l);
-				tile.draw(g, loc + common::Point(x, y));
+				tile.draw(g, addrToPt(ptToAddr(Point(x, y))) + loc);
 			}
 		}
 	}
 }
 
-common::Point Zone::loc() {
-	return common::Point(TileWidth * m_address.X, TileHeight * m_address.Y);
+Point Zone::loc() {
+	return Point(TileWidth * m_address.X, TileHeight * m_address.Y);
 }
 
 void Zone::incDeps() {
@@ -174,7 +175,7 @@ void Zone::load() {
 
 				auto oc = tile.getOccupant();
 				if (oc && oc->id() != "") {
-					oc->setAddress(common::Point(x, y));
+					oc->setAddress(Point(x, y));
 					add(oc);
 				}
 			}
