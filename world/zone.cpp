@@ -109,17 +109,14 @@ common::Bounds Zone::bounds() {
 }
 
 void Zone::draw(core::Graphics &g, common::Bounds bnds, common::Point translation) {
-	auto loc = bounds().pt1();
-	loc.X -= TileWidth * m_address.X;
-	loc.Y -= TileHeight * m_address.Y;
-	translation -= addrToPt(m_address);
-	translation -= bnds.pt1();
+	auto loc = addrToPt(bounds().pt1());
+	loc += translation;
 
-	for (int l = 0; l < m_tiles.layers(); l++) {
-		for (int y = bnds.Y; y < bnds.y2(); y += TileHeight) {
-			for (int x = bnds.X; x < bnds.x2(); x += TileWidth) {
+	for (auto l = 0; l < m_tiles.layers(); l++) {
+		for (auto y = bnds.Y; y < bnds.y2(); y += TileHeight) {
+			for (auto x = bnds.X; x < bnds.x2(); x += TileWidth) {
 				auto &tile = m_tiles.at(x / TileWidth, y / TileHeight, l);
-				tile.draw(g, common::Point(x, y) + loc + translation);
+				tile.draw(g, loc + common::Point(x, y));
 			}
 		}
 	}
