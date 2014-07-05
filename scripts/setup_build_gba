@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-project=`pwd`
+project=`pwd`/src
 buildDir="build/gba"
 
 mkdir -p $buildDir

@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-project=`pwd`
+project=`pwd`/src
 buildDir="build/sdl"
 
 mkdir -p $buildDir

@@ -1,5 +1,5 @@
 make:
-	make -j -C models
+	make -j -C src/models
 	make -j -C build
 preinstall:
 	make -j -C build ARGS="preinstall"
