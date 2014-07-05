@@ -26,12 +26,14 @@ namespace world {
 
 class Person: public Sprite, public core::Task {
 	private:
+		static const std::function<void()> c_defaultTimeoutProc;
 		models::SpriteDirection m_facing = models::SpriteDirection::North;
 		models::SpriteMotion m_motion = models::SpriteMotion::Still;
 		PersonClass *m_class = nullptr;
 		class Zone *m_zone = nullptr;
 		std::vector<std::string> m_creatures;
 		std::function<void()> m_onZoneChange = []() {};
+		std::function<void()> m_timeoutProc = c_defaultTimeoutProc;
 		std::string m_id;
 		common::Point m_addr;
 

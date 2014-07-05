@@ -23,6 +23,8 @@ namespace world {
 using core::EventType;
 using core::TaskState;
 
+const std::function<void()> Person::c_defaultTimeoutProc = []() {};
+
 Person::Person(models::Sprite model) {
 	m_facing = (models::SpriteDirection) model.Facing;
 	m_motion = (models::SpriteMotion) model.Motion;
@@ -52,6 +54,9 @@ TaskState Person::run(core::Event e) {
 		break;
 	case EventType::FinishTask:
 		retval = TaskState::Done;
+		break;
+	case EventType::Timeout:
+		m_timeoutProc();
 		break;
 	}
 
