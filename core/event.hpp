@@ -23,7 +23,7 @@
 namespace wombat {
 namespace core {
 
-enum class EventType {
+enum EventType {
 	UnknownEvent = 1024,
 	Timeout,
 	ChannelMessage,

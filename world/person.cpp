@@ -39,16 +39,23 @@ Person::~Person() {
 }
 
 TaskState Person::run(core::Event e) {
-	const auto t = (int) e.type();
-	if (t == (int) PersonEvent::MoveLeft) {
-	} else if (t == (int) PersonEvent::MoveUp) {
-	} else if (t == (int) PersonEvent::MoveDown) {
-	} else if (t == (int) PersonEvent::MoveRight) {
-	} else if (t == (int) EventType::FinishTask) {
-		return TaskState::Done;
+	TaskState retval = TaskState::Continue;
+
+	switch ((int) e.type()) {
+	case WorldEvent::MoveLeft:
+		break;
+	case WorldEvent::MoveUp:
+		break;
+	case WorldEvent::MoveDown:
+		break;
+	case WorldEvent::MoveRight:
+		break;
+	case EventType::FinishTask:
+		retval = TaskState::Done;
+		break;
 	}
 
-	return TaskState::Continue;
+	return retval;
 }
 
 void Person::draw(core::Graphics &gfx, common::Point pt) {

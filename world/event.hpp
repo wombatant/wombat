@@ -19,14 +19,10 @@
 namespace wombat {
 namespace world {
 
-enum class ZoneEvent {
-	SpriteHandover = ((int) core::EventType::AppEvent) + 1,
+enum WorldEvent {
+	SpriteHandover = core::EventType::AppEvent + 1,
 	SpriteHandoverAck,
-	ZoneEventEnd
-};
-
-enum class PersonEvent {
-	MoveLeft = ((int) ZoneEvent::ZoneEventEnd) + 1,
+	MoveLeft,
 	MoveUp,
 	MoveDown,
 	MoveRight
