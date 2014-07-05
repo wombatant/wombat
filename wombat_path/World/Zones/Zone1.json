@@ -14,11 +14,7 @@
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
-				{
-					"TileClass": {
-						"Import": "World/Tiles/Tile1"
-					}
-				},
+				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},

@@ -17,16 +17,12 @@
 #define WOMBAT_WORLD_ZONE_HPP
 
 #include <core/core.hpp>
+#include "event.hpp"
 #include "person.hpp"
 #include "tile.hpp"
 
 namespace wombat {
 namespace world {
-
-enum class ZoneEvent {
-	SpriteHandover = ((int) core::EventType::AppEvent) + 1,
-	SpriteHandoverAck
-};
 
 class Zone: public core::Task {
 	private:
@@ -98,6 +94,7 @@ class Zone: public core::Task {
 		bool m_loaded = false;
 		std::map<std::string, Sprite*> m_sprites;
 		core::Mutex m_mutex;
+		core::TaskProcessor *m_taskProcessor = new core::TaskProcessor();
 
 	public:
 		/**

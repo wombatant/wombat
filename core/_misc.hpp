@@ -28,6 +28,8 @@ namespace core {
  */
 uint64 _schedTime();
 
+extern BaseEventQueue &_mainEventQueue;
+
 }
 }
 

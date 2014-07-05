@@ -71,16 +71,17 @@ class Task {
 
 	public:
 		/**
-		 * Constructor
-		 */
-		Task();
-
-		/**
 		 * Destructor
 		 */
 		virtual ~Task();
 
-		virtual void init() {};
+		/**
+		 * Posts an Event for this Task to receive.
+		 * @param event Event for this Task to receive
+		 */
+		void post(Event event);
+
+		virtual void init();
 
 		virtual TaskState run(Event) = 0;
 
@@ -96,12 +97,6 @@ class Task {
 		 * @return value indicating whether or not the Task should be auto-deleted when it completes
 		 */
 		bool autoDelete();
-
-		/**
-		 * Posts an Event for this Task to receive.
-		 * @param event Event for this Task to receive
-		 */
-		void post(Event event);
 
 		/**
 		 * Used internally by core to set the TaskProcessor that manages this Task.
@@ -158,7 +153,7 @@ class TaskProcessor: public Task {
 		//  this will be incremented on every call of run
 		std::vector<ScheduleItem> m_schedule;
 		SubscriptionManager m_submgr;
-		bool m_running;
+		bool m_running = false;
 		bool m_semInternal;
 		Mutex m_mutex;
 		BaseEventQueue *m_events;

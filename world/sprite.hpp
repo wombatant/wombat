@@ -24,21 +24,6 @@ namespace world {
 class Sprite {
 	public:
 		/**
-		 * Constructor
-		 */
-		Sprite() = default;
-
-		/**
-		 * Constructor
-		 * @param model model to build Sprite off of
-		 */
-		Sprite(models::Sprite model);
-
-		void load(models::Sprite model);
-
-		void unload();
-
-		/**
 		 * Default setAddress does nothing, this is just here for classes based
 		 * on Sprite can acquire their address.
 		 */

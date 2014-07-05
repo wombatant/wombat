@@ -21,8 +21,10 @@ namespace world {
 
 using common::Bounds;
 using common::Point;
-using core::TaskState;
+using core::Event;
 using core::EventType;
+using core::Key;
+using core::TaskState;
 
 Camera::Camera(World *world) {
 	m_world = world;
@@ -33,14 +35,22 @@ Camera::Camera(World *world) {
 void Camera::init() {
 	updateSize();
 	core::subscribe(EventType::ScreenSizeChange);
+	core::subscribe(EventType::KeyDown);
+	core::subscribe(EventType::KeyUp);
 }
 
-TaskState Camera::run(core::Event e) {
+TaskState Camera::run(Event e) {
 	TaskState retval = TaskState::Continue;
 
 	switch (e.type()) {
 	case EventType::ScreenSizeChange:
 		updateSize();
+		break;
+	case EventType::KeyDown:
+		keyDown(e);
+		break;
+	case EventType::KeyUp:
+		keyUp(e);
 		break;
 	default:
 		break;
@@ -118,6 +128,30 @@ void Camera::findZones() {
 void Camera::updateSize() {
 	m_bounds.Width = core::displayWidth();
 	m_bounds.Height = core::displayHeight();
+}
+
+void Camera::keyDown(Event e) {
+	if (m_person) {
+		switch (e.key()) {
+		case Key::H:
+			m_person->post(Event((EventType) PersonEvent::MoveLeft));
+			break;
+		case Key::J:
+			m_person->post(Event((EventType) PersonEvent::MoveDown));
+			break;
+		case Key::K:
+			m_person->post(Event((EventType) PersonEvent::MoveUp));
+			break;
+		case Key::L:
+			m_person->post(Event((EventType) PersonEvent::MoveRight));
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void Camera::keyUp(Event e) {
 }
 
 }

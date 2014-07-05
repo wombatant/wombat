@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "_corecapabilities.hpp"
 #include "_misc.hpp"
 #include "_tls.hpp"
 #include "_threads.hpp"
@@ -49,11 +48,6 @@ TaskState::TaskState(TaskState::State state) {
 
 // Task
 
-Task::Task() {
-	m_autoDelete = false;
-	m_taskProcessor = nullptr;
-}
-
 Task::~Task() {
 }
 
@@ -61,14 +55,19 @@ void Task::setAutoDelete(bool autoDelete) {
 	m_autoDelete = true;
 }
 
-bool Task::autoDelete() {
-	return m_autoDelete;
-}
-
 void Task::post(Event event) {
 	if (m_taskProcessor != nullptr) {
+		event.setTask(this);
+		event.setTaskPost();
 		m_taskProcessor->post(event);
 	}
+}
+
+void Task::init() {
+}
+
+bool Task::autoDelete() {
+	return m_autoDelete;
 }
 
 void Task::_setTaskProcessor(TaskProcessor *tp) {
@@ -92,13 +91,16 @@ TaskState FunctionTask::run(Event e) {
 // TaskProcessor
 
 TaskProcessor::TaskProcessor(BaseEventQueue *sem) {
-	m_running = false;
 	m_currentTask = nullptr;
 	if (sem != nullptr) {
 		m_events = sem;
 		m_semInternal = false;
 	} else {
-		m_events = new EventQueue();
+		if (SupportsThreads) {
+			m_events = new EventQueue();
+		} else {
+			m_events = &_mainEventQueue;
+		}
 		m_semInternal = true;
 	}
 }
@@ -110,7 +112,7 @@ TaskProcessor::~TaskProcessor() {
 }
 
 TaskState TaskProcessor::run(Event event) {
-	// preserve previous task processor and restore, this allows for
+	// preserve previous TaskProcessor and restore, this allows for
 	//  TaskProcessor nesting
 	const auto prevTp = activeTaskProcessor();
 
@@ -120,10 +122,9 @@ TaskState TaskProcessor::run(Event event) {
 		m_submgr.run(event);
 	}
 
-	switch (event.type()) {
-	case EventType::Timeout:
-		// Timeout means something wants to run
-		{
+	if (!event.getTaskPost()) {
+		switch (event.type()) {
+		case EventType::Timeout: // Timeout means something wants to run
 			// put a limit on the number of Tasks processed in a single iteration
 			for (int i = 0; i < 100; i++) {
 				auto nt = popActiveTask();
@@ -133,26 +134,29 @@ TaskState TaskProcessor::run(Event event) {
 					break;
 				}
 			}
+			break;
+		case EventType::ChannelMessage:
+			runTask(event.task(), EventType::ChannelMessage);
+			break;
+		case EventType::InitTask:
+			if (event.task()) {
+				m_currentTask = event.task();
+				event.task()->init();
+				processTaskState(event.task(), TaskState::Running);
+				m_currentTask = nullptr;
+			}
+			break;
+		case EventType::GenericPost:
+			// GenericPost is already designated for use only as a
+			//  sleep refresh in this switch or exit the thread loop
+			break;
+		default:
+			break;
 		}
-		break;
-	case EventType::ChannelMessage:
-		runTask(event.task(), EventType::ChannelMessage);
-		break;
-	case EventType::InitTask:
-		m_currentTask = event.task();
-		event.task()->init();
-		processTaskState(event.task(), TaskState::Running);
-		m_currentTask = nullptr;
-		break;
-	case EventType::GenericPost:
-		// GenericPost is already designated for use only as a
-		//  sleep refresh in this switch or exit the thread loop
-		break;
-	default:
-		if (event.type() >= EventType::AppEvent) {
+	} else {
+		if (event.task()) {
 			runTask(event.task(), event.type());
 		}
-		break;
 	}
 
 	setActiveTaskProcessor(prevTp);
@@ -181,9 +185,10 @@ void TaskProcessor::addTask(Task *task, TaskState state) {
 }
 
 void TaskProcessor::start() {
+	m_mutex.lock();
 	if (!m_running) {
 		m_running = true;
-#ifdef SUPPORTS_THREADS
+		if (SupportsThreads) {
 		startThread([this]() {
 			TaskState taskState;
 			while (m_running) {
@@ -197,10 +202,11 @@ void TaskProcessor::start() {
 			}
 			m_done.write(true);
 		});
-#else
-		core::addTask(this);
-#endif
+		} else {
+			core::addTask(this);
+		}
 	}
+	m_mutex.unlock();
 }
 
 void TaskProcessor::stop() {
@@ -298,10 +304,11 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 }
 
 void TaskProcessor::runTask(Task *task, Event event) {
+	auto prevTask = m_currentTask;
 	m_currentTask = task;
 	auto state = task->run(event);
 	processTaskState(task, state);
-	m_currentTask = nullptr;
+	m_currentTask = prevTask;
 }
 
 void TaskProcessor::deschedule(Task *task) {

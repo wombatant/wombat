@@ -13,14 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_CORE__CORECAPABILITIES_HPP
-#define WOMBAT_CORE__CORECAPABILITIES_HPP
+#ifndef WOMBAT_WORLD_EVENT_HPP
+#define WOMBAT_WORLD_EVENT_HPP
 
-// These defines are only for use inside core, other packages
-//  should use the variables defined in corecapabilities.hpp.
-#ifdef USE_SDL
-	#define SUPPORTS_THREADS
-#elif USE_GBA
-#endif
+namespace wombat {
+namespace world {
+
+enum class ZoneEvent {
+	SpriteHandover = ((int) core::EventType::AppEvent) + 1,
+	SpriteHandoverAck,
+	ZoneEventEnd
+};
+
+enum class PersonEvent {
+	MoveLeft = ((int) ZoneEvent::ZoneEventEnd) + 1,
+	MoveUp,
+	MoveDown,
+	MoveRight
+};
+
+}
+}
 
 #endif

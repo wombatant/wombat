@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifndef WOMBAT_WORLD_TILE_HPP
+#define WOMBAT_WORLD_TILE_HPP
+
 #include <common/common.hpp>
 #include "sprite.hpp"
 #include "tileclass.hpp"
-
-#ifndef WOMBAT_WORLD_TILEINSTANCE_HPP
-#define WOMBAT_WORLD_TILEINSTANCE_HPP
 
 namespace wombat {
 namespace world {

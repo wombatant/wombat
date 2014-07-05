@@ -62,6 +62,10 @@ class Camera: public core::Drawer, public core::Task {
 	private:
 		void findZones();
 		void updateSize();
+
+		void keyDown(core::Event e);
+
+		void keyUp(core::Event e);
 };
 
 }

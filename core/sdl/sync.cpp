@@ -90,9 +90,9 @@ Event EventQueue::wait(uint64 timeout) {
 	return post;
 }
 
-void EventQueue::post(Event wakeup) {
+void EventQueue::post(Event event) {
 	m_mutex.lock();
-	m_posts.push(wakeup);
+	m_posts.push(event);
 	SDL_SemPost((SDL_sem*) m_semaphore);
 	m_mutex.unlock();
 }

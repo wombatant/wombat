@@ -22,16 +22,6 @@ namespace world {
 
 using core::TaskState;
 
-Sprite::Sprite(models::Sprite model) {
-	load(model);
-}
-
-void Sprite::load(models::Sprite model) {
-}
-
-void Sprite::unload() {
-}
-
 void Sprite::setAddress(common::Point pt) {
 }
 

@@ -60,6 +60,18 @@ Event::~Event() {
 	}
 }
 
+void Event::setTask(class Task *task) {
+	m_task = task;
+}
+
+void Event::setTaskPost(bool taskPost) {
+	m_taskPost = taskPost;
+}
+
+bool Event::getTaskPost() {
+	return m_taskPost;
+}
+
 void Event::defaultCopy(void *dest, union Event::Body src) {
 	memcpy(dest, &src, sizeof(Event::Body));
 }

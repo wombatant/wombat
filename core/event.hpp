@@ -29,6 +29,7 @@ enum class EventType {
 	ChannelMessage,
 	GenericPost,
 	InitTask,
+	FinishTask,
 	AppEvent, // Should always be the highest value listed here
 
 	// Optional EventTypes
@@ -57,13 +58,14 @@ void main();
 
 class Event {
 	friend void core::main();
+	friend class Task;
 	friend class TaskProcessor;
-	protected:
+	private:
 		EventType m_type;
 		/**
 		 * Used to specify the Task that received a message.
 		 */
-		class Task *m_task;
+		class Task *m_task = nullptr;
 		union Body {
 			Key key;
 			void *channel;
@@ -72,6 +74,7 @@ class Event {
 				void *data;
 			} other;
 		} m_body;
+		bool m_taskPost; // a Event posted through Task::post
 		std::function<void(void *dest, Body src)> m_copy;
 		std::function<void(void *dest)> m_free;
 
@@ -111,7 +114,7 @@ class Event {
 		 * @param val the value that the event carries, this needs to be a memcpy friendly type
 		 */
 		template<typename T>
-		Event(T val);
+		explicit Event(T val);
 
 		/**
 		 * Constructor
@@ -175,6 +178,18 @@ class Event {
 		 * @param task the Task that this Event is meant for
 		 */
 		void setTask(class Task *task);
+
+		/**
+		 * Sets whether or not this is the result of a Task::post.
+		 * @param taskPost whether or not this is the result of a Task::post
+		 */
+		void setTaskPost(bool taskPost = true);
+
+		/**
+		 * Gets whether or not this is the result of a Task::post.
+		 * @return whether or not this is the result of a Task::post
+		 */
+		bool getTaskPost();
 
 	private:
 		void defaultCopy(void *dest, union Event::Body src);

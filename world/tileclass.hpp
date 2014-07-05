@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef WOMBAT_WORLD_TILE_HPP
-#define WOMBAT_WORLD_TILE_HPP
+#ifndef WOMBAT_WORLD_TILECLASS_HPP
+#define WOMBAT_WORLD_TILECLASS_HPP
 
 #include <core/core.hpp>
 #include "animlayer.hpp"

@@ -56,7 +56,9 @@ class SdlMainEventQueue: public BaseEventQueue {
 	private:
 		SdlMainEventQueue(const SdlMainEventQueue&);
 		SdlMainEventQueue &operator=(const SdlMainEventQueue&);
-} _mainEventQueue;
+};
+
+BaseEventQueue &_mainEventQueue = *new SdlMainEventQueue();
 
 TaskProcessor _taskProcessor(&_mainEventQueue);
 

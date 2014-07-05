@@ -17,6 +17,7 @@
 #define WOMBAT_WORLD_PERSON_HPP
 
 #include <core/core.hpp>
+#include "event.hpp"
 #include "personclass.hpp"
 #include "sprite.hpp"
 

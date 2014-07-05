@@ -80,9 +80,14 @@ Zone::Zone(models::ZoneInstance model) {
 	m_address = model.Address;
 	m_tiles.setDimensions(header.TilesWide, header.TilesHigh, header.Layers);
 	m_path = header.Zone;
+	m_taskProcessor->addTask(this);
+	m_taskProcessor->start();
 }
 
 Zone::~Zone() {
+	m_taskProcessor->stop();
+	m_taskProcessor->done();
+	delete m_taskProcessor;
 }
 
 TaskState Zone::run(core::Event e) {
@@ -146,7 +151,15 @@ void Zone::decDeps() {
 
 void Zone::add(Sprite *sprite) {
 	sprite->setZone(this);
-	m_sprites[sprite->id()] = sprite;
+	if (sprite->id() != "") {
+		m_sprites[sprite->id()] = sprite;
+	}
+
+	auto task = dynamic_cast<Task*>(sprite);
+	if (task) {
+		task->post(EventType::FinishTask);
+		m_taskProcessor->addTask(task);
+	}
 }
 
 void Zone::remove(Sprite *sprite) {
@@ -174,7 +187,7 @@ void Zone::load() {
 				tile.load(model);
 
 				auto oc = tile.getOccupant();
-				if (oc && oc->id() != "") {
+				if (oc) {
 					oc->setAddress(Point(x, y));
 					add(oc);
 				}

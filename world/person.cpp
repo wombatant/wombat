@@ -20,6 +20,7 @@
 namespace wombat {
 namespace world {
 
+using core::EventType;
 using core::TaskState;
 
 Person::Person(models::Sprite model) {
@@ -37,7 +38,16 @@ Person::~Person() {
 	PersonClass::checkin(m_class);
 }
 
-TaskState Person::run(core::Event) {
+TaskState Person::run(core::Event e) {
+	const auto t = (int) e.type();
+	if (t == (int) PersonEvent::MoveLeft) {
+	} else if (t == (int) PersonEvent::MoveUp) {
+	} else if (t == (int) PersonEvent::MoveDown) {
+	} else if (t == (int) PersonEvent::MoveRight) {
+	} else if (t == (int) EventType::FinishTask) {
+		return TaskState::Done;
+	}
+
 	return TaskState::Continue;
 }
 
