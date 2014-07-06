@@ -66,7 +66,7 @@ class Event {
 				void *data;
 			} other;
 		} m_body;
-		bool m_taskPost; // a Event posted through Task::post
+		bool m_taskPost = false; // a Event posted through Task::post
 		std::function<void(void *dest, Body src)> m_copy;
 		std::function<void(void *dest)> m_free;
 

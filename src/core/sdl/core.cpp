@@ -55,8 +55,7 @@ BaseEventQueue &_mainEventQueue = *new SdlMainEventQueue();
 TaskProcessor _taskProcessor(&_mainEventQueue);
 
 const auto Event_DrawEvent = SDL_RegisterEvents(1);
-const auto Event_SemaporePost = SDL_RegisterEvents(1);
-const auto Event_SemaphoreTimeout = SDL_RegisterEvents(1);
+const auto Event_SemaphorePost = SDL_RegisterEvents(1);
 
 SDL_Window *_display = nullptr;
 SDL_Renderer *_renderer = nullptr;
@@ -86,7 +85,7 @@ void SdlMainEventQueue::post(Event post) {
 
 	SDL_Event ev;
 	SDL_zero(ev);
-	ev.type = Event_SemaporePost;
+	ev.type = Event_SemaphorePost;
 	SDL_PushEvent(&ev);
 
 	m_mutex.unlock();
@@ -142,7 +141,7 @@ void main() {
 		if (taskState.state == TaskState::Running) {
 			// yes... SDL_WaitEventTimeout uses 0 indicate failure...
 			if (SDL_WaitEventTimeout(&sev, taskState.sleepDuration) == 0) {
-				sev.type = Event_SemaphoreTimeout;
+				_mainEventQueue.post(EventType::Timeout);
 			}
 		} else {
 			SDL_WaitEvent(&sev);
@@ -153,21 +152,16 @@ void main() {
 		_updateEventTime();
 		if (t == Event_DrawEvent) {
 			_draw();
-		} else if (sev.type == Event_SemaphoreTimeout) {
-			ev.m_type = EventType::Timeout;
-			taskState = _taskProcessor.run(ev);
-		} else if (sev.type == Event_SemaporePost) {
+		} else if (sev.type == Event_SemaphorePost) {
 			if (_mainEventQueue.popPost(ev) == 0) {
 				taskState = _taskProcessor.run(ev);
 			}
 		} else if (t == SDL_WINDOWEVENT) {
 			if (sev.window.event == SDL_WINDOWEVENT_RESIZED) {
-				ev.m_type = EventType::ScreenSizeChange;
-				_submgr.post(ev);
+				_submgr.post(EventType::ScreenSizeChange);
 			}
 		} else if (t == SDL_QUIT) {
-			ev.m_type = EventType::Quit;
-			_submgr.post(ev);
+			_submgr.post(EventType::Quit);
 		} else if (t == SDL_KEYUP) {
 			ev.m_type = EventType::KeyUp;
 			ev.m_body.key = toWombatKey(sev);
