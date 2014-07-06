@@ -10,6 +10,7 @@
 namespace wombat {
 
 using core::Event;
+using core::Key;
 using core::TaskState;
 
 App::App() {
@@ -26,8 +27,6 @@ App::App() {
 	camera->init(initFile);
 	core::addDrawer(camera);
 	core::addTask(camera);
-
-	core::addTask(this);
 }
 
 App::~App() {
@@ -41,7 +40,7 @@ void App::init() {
 	core::subscribe(Event::Quit);
 }
 
-TaskState App::run(core::Event e) {
+TaskState App::run(Event e) {
 	TaskState retval = TaskState::Continue;
 
 	switch (e.type()) {
@@ -57,8 +56,8 @@ TaskState App::run(core::Event e) {
 		break;
 	case Event::KeyDown:
 		switch (e.key()) {
-		case core::Key::Escape:
-		case core::Key::Q:
+		case Key::Escape:
+		case Key::Q:
 			quit();
 			retval = TaskState::Done;
 			break;

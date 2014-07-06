@@ -20,7 +20,6 @@ using core::TaskState;
 Camera::Camera(World *world) {
 	m_world = world;
 	setAutoDelete(true);
-	core::addTask(this);
 }
 
 void Camera::init() {

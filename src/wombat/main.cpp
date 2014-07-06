@@ -42,7 +42,7 @@ int main(int argc, const char **args) {
 			core::addDrawer(test);
 		}
 	} else {
-		new App();
+		core::addTask(new App());
 	}
 
 	core::main();
