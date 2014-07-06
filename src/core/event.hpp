@@ -152,7 +152,7 @@ class Event {
 		 * Gets pointer to the Channel this Event is about.
 		 * @return pointer to the Channel this Event is about
 		 */
-		void *channel() {
+		inline void *channel() const {
 			return m_body.channel;
 		}
 
