@@ -38,7 +38,7 @@ class SdlMainEventQueue: public BaseEventQueue {
 
 		Event wait(uint64 timeout) override;
 
-		void post(Event wakeup = EventType::GenericPost) override;
+		void post(Event wakeup = Event::GenericPost) override;
 
 		int popPost(Event &post) override;
 
@@ -72,11 +72,11 @@ SdlMainEventQueue::~SdlMainEventQueue() {
 }
 
 Event SdlMainEventQueue::wait() {
-	return EventType::UnknownEvent;
+	return Event::UnknownEvent;
 }
 
 Event SdlMainEventQueue::wait(uint64 timeout) {
-	return EventType::UnknownEvent;
+	return Event::UnknownEvent;
 }
 
 void SdlMainEventQueue::post(Event post) {
@@ -141,7 +141,7 @@ void main() {
 		if (taskState.state == TaskState::Running) {
 			// yes... SDL_WaitEventTimeout uses 0 indicate failure...
 			if (SDL_WaitEventTimeout(&sev, taskState.sleepDuration) == 0) {
-				_mainEventQueue.post(EventType::Timeout);
+				_mainEventQueue.post(Event::Timeout);
 			}
 		} else {
 			SDL_WaitEvent(&sev);
@@ -158,16 +158,16 @@ void main() {
 			}
 		} else if (t == SDL_WINDOWEVENT) {
 			if (sev.window.event == SDL_WINDOWEVENT_RESIZED) {
-				_submgr.post(EventType::ScreenSizeChange);
+				_submgr.post(Event::ScreenSizeChange);
 			}
 		} else if (t == SDL_QUIT) {
-			_submgr.post(EventType::Quit);
+			_submgr.post(Event::Quit);
 		} else if (t == SDL_KEYUP) {
-			ev.m_type = EventType::KeyUp;
+			ev.m_type = Event::KeyUp;
 			ev.m_body.key = toWombatKey(sev);
 			_submgr.post(ev);
 		} else if (t == SDL_KEYDOWN) {
-			ev.m_type = EventType::KeyDown;
+			ev.m_type = Event::KeyDown;
 			ev.m_body.key = toWombatKey(sev);
 			_submgr.post(ev);
 		}

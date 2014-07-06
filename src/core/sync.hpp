@@ -107,7 +107,7 @@ class EventQueue: public BaseEventQueue {
 
 		Event wait(uint64 timeout);
 
-		void post(Event wakeup = EventType::GenericPost);
+		void post(Event wakeup = Event::GenericPost);
 
 		int popPost(Event &post);
 

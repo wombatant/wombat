@@ -14,7 +14,7 @@ namespace core {
 
 // Event
 
-Event::Event(EventType type) {
+Event::Event(Event::Type type) {
 	m_type = type;
 	m_copy = [this](void *dest, Event::Body src) {
 		this->defaultCopy(dest, src);
@@ -23,7 +23,7 @@ Event::Event(EventType type) {
 	memset(&m_body, 0, sizeof(m_body));
 }
 
-Event::Event(EventType type, void *channel) {
+Event::Event(Event::Type type, void *channel) {
 	m_type = type;
 	m_body.channel = channel;
 	m_copy = [this](void *dest, Event::Body src) {
@@ -32,7 +32,7 @@ Event::Event(EventType type, void *channel) {
 	m_free = [](void *dest) {};
 }
 
-Event::Event(EventType type, Task *task) {
+Event::Event(Event::Type type, Task *task) {
 	m_type = type;
 	m_task = task;
 	m_copy = [this](void *dest, Event::Body src) {
@@ -47,7 +47,7 @@ Event::Event(const Event &event) {
 }
 
 Event::~Event() {
-	if (type() >= EventType::AppEvent) {
+	if (type() >= Event::AppEvent) {
 		m_free(m_body.other.data);
 	}
 }

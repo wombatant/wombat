@@ -12,7 +12,7 @@
 namespace wombat {
 namespace world {
 
-using core::EventType;
+using core::Event;
 using core::TaskState;
 
 const std::function<void()> Person::c_defaultTimeoutProc = []() {};
@@ -44,10 +44,10 @@ TaskState Person::run(core::Event e) {
 		break;
 	case WorldEvent::MoveRight:
 		break;
-	case EventType::FinishTask:
+	case Event::FinishTask:
 		retval = TaskState::Done;
 		break;
-	case EventType::Timeout:
+	case Event::Timeout:
 		m_timeoutProc();
 		break;
 	}

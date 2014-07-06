@@ -15,7 +15,7 @@ namespace core {
 
 SubscriptionManager _submgr;
 
-int subscribe(EventType et) {
+int subscribe(Event::Type et) {
 	int retval = 0;
 	auto tp = activeTaskProcessor();
 	if (tp) {
@@ -110,27 +110,27 @@ TaskState TaskProcessor::run(Event event) {
 
 	setActiveTaskProcessor(this);
 
-	if (event.type() < EventType::OptionalEventTypeRange) {
+	if (event.type() < Event::OptionalEventTypeRange) {
 		m_submgr.run(event);
 	}
 
 	if (!event.getTaskPost()) {
 		switch (event.type()) {
-		case EventType::Timeout: // Timeout means something wants to run
+		case Event::Timeout: // Timeout means something wants to run
 			// put a limit on the number of Tasks processed in a single iteration
 			for (int i = 0; i < 100; i++) {
 				auto nt = popActiveTask();
 				if (nt) {
-					runTask(nt, EventType::Timeout);
+					runTask(nt, Event::Timeout);
 				} else {
 					break;
 				}
 			}
 			break;
-		case EventType::ChannelMessage:
-			runTask(event.task(), EventType::ChannelMessage);
+		case Event::ChannelMessage:
+			runTask(event.task(), Event::ChannelMessage);
 			break;
-		case EventType::InitTask:
+		case Event::InitTask:
 			if (event.task()) {
 				m_currentTask = event.task();
 				event.task()->init();
@@ -138,7 +138,7 @@ TaskState TaskProcessor::run(Event event) {
 				m_currentTask = nullptr;
 			}
 			break;
-		case EventType::GenericPost:
+		case Event::GenericPost:
 			// GenericPost is already designated for use only as a
 			//  sleep refresh in this switch or exit the thread loop
 			break;
@@ -173,7 +173,7 @@ void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState stat
 void TaskProcessor::addTask(Task *task, TaskState state) {
 	task->_setTaskProcessor(this);
 	// post to the semaphore to refresh the sleep time
-	m_events->post(Event(EventType::InitTask, task));
+	m_events->post(Event(Event::InitTask, task));
 }
 
 void TaskProcessor::start() {
@@ -214,7 +214,7 @@ void TaskProcessor::post(Event event) {
 	m_events->post(event);
 }
 
-void TaskProcessor::addSubscription(EventType et) {
+void TaskProcessor::addSubscription(Event::Type et) {
 	if (m_submgr.subs(et) == 0) {
 		_submgr.addSubscription(et, this);
 	}

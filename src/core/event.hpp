@@ -15,23 +15,6 @@
 namespace wombat {
 namespace core {
 
-enum EventType {
-	UnknownEvent = 1024,
-	Timeout,
-	ChannelMessage,
-	GenericPost,
-	InitTask,
-	FinishTask,
-	AppEvent, // Should always be the highest value listed here
-
-	// Optional EventTypes
-	Quit = 0,
-	KeyUp,
-	KeyDown,
-	ScreenSizeChange,
-	OptionalEventTypeRange
-};
-
 enum class Key {
 	Unknown,
 	Escape,
@@ -52,8 +35,26 @@ class Event {
 	friend void core::main();
 	friend class Task;
 	friend class TaskProcessor;
+	public:
+		enum Type {
+			UnknownEvent = 1024,
+			Timeout,
+			ChannelMessage,
+			GenericPost,
+			InitTask,
+			FinishTask,
+			AppEvent, // Should always be the highest value listed here
+
+			// Optional EventTypes
+			Quit = 0,
+			KeyUp,
+			KeyDown,
+			ScreenSizeChange,
+			OptionalEventTypeRange
+		};
+
 	private:
-		EventType m_type;
+		Type m_type;
 		/**
 		 * Used to specify the Task that received a message.
 		 */
@@ -79,21 +80,21 @@ class Event {
 		 * Constructor
 		 * @param type the value for the type value of the Event
 		 */
-		Event(EventType type = EventType::UnknownEvent);
+		Event(Type type = Event::UnknownEvent);
 
 		/**
 		 * Constructor
 		 * @param type the value for the type value of the Event
 		 * @param channel pointer to the Channel written to
 		 */
-		Event(EventType type, void *channel);
+		Event(Type type, void *channel);
 
 		/**
 		 * Constructor
 		 * @param type the value for the type value of the Event
 		 * @param task the Task for the event to reference
 		 */
-		Event(EventType type, class Task *task);
+		Event(Type type, class Task *task);
 
 		/**
 		 * Constructor
@@ -114,7 +115,7 @@ class Event {
 		 * @param val the value that the event carries, this needs to be a memcpy friendly type
 		 */
 		template<typename T>
-		Event(EventType type, T val);
+		Event(Type type, T val);
 
 		/**
 		 * Destructor
@@ -122,17 +123,17 @@ class Event {
 		~Event();
 
 		/**
-		 * Gets the EventType describing this Event.
-		 * @return the EventType describing this Event
+		 * Gets the Type describing this Event.
+		 * @return the Type describing this Event
 		 */
-		inline EventType type() const {
+		inline Type type() const {
 			return m_type;
 		}
 
 		/**
 		 * Gets the Key associated with this Event.
 		 * This method assumes type() returns KeyUpEvent or KeyDownEvent.
-		 * @return the EventType describing this Event
+		 * @return the Type describing this Event
 		 */
 		inline Key key() const {
 			return m_body.key;
@@ -141,7 +142,7 @@ class Event {
 		/**
 		 * Gets the Task this Event is for.
 		 * This method assumes type() returns KeyUpEvent, KeyDownEvent, or InitTask.
-		 * @return the EventType describing this Event
+		 * @return the Type describing this Event
 		 */
 		inline class Task *task() const {
 			return m_task;
@@ -201,11 +202,11 @@ Event::Event(T val) {
 	m_free = [](void *data) {
 		delete (T*) data;
 	};
-	m_type = EventType::AppEvent;
+	m_type = Event::AppEvent;
 }
 
 template<typename T>
-Event::Event(EventType type, T val) {
+Event::Event(Type type, T val) {
 	m_body.other.size = sizeof(T);
 	m_body.other.data = new T;
 	*((T*) m_body.other.data) = val;

@@ -12,7 +12,7 @@ namespace wombat {
 namespace world {
 
 enum WorldEvent {
-	SpriteHandover = core::EventType::AppEvent + 1,
+	SpriteHandover = core::Event::AppEvent + 1,
 	SpriteHandoverAck,
 	MoveLeft,
 	MoveUp,

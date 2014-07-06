@@ -27,11 +27,11 @@ class SubscriptionManager {
 		SubscriptionManager();
 
 		/**
-		 * Adds the given Task to the subscription list of the given EventType.
-		 * @param et the EventType that the Task is subscribing to
+		 * Adds the given Task to the subscription list of the given Event::Type.
+		 * @param et the Event::Type that the Task is subscribing to
 		 * @param task the Task to add to the subscription list
 		 */
-		void addSubscription(EventType et, Task *task);
+		void addSubscription(Event::Type et, Task *task);
 
 		/**
 		 * Removes the given Task from all subscription lists.
@@ -41,23 +41,23 @@ class SubscriptionManager {
 
 		/**
 		 * Calls post on the given Event for all TaskProcessors subscribed to
-		 * the Event's EventType.
+		 * the Event's Event::Type.
 		 * @param event the Event to publish
 		 */
 		void post(Event event);
 
 		/**
-		 * Calls run on the given Event for all subscribers to the Event's EventType.
+		 * Calls run on the given Event for all subscribers to the Event's Event::Type.
 		 * @param event the Event to publish
 		 */
 		void run(Event event);
 
 		/**
-		 * Gets the number of subscribers to the given EventType.
-		 * @param et the EventType to return the number of subscribers of
-		 * @return the number of subscribers to the given EventType.
+		 * Gets the number of subscribers to the given Event::Type.
+		 * @param et the Event::Type to return the number of subscribers of
+		 * @return the number of subscribers to the given Event::Type.
 		 */
-		int subs(EventType et);
+		int subs(Event::Type et);
 };
 
 }

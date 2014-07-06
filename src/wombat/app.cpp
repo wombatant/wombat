@@ -9,7 +9,7 @@
 
 namespace wombat {
 
-using core::EventType;
+using core::Event;
 using core::TaskState;
 
 App::App() {
@@ -35,27 +35,27 @@ App::~App() {
 }
 
 void App::init() {
-	core::subscribe(EventType::KeyDown);
-	core::subscribe(EventType::KeyUp);
-	core::subscribe(EventType::ScreenSizeChange);
-	core::subscribe(EventType::Quit);
+	core::subscribe(Event::KeyDown);
+	core::subscribe(Event::KeyUp);
+	core::subscribe(Event::ScreenSizeChange);
+	core::subscribe(Event::Quit);
 }
 
 TaskState App::run(core::Event e) {
 	TaskState retval = TaskState::Continue;
 
 	switch (e.type()) {
-	case EventType::ScreenSizeChange:
+	case Event::ScreenSizeChange:
 		core::draw();
 		break;
-	case EventType::Timeout:
+	case Event::Timeout:
 		core::draw();
 		retval = 16;
 		break;
-	case EventType::Quit:
+	case Event::Quit:
 		quit();
 		break;
-	case EventType::KeyDown:
+	case Event::KeyDown:
 		switch (e.key()) {
 		case core::Key::Escape:
 		case core::Key::Q:

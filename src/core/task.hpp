@@ -19,10 +19,10 @@ namespace core {
 /**
  * Subscribes to events of the given type. This must be run from within
  * the Task it is called for.
- * @param et the EventType to subscribe to
+ * @param et the Event::Type to subscribe to
  * @return 0 if success
  */
-int subscribe(EventType et);
+int subscribe(Event::Type et);
 		
 class TaskState {
 	public:
@@ -118,7 +118,7 @@ class FunctionTask: public Task {
 
 class TaskProcessor: public Task {
 	friend Task;
-	friend int subscribe(EventType);
+	friend int subscribe(Event::Type);
 	private:
 		struct ScheduleItem {
 			Task *task = nullptr;
@@ -203,10 +203,10 @@ class TaskProcessor: public Task {
 
 	protected:
 		/**
-		 * Adds the given Task to the subscription list of the given EventType.
-		 * @param et the EventType that the Task is subscribing to
+		 * Adds the given Task to the subscription list of the given Event::Type.
+		 * @param et the Event::Type that the Task is subscribing to
 		 */
-		void addSubscription(EventType et);
+		void addSubscription(Event::Type et);
 
 	private:
 		/**

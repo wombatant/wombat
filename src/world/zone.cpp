@@ -13,7 +13,7 @@ namespace world {
 
 using common::Point;
 using common::Bounds;
-using core::EventType;
+using core::Event;
 using core::TaskState;
 
 Zone::TileGrid::~TileGrid() {
@@ -84,7 +84,7 @@ Zone::~Zone() {
 
 TaskState Zone::run(core::Event e) {
 	switch (e.type()) {
-	case EventType::Timeout:
+	case Event::Timeout:
 		if (m_dependents == 0) {
 			unload();
 		}
@@ -149,7 +149,7 @@ void Zone::add(Sprite *sprite) {
 
 	auto task = dynamic_cast<Task*>(sprite);
 	if (task) {
-		task->post(EventType::FinishTask);
+		task->post(Event::FinishTask);
 		m_taskProcessor->addTask(task);
 	}
 }

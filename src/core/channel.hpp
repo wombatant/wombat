@@ -61,9 +61,9 @@ class Channel {
 		 * Waits until a message is received, then discards the message.
 		 * @return reason for the wake up
 		 */
-		EventType read() {
+		Event::Type read() {
 			auto reason = m_sem->wait().type();
-			if (reason == EventType::ChannelMessage) {
+			if (reason == Event::ChannelMessage) {
 				m_mutex.lock();
 				m_msgs.pop();
 				m_mutex.unlock();
@@ -77,10 +77,10 @@ class Channel {
 		 * @param msg reference to the message to write to
 		 * @return reason for the wake up
 		 */
-		EventType read(T &msg) {
+		Event::Type read(T &msg) {
 			while (1) {
 				auto reason = m_sem->wait().type();
-				if (reason == EventType::ChannelMessage) {
+				if (reason == Event::ChannelMessage) {
 					if (getMessage(msg)) {
 						return reason;
 					}
@@ -97,12 +97,12 @@ class Channel {
 		 * @param timeout timeout duration to give up on
 		 * @return reason for the wake up
 		 */
-		EventType read(T &msg, uint64 timeout) {
+		Event::Type read(T &msg, uint64 timeout) {
 			auto startTime = core::time();
 			auto currentTimeout = timeout;
 			while (1) {
 				auto reason = m_sem->wait(currentTimeout).type();
-				if (reason == EventType::ChannelMessage) {
+				if (reason == Event::ChannelMessage) {
 					if (getMessage(msg)) {
 						return reason;
 					}
@@ -122,7 +122,7 @@ class Channel {
 			m_mutex.lock();
 			m_msgs.push(msg);
 			m_mutex.unlock();
-			m_sem->post(Event(EventType::ChannelMessage, this));
+			m_sem->post(Event(Event::ChannelMessage, this));
 		}
 
 	// disallow copying

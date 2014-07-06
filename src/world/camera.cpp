@@ -14,7 +14,6 @@ namespace world {
 using common::Bounds;
 using common::Point;
 using core::Event;
-using core::EventType;
 using core::Key;
 using core::TaskState;
 
@@ -26,22 +25,22 @@ Camera::Camera(World *world) {
 
 void Camera::init() {
 	updateSize();
-	core::subscribe(EventType::ScreenSizeChange);
-	core::subscribe(EventType::KeyDown);
-	core::subscribe(EventType::KeyUp);
+	core::subscribe(Event::ScreenSizeChange);
+	core::subscribe(Event::KeyDown);
+	core::subscribe(Event::KeyUp);
 }
 
 TaskState Camera::run(Event e) {
 	TaskState retval = TaskState::Continue;
 
 	switch (e.type()) {
-	case EventType::ScreenSizeChange:
+	case Event::ScreenSizeChange:
 		updateSize();
 		break;
-	case EventType::KeyDown:
+	case Event::KeyDown:
 		keyDown(e);
 		break;
-	case EventType::KeyUp:
+	case Event::KeyUp:
 		keyUp(e);
 		break;
 	default:
@@ -126,16 +125,16 @@ void Camera::keyDown(Event e) {
 	if (m_person) {
 		switch (e.key()) {
 		case Key::H:
-			m_person->post((EventType) WorldEvent::MoveLeft);
+			m_person->post((Event) WorldEvent::MoveLeft);
 			break;
 		case Key::J:
-			m_person->post((EventType) WorldEvent::MoveDown);
+			m_person->post((Event) WorldEvent::MoveDown);
 			break;
 		case Key::K:
-			m_person->post((EventType) WorldEvent::MoveUp);
+			m_person->post((Event) WorldEvent::MoveUp);
 			break;
 		case Key::L:
-			m_person->post((EventType) WorldEvent::MoveRight);
+			m_person->post((Event) WorldEvent::MoveRight);
 			break;
 		default:
 			break;

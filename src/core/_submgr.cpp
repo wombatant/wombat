@@ -11,10 +11,10 @@
 namespace wombat {
 namespace core {
 
-SubscriptionManager::SubscriptionManager(): m_subs((int) EventType::OptionalEventTypeRange) {
+SubscriptionManager::SubscriptionManager(): m_subs((int) Event::OptionalEventTypeRange) {
 }
 
-void SubscriptionManager::addSubscription(EventType et, Task *task) {
+void SubscriptionManager::addSubscription(Event::Type et, Task *task) {
 	m_subs[(int) et].push_back(task);
 }
 
@@ -46,7 +46,7 @@ void SubscriptionManager::run(Event e) {
 	}
 }
 
-int SubscriptionManager::subs(EventType et) {
+int SubscriptionManager::subs(Event::Type et) {
 	return m_subs[(int) et].size();
 }
 
