@@ -14,11 +14,15 @@ namespace core {
 
 // Event
 
+const Event::Copier Event::DefaultCopy = [](Event *me, void *dest, Event::Body src) {
+	me->defaultCopy(dest, src);
+};
+
+const std::function<void(void*)> Event::DefaultFree = [](void*) {};
+
 Event::Event(Event::Type type) {
 	m_type = type;
-	m_copy = [this](void *dest, Event::Body src) {
-		this->defaultCopy(dest, src);
-	};
+	m_copy = DefaultCopy;
 	m_free = [](void *dest) {};
 	memset(&m_body, 0, sizeof(m_body));
 }
@@ -26,24 +30,20 @@ Event::Event(Event::Type type) {
 Event::Event(Event::Type type, void *channel) {
 	m_type = type;
 	m_body.channel = channel;
-	m_copy = [this](void *dest, Event::Body src) {
-		this->defaultCopy(dest, src);
-	};
+	m_copy = DefaultCopy;
 	m_free = [](void *dest) {};
 }
 
 Event::Event(Event::Type type, Task *task) {
 	m_type = type;
 	m_task = task;
-	m_copy = [this](void *dest, Event::Body src) {
-		this->defaultCopy(dest, src);
-	};
+	m_copy = DefaultCopy;
 	m_free = [](void *dest) {};
 }
 
 Event::Event(const Event &event) {
 	*this = event;
-	m_copy(&m_body, event.m_body);
+	m_copy(this, &m_body, event.m_body);
 }
 
 Event::~Event() {

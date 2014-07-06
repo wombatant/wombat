@@ -54,11 +54,6 @@ class Event {
 		};
 
 	private:
-		Type m_type;
-		/**
-		 * Used to specify the Task that received a message.
-		 */
-		class Task *m_task = nullptr;
 		union Body {
 			Key key;
 			void *channel;
@@ -66,14 +61,19 @@ class Event {
 				int size;
 				void *data;
 			} other;
-		} m_body;
+		};
+		typedef std::function<void(Event*, void*, Body)> Copier;
+		static const Copier DefaultCopy;
+		static const std::function<void(void*)> DefaultFree;
+		Type m_type;
+		/**
+		 * Used to specify the Task that received a message.
+		 */
+		class Task *m_task = nullptr;
+		Body m_body;
 		bool m_taskPost = false; // a Event posted through Task::post
-		std::function<void(void *dest, Body src)> m_copy;
-		std::function<void(void *dest)> m_free;
-
-	private:
-		static const std::function<void(void *dest, union Body src)> DefaultCopy;
-		static const std::function<void(void *dest, union Body src)> AppEventCopy;
+		Copier m_copy = DefaultCopy;
+		std::function<void(void *dest)> m_free = DefaultFree;
 
 	public:
 		/**
@@ -196,8 +196,8 @@ Event::Event(T val) {
 	m_body.other.size = sizeof(T);
 	m_body.other.data = new T;
 	*((T*) m_body.other.data) = val;
-	m_copy = [this](void *dest, Event::Body src) {
-		appEventCopy<T>(dest, src);
+	m_copy = [](Event *me, void *dest, Event::Body src) {
+		me->appEventCopy<T>(dest, src);
 	};
 	m_free = [](void *data) {
 		delete (T*) data;
@@ -210,8 +210,8 @@ Event::Event(Type type, T val) {
 	m_body.other.size = sizeof(T);
 	m_body.other.data = new T;
 	*((T*) m_body.other.data) = val;
-	m_copy = [this](void *dest, Event::Body src) {
-		appEventCopy<T>(dest, src);
+	m_copy = [](Event *me, void *dest, Event::Body src) {
+		me->appEventCopy<T>(dest, src);
 	};
 	m_free = [](void *data) {
 		delete (T*) data;
