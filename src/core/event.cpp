@@ -22,23 +22,17 @@ const std::function<void(void*)> Event::DefaultFree = [](void*) {};
 
 Event::Event(Event::Type type) {
 	m_type = type;
-	m_copy = DefaultCopy;
-	m_free = [](void *dest) {};
 	memset(&m_body, 0, sizeof(m_body));
 }
 
 Event::Event(Event::Type type, void *channel) {
 	m_type = type;
 	m_body.channel = channel;
-	m_copy = DefaultCopy;
-	m_free = [](void *dest) {};
 }
 
 Event::Event(Event::Type type, Task *task) {
 	m_type = type;
 	m_task = task;
-	m_copy = DefaultCopy;
-	m_free = [](void *dest) {};
 }
 
 Event::Event(const Event &event) {
