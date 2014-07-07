@@ -124,16 +124,16 @@ void Camera::keyDown(Event e) {
 	if (m_person) {
 		switch (e.key()) {
 		case Key::H:
-			m_person->post((Event) WorldEvent::MoveLeft);
+			m_person->post((Event::Type) WorldEvent::MoveLeft);
 			break;
 		case Key::J:
-			m_person->post((Event) WorldEvent::MoveDown);
+			m_person->post((Event::Type) WorldEvent::MoveDown);
 			break;
 		case Key::K:
-			m_person->post((Event) WorldEvent::MoveUp);
+			m_person->post((Event::Type) WorldEvent::MoveUp);
 			break;
 		case Key::L:
-			m_person->post((Event) WorldEvent::MoveRight);
+			m_person->post((Event::Type) WorldEvent::MoveRight);
 			break;
 		default:
 			break;
@@ -142,6 +142,24 @@ void Camera::keyDown(Event e) {
 }
 
 void Camera::keyUp(Event e) {
+	if (m_person) {
+		switch (e.key()) {
+		case Key::H:
+			m_person->post((Event::Type) WorldEvent::MoveLeft);
+			break;
+		case Key::J:
+			m_person->post((Event::Type) WorldEvent::MoveDown);
+			break;
+		case Key::K:
+			m_person->post((Event::Type) WorldEvent::MoveUp);
+			break;
+		case Key::L:
+			m_person->post((Event::Type) WorldEvent::MoveRight);
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 }
