@@ -87,14 +87,14 @@ class Event {
 		 * @param type the value for the type value of the Event
 		 * @param channel pointer to the Channel written to
 		 */
-		Event(Type type, void *channel);
+		Event(int type, void *channel);
 
 		/**
 		 * Constructor
 		 * @param type the value for the type value of the Event
 		 * @param task the Task for the event to reference
 		 */
-		Event(Type type, class Task *task);
+		Event(int type, class Task *task);
 
 		/**
 		 * Constructor
@@ -115,7 +115,7 @@ class Event {
 		 * @param val the value that the event carries, this needs to be a memcpy friendly type
 		 */
 		template<typename T>
-		Event(Type type, T val);
+		Event(int type, T val);
 
 		/**
 		 * Destructor
@@ -206,7 +206,7 @@ Event::Event(T val) {
 }
 
 template<typename T>
-Event::Event(Type type, T val) {
+Event::Event(int type, T val) {
 	m_body.other.size = sizeof(T);
 	m_body.other.data = new T;
 	*((T*) m_body.other.data) = val;
@@ -216,7 +216,7 @@ Event::Event(Type type, T val) {
 	m_free = [](void *data) {
 		delete (T*) data;
 	};
-	m_type = type;
+	m_type = (Event::Type) type;
 }
 
 template<typename T>

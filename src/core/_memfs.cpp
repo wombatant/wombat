@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 #include <string.h>
+#include <stddef.h>
 #include "_memfs.hpp"
 
 namespace wombat {
@@ -23,7 +24,7 @@ MemFsPtr MemFs::Record::size() {
 
 void MemFs::Record::setPath(std::string path) {
 	char *ptr = (char*) (this + m_path);
-	for (int i = 0; i < path.size(); i++) {
+	for (uint i = 0; i < path.size(); i++) {
 		*(ptr + i) = path[i];
 	}
 }
@@ -66,7 +67,7 @@ int MemFs::read(std::string path, uint8 **data, MemFsPtr *size) {
 	return retval;
 }
 
-MemFs::Record *MemFs::getRecord(MemFs::Record *root, const char *path, int pathLen) {
+MemFs::Record *MemFs::getRecord(MemFs::Record *root, const char *path, MemFsPtr pathLen) {
 	MemFsPtr len;
 	if (root->pathLen() < pathLen) {
 		len = root->pathLen();

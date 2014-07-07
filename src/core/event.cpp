@@ -25,13 +25,13 @@ Event::Event(Event::Type type) {
 	memset(&m_body, 0, sizeof(m_body));
 }
 
-Event::Event(Event::Type type, void *channel) {
-	m_type = type;
+Event::Event(int type, void *channel) {
+	m_type = (Event::Type) type;
 	m_body.channel = channel;
 }
 
-Event::Event(Event::Type type, Task *task) {
-	m_type = type;
+Event::Event(int type, Task *task) {
+	m_type = (Event::Type) type;
 	m_task = task;
 }
 

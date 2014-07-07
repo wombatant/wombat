@@ -145,7 +145,7 @@ void Camera::keyUp(Event e) {
 	if (m_person) {
 		switch (e.key()) {
 		case Key::H:
-			m_person->post((Event::Type) WorldEvent::MoveLeft);
+			m_person->post(Event(WorldEvent::MoveLeft, false));
 			break;
 		case Key::J:
 			m_person->post((Event::Type) WorldEvent::MoveDown);

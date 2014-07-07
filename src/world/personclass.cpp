@@ -26,9 +26,9 @@ PersonClass::PersonClass(models::PersonClass model) {
 	m_title = model.Title[core::getLanguage()];
 
 	m_animations.resize(model.Overhead.size());
-	for (int i = 0; i < model.Overhead.size(); i++) {
+	for (uint i = 0; i < model.Overhead.size(); i++) {
 		m_animations[i].resize(model.Overhead[i].size());
-		for (int ii = 0; ii < model.Overhead[i].size(); ii++) {
+		for (uint ii = 0; ii < model.Overhead[i].size(); ii++) {
 			m_animations[i][ii].load(model.Overhead[i][ii]);
 		}
 	}
@@ -42,8 +42,8 @@ void PersonClass::draw(core::Graphics &gfx, common::Point pt, SpriteDirection fa
 }
 
 AnimLayer PersonClass::anim(models::SpriteDirection facing, models::SpriteMotion motion) {
-	if ((int) facing < m_animations.size() && (int) motion < m_animations[(int) facing].size()) {
-		return m_animations[(int) facing][(int) motion];
+	if ((uint) facing < m_animations.size() && (uint) motion < m_animations[(uint) facing].size()) {
+		return m_animations[(uint) facing][(uint) motion];
 	}
 	return AnimLayer();
 }

@@ -80,7 +80,7 @@ class MemFs {
 		 * @param pathLen number of characters in pathLen
 		 * @return the requested Record, if available
 		 */
-		Record *getRecord(Record *root, const char *path, int pathLen);
+		Record *getRecord(Record *root, const char *path, MemFsPtr pathLen);
 
 		/**
 		 * Gets an address for a new Record.
