@@ -37,10 +37,8 @@ TaskState Camera::run(Event e) {
 		updateSize();
 		break;
 	case Event::KeyDown:
-		keyDown(e);
-		break;
 	case Event::KeyUp:
-		keyUp(e);
+		keyEvent(e);
 		break;
 	default:
 		break;
@@ -120,45 +118,28 @@ void Camera::updateSize() {
 	m_bounds.Height = core::displayHeight();
 }
 
-void Camera::keyDown(Event e) {
+void Camera::keyEvent(Event e) {
 	if (m_person) {
+		auto type = e.type() == Event::KeyDown ? StartMoving : StopMoving;
+		Person::Motion motion;
 		switch (e.key()) {
 		case Key::H:
-			m_person->post((Event::Type) WorldEvent::MoveLeft);
+			motion = Person::MovingLeft;
 			break;
 		case Key::J:
-			m_person->post((Event::Type) WorldEvent::MoveDown);
+			motion = Person::MovingDown;
 			break;
 		case Key::K:
-			m_person->post((Event::Type) WorldEvent::MoveUp);
+			motion = Person::MovingUp;
 			break;
 		case Key::L:
-			m_person->post((Event::Type) WorldEvent::MoveRight);
+			motion = Person::MovingRight;
 			break;
 		default:
+			motion = Person::Still;
 			break;
 		}
-	}
-}
-
-void Camera::keyUp(Event e) {
-	if (m_person) {
-		switch (e.key()) {
-		case Key::H:
-			m_person->post(Event(WorldEvent::MoveLeft, false));
-			break;
-		case Key::J:
-			m_person->post((Event::Type) WorldEvent::MoveDown);
-			break;
-		case Key::K:
-			m_person->post((Event::Type) WorldEvent::MoveUp);
-			break;
-		case Key::L:
-			m_person->post((Event::Type) WorldEvent::MoveRight);
-			break;
-		default:
-			break;
-		}
+		m_person->post(Event(type, motion));
 	}
 }
 

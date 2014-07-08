@@ -24,7 +24,7 @@ enum class SpriteDirection: int {
 };
 
 enum class SpriteMotion: int {
-	Still = 1,
+	Still = 0,
 	Walking
 };
 

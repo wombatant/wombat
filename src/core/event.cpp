@@ -14,8 +14,8 @@ namespace core {
 
 // Event
 
-const Event::Copier Event::DefaultCopy = [](Event *me, void *dest, Event::Body src) {
-	me->defaultCopy(dest, src);
+const Event::Copier Event::DefaultCopy = [](Event *me, Body *dest, Event::Body src) {
+	defaultCopy(dest, src);
 };
 
 const std::function<void(void*)> Event::DefaultFree = [](void*) {};
@@ -35,15 +35,26 @@ Event::Event(int type, Task *task) {
 	m_task = task;
 }
 
-Event::Event(const Event &event) {
-	*this = event;
-	m_copy(this, &m_body, event.m_body);
+Event::Event(const Event &src) {
+	*this = src;
 }
 
 Event::~Event() {
 	if (type() >= Event::AppEvent) {
-		m_free(m_body.other.data);
+		if (m_body.other.data != nullptr) {
+			m_free(m_body.other.data);
+		}
 	}
+}
+
+Event &Event::operator=(const Event &src) {
+	m_type = src.m_type;
+	m_taskPost = src.m_taskPost;
+	m_task = src.m_task;
+	m_copy = src.m_copy;
+	m_free = src.m_free;
+	m_copy(this, &m_body, src.m_body);
+	return *this;
 }
 
 void Event::setTask(class Task *task) {
@@ -58,7 +69,7 @@ bool Event::getTaskPost() {
 	return m_taskPost;
 }
 
-void Event::defaultCopy(void *dest, union Event::Body src) {
+void Event::defaultCopy(void *dest, Event::Body &src) {
 	memcpy(dest, &src, sizeof(Event::Body));
 }
 

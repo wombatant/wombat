@@ -17,10 +17,18 @@ namespace wombat {
 namespace world {
 
 class Person: public Sprite, public core::Task {
+	public:
+		enum Motion {
+			Still       = 0,
+			MovingUp    = 1,
+			MovingDown  = 2,
+			MovingLeft  = 4,
+			MovingRight = 8
+		};
+
 	private:
 		static const std::function<void()> c_defaultTimeoutProc;
 		models::SpriteDirection m_facing = models::SpriteDirection::North;
-		models::SpriteMotion m_motion = models::SpriteMotion::Still;
 		PersonClass *m_class = nullptr;
 		class Zone *m_zone = nullptr;
 		std::vector<std::string> m_creatures;
@@ -28,6 +36,7 @@ class Person: public Sprite, public core::Task {
 		std::function<void()> m_timeoutProc = c_defaultTimeoutProc;
 		std::string m_id;
 		common::Point m_addr;
+		int m_motion = Still;
 
 	public:
 		/**

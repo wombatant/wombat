@@ -14,12 +14,12 @@ namespace world {
 
 using core::Event;
 using core::TaskState;
+using models::SpriteMotion;
 
 const std::function<void()> Person::c_defaultTimeoutProc = []() {};
 
 Person::Person(models::Sprite model) {
 	m_facing = (models::SpriteDirection) model.Facing;
-	m_motion = (models::SpriteMotion) model.Motion;
 	m_id = model.Id;
 
 	models::Person person;
@@ -36,13 +36,21 @@ TaskState Person::run(core::Event e) {
 	TaskState retval = TaskState::Continue;
 
 	switch ((int) e.type()) {
-	case WorldEvent::MoveLeft:
+	case StartMoving:
+		{
+			Motion flag;
+			if (e.read(flag) == 0) {
+				m_motion |= flag;
+			}
+		}
 		break;
-	case WorldEvent::MoveUp:
-		break;
-	case WorldEvent::MoveDown:
-		break;
-	case WorldEvent::MoveRight:
+	case StopMoving:
+		{
+			Motion flag;
+			if (e.read(flag) == 0) {
+				m_motion |= ~flag;
+			}
+		}
 		break;
 	case Event::FinishTask:
 		retval = TaskState::Done;
@@ -56,7 +64,8 @@ TaskState Person::run(core::Event e) {
 }
 
 void Person::draw(core::Graphics &gfx, common::Point pt) {
-	m_class->draw(gfx, pt, m_facing, m_motion);
+	auto motion = m_motion == Still ? SpriteMotion::Still : SpriteMotion::Walking;
+	m_class->draw(gfx, pt, m_facing, motion);
 }
 
 std::string Person::id() {

@@ -14,10 +14,8 @@ namespace world {
 enum WorldEvent {
 	SpriteHandover = core::Event::AppEvent + 1,
 	SpriteHandoverAck,
-	MoveLeft,
-	MoveUp,
-	MoveDown,
-	MoveRight
+	StartMoving,
+	StopMoving
 };
 
 }

@@ -62,9 +62,10 @@ class Event {
 				void *data;
 			} other;
 		};
-		typedef std::function<void(Event*, void*, Body)> Copier;
+		typedef std::function<void(Event*, Body*, Body)> Copier;
 		static const Copier DefaultCopy;
 		static const std::function<void(void*)> DefaultFree;
+
 		Type m_type;
 		/**
 		 * Used to specify the Task that received a message.
@@ -121,6 +122,8 @@ class Event {
 		 * Destructor
 		 */
 		~Event();
+
+		Event &operator=(const Event &src);
 
 		/**
 		 * Gets the Type describing this Event.
@@ -185,10 +188,10 @@ class Event {
 		bool getTaskPost();
 
 	private:
-		void defaultCopy(void *dest, union Event::Body src);
+		static void defaultCopy(void *dest, Body &src);
 
 		template<typename T>
-		void appEventCopy(void *dest, union Event::Body src);
+		static void appEventCopy(Body *dest, Body src);
 };
 
 template<typename T>
@@ -196,8 +199,8 @@ Event::Event(T val) {
 	m_body.other.size = sizeof(T);
 	m_body.other.data = new T;
 	*((T*) m_body.other.data) = val;
-	m_copy = [](Event *me, void *dest, Event::Body src) {
-		me->appEventCopy<T>(dest, src);
+	m_copy = [](Event *me, Body *dest, Event::Body src) {
+		appEventCopy<T>(dest, src);
 	};
 	m_free = [](void *data) {
 		delete (T*) data;
@@ -210,8 +213,8 @@ Event::Event(int type, T val) {
 	m_body.other.size = sizeof(T);
 	m_body.other.data = new T;
 	*((T*) m_body.other.data) = val;
-	m_copy = [](Event *me, void *dest, Event::Body src) {
-		me->appEventCopy<T>(dest, src);
+	m_copy = [](Event *me, Body *dest, Event::Body src) {
+		appEventCopy<T>(dest, src);
 	};
 	m_free = [](void *data) {
 		delete (T*) data;
@@ -220,19 +223,17 @@ Event::Event(int type, T val) {
 }
 
 template<typename T>
-void Event::appEventCopy(void *dest, union Event::Body src) {
-	m_body.other.size = src.other.size;
-	m_body.other.data = new T;
-	*((T*) m_body.other.data) = *((T*) src.other.data);
+void Event::appEventCopy(Body *dest, Event::Body src) {
+	dest->other.size = src.other.size;
+	dest->other.data = new T;
+	*((T*) dest->other.data) = *((T*) src.other.data);
 }
 
 template<typename T>
 int Event::read(T &val) {
-	auto &data = (T*) m_body.other.data;
+	auto data = (T*) m_body.other.data;
 	if (data && m_body.other.size == sizeof(T)) {
 		val = *data;
-		m_free(data);
-		data = 0;
 		return 0;
 	}
 	return 1;
