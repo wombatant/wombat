@@ -41,9 +41,13 @@ void PersonClass::draw(core::Graphics &gfx, common::Point pt, SpriteDirection fa
 	}
 }
 
-AnimLayer PersonClass::anim(models::SpriteDirection facing, models::SpriteMotion motion) {
-	if ((uint) facing < m_animations.size() && (uint) motion < m_animations[(uint) facing].size()) {
-		return m_animations[(uint) facing][(uint) motion];
+AnimLayer PersonClass::anim(SpriteDirection facing, SpriteMotion motion) {
+	for (int i = 0; i < 2; i++) {
+		if ((uint) facing < m_animations.size() && (uint) motion < m_animations[(uint) facing].size()) {
+			return m_animations[(uint) facing][(uint) motion];
+		}
+		facing = (SpriteDirection) 0;
+		motion = (SpriteMotion) 0;
 	}
 	return AnimLayer();
 }
