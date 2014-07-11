@@ -109,14 +109,6 @@ bool SdlMainEventQueue::hasPosts() {
 
 // Main TaskProcessor modifiers
 
-void addTask(std::function<TaskState(Event)> task, TaskState state) {
-	_taskProcessor.addTask(task, state);
-}
-
-void addTask(Task *task, TaskState state) {
-	_taskProcessor.addTask(task, state);
-}
-
 void draw() {
 	SDL_Event ev;
 	SDL_zero(ev);
@@ -193,6 +185,8 @@ int init(models::Settings settings) {
 	if (!_display)
 		return -3;
 	_renderer = SDL_CreateRenderer(_display, -1, SDL_RENDERER_ACCELERATED);
+	if (!_renderer)
+		return -4;
 
 	_running = true;
 	_updateEventTime();

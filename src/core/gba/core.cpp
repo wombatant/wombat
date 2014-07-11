@@ -25,14 +25,6 @@ EventQueue _mainEventQueue;
 
 TaskProcessor _taskProcessor(&_mainEventQueue);
 
-void addTask(std::function<TaskState(Event)> task, TaskState state) {
-	_taskProcessor.addTask(task, state);
-}
-
-void addTask(Task *task, TaskState state) {
-	_taskProcessor.addTask(task, state);
-}
-
 void draw() {
 }
 

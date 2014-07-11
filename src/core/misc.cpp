@@ -11,8 +11,7 @@
 #include <vector>
 #include <chrono>
 #include <time.h>
-#include "event.hpp"
-#include "misc.hpp"
+#include "core.hpp"
 
 namespace wombat {
 namespace core {
@@ -21,6 +20,7 @@ namespace core {
 time_t refTime;
 bool _running = false;
 std::string _language = "english";
+extern TaskProcessor _taskProcessor;
 
 void setLanguage(std::string lang) {
 	_language = lang;
@@ -36,6 +36,14 @@ bool running() {
 
 void quit() {
 	_running = false;
+}
+
+void addTask(std::function<TaskState(Event)> task, TaskState state) {
+	_taskProcessor.addTask(task, state);
+}
+
+void addTask(Task *task, TaskState state) {
+	_taskProcessor.addTask(task, state);
 }
 
 void _updateEventTime() {
