@@ -33,7 +33,7 @@ enum class Key {
 void main();
 
 class Event {
-	friend void core::main();
+	friend void ::wombat::core::main();
 	friend class Task;
 	friend class TaskProcessor;
 	public:
