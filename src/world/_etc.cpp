@@ -27,17 +27,5 @@ Zone *ZoneProcessor::zone() {
 	return m_zone;
 }
 
-common::Point addrToPt(common::Point addr) {
-	addr.X *= TileWidth;
-	addr.Y *= TileHeight;
-	return addr;
-}
-
-common::Point ptToAddr(common::Point pt) {
-	pt.X /= TileWidth;
-	pt.Y /= TileHeight;
-	return pt;
-}
-
 }
 }

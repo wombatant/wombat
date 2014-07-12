@@ -5,6 +5,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+#ifndef WOMBAT_WORLD__ETC_HPP
+#define WOMBAT_WORLD__ETC_HPP
+
 #include <core/core.hpp>
 
 namespace wombat {
@@ -17,9 +20,11 @@ extern int TileHeight;
 
 extern std::map<core::TaskProcessor*, class Zone*> m_zoneMap;
 
+typedef core::uint64 Error;
+
 class ZoneProcessor: public core::TaskProcessor {
 	private:
-		Zone *m_zone = nullptr;
+		class Zone *m_zone = nullptr;
 
 	public:
 		/**
@@ -35,9 +40,19 @@ class ZoneProcessor: public core::TaskProcessor {
 		class Zone *zone();
 };
 
-common::Point addrToPt(common::Point);
+inline common::Point addr(common::Point pt) {
+	pt.X /= TileWidth;
+	pt.Y /= TileHeight;
+	return pt;
+}
 
-common::Point ptToAddr(common::Point);
+inline common::Point pt(common::Point addr) {
+	addr.X *= TileWidth;
+	addr.Y *= TileHeight;
+	return addr;
+}
 
 }
 }
+
+#endif

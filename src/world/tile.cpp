@@ -27,6 +27,7 @@ void Tile::draw(core::Graphics &gfx, Point pt) {
 	if (m_occupant) {
 		m_occupant->draw(gfx, pt);
 	}
+
 	if (_debug) {
 		gfx.drawLine(pt.X, pt.Y, pt.X, pt.Y + TileHeight);
 		gfx.drawLine(pt.X, pt.Y, pt.X + TileWidth, pt.Y);
@@ -35,6 +36,18 @@ void Tile::draw(core::Graphics &gfx, Point pt) {
 
 Sprite *Tile::getOccupant() {
 	return m_occupant;
+}
+
+Error Tile::claim(Sprite *occupant) {
+	if (m_occupant == nullptr) {
+		m_occupant = occupant;
+		return 0;
+	}
+	return 1;
+}
+
+void Tile::release() {
+	m_occupant = nullptr;
 }
 
 }

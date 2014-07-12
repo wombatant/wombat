@@ -9,6 +9,7 @@
 #define WOMBAT_WORLD_PERSON_HPP
 
 #include <core/core.hpp>
+#include "_etc.hpp"
 #include "event.hpp"
 #include "personclass.hpp"
 #include "sprite.hpp"
@@ -27,15 +28,26 @@ class Person: public Sprite, public core::Task {
 		};
 
 	private:
-		static const std::function<void()> c_defaultTimeoutProc;
+		typedef std::function<core::TaskState(Person *me)> TimeoutProc;
+		typedef std::function<void()> ZoneChangeProc;
+
+		static const TimeoutProc c_defaultTimeoutProc;
+		static const TimeoutProc c_timeoutMoveUp;
+		static const TimeoutProc c_timeoutMoveDown;
+		static const TimeoutProc c_timeoutMoveLeft;
+		static const TimeoutProc c_timeoutMoveRight;
+		static const core::uint64 c_timeoutInterval;
+
 		models::SpriteDirection m_facing = models::SpriteDirection::North;
 		PersonClass *m_class = nullptr;
 		class Zone *m_zone = nullptr;
 		std::vector<std::string> m_creatures;
-		std::function<void()> m_onZoneChange = []() {};
-		std::function<void()> m_timeoutProc = c_defaultTimeoutProc;
+		ZoneChangeProc m_onZoneChange = []() {};
+		TimeoutProc m_timeoutProc = c_defaultTimeoutProc;
 		std::string m_id;
 		common::Point m_addr;
+		common::Point m_ptOffset;
+		int m_layer = 0;
 		int m_motion = Still;
 
 	public:
@@ -82,7 +94,16 @@ class Person: public Sprite, public core::Task {
 		 * Sets the function when the Person goes to a different Zone.
 		 * @param zc the function when the Person goes to a different Zone
 		 */
-		void onZoneChange(std::function<void()> zc);
+		void onZoneChange(ZoneChangeProc zc);
+
+	private:
+		void startMoving(TimeoutProc proc, common::Point addr);
+
+		void updateTimeoutProc();
+
+		core::TaskState moveIn(int &operand, int goal);
+
+		core::TaskState moveOut(int &operand, int goal);
 };
 
 }

@@ -8,7 +8,7 @@
 #ifndef WOMBAT_WORLD_TILE_HPP
 #define WOMBAT_WORLD_TILE_HPP
 
-#include <common/common.hpp>
+#include "_etc.hpp"
 #include "sprite.hpp"
 #include "tileclass.hpp"
 
@@ -26,6 +26,18 @@ class Tile {
 		void draw(core::Graphics &gfx, common::Point pt);
 
 		Sprite *getOccupant();
+
+		/**
+		 * Claims this Tile for the given Sprite.
+		 * @param occupant the Sprite wanting to claim this Tile
+		 * @return 0 for success
+		 */
+		Error claim(Sprite *occupant);
+
+		/**
+		 * Unclaims this Tile.
+		 */
+		void release();
 };
 
 }

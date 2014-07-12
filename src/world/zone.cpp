@@ -108,13 +108,13 @@ Bounds Zone::bounds() {
 }
 
 void Zone::draw(core::Graphics &g, Bounds bnds, Point translation) {
-	auto loc = addrToPt(bounds().pt1()) + translation;
+	auto loc = pt(bounds().pt1()) + translation;
 
 	for (auto l = 0; l < m_tiles.layers(); l++) {
 		for (auto y = bnds.Y; y < bnds.y2(); y += TileHeight) {
 			for (auto x = bnds.X; x < bnds.x2(); x += TileWidth) {
-				auto &tile = m_tiles.at(x / TileWidth, y / TileHeight, l);
-				tile.draw(g, addrToPt(ptToAddr(Point(x, y))) + loc);
+				auto tile = m_tiles.at(x / TileWidth, y / TileHeight, l);
+				tile->draw(g, pt(addr(Point(x, y))) + loc);
 			}
 		}
 	}
@@ -166,6 +166,10 @@ Sprite *Zone::getSprite(std::string id) {
 	return m_sprites[id];
 }
 
+Tile *Zone::getTile(int x, int y, int layer) {
+	return m_tiles.at(x, y, layer);
+}
+
 void Zone::load() {
 	models::Zone zone;
 	core::read(zone, m_path);
@@ -174,11 +178,11 @@ void Zone::load() {
 	for (int l = 0; l < m_tiles.layers(); l++) {
 		for (int y = 0; y < m_tiles.tilesHigh(); y++) {
 			for (int x = 0; x < m_tiles.tilesWide(); x++) {
-				auto &tile = m_tiles.at(x, y, l);
+				auto tile = m_tiles.at(x, y, l);
 				auto model = zone.Tiles[l][y][x];
-				tile.load(model);
+				tile->load(model);
 
-				auto oc = tile.getOccupant();
+				auto oc = tile->getOccupant();
 				if (oc) {
 					oc->setAddress(Point(x, y));
 					add(oc);

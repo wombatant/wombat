@@ -56,8 +56,8 @@ class Zone: public core::Task {
 				 * @param layer layer of desired Tile
 				 * @return pointer to the Tile at the given address
 				 */
-				inline Tile &at(int x, int y, int layer) {
-					return m_tiles[layer][y][x];
+				inline Tile *at(int x, int y, int layer) {
+					return &m_tiles[layer][y][x];
 				}
 
 				/**
@@ -156,6 +156,14 @@ class Zone: public core::Task {
 		 * @return the Sprite with the given id
 		 */
 		class Person *getPerson(std::string id);
+
+		/**
+		 * Gets the Tile at the given point
+		 * @param x the x coordinate for the point
+		 * @param y the y coordinate for the point
+		 * @return Tile at the given point
+		 */
+		Tile *getTile(int x, int y, int layer);
 
 	private:
 		void load();
