@@ -14,7 +14,7 @@ namespace core {
 
 // Event
 
-const Event::Copier Event::DefaultCopy = [](Event *me, Body *dest, Event::Body src) {
+const Event::Copier Event::DefaultCopy = [](Body *dest, Event::Body src) {
 	defaultCopy(dest, src);
 };
 
@@ -53,7 +53,7 @@ Event &Event::operator=(const Event &src) {
 	m_task = src.m_task;
 	m_copy = src.m_copy;
 	m_free = src.m_free;
-	m_copy(this, &m_body, src.m_body);
+	m_copy(&m_body, src.m_body);
 	return *this;
 }
 

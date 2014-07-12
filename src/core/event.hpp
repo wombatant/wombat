@@ -9,6 +9,7 @@
 #define WOMBAT_CORE_EVENT_HPP
 
 #include <functional>
+#include <iostream>
 #include <stdlib.h>
 #include "types.hpp"
 
@@ -62,7 +63,7 @@ class Event {
 				void *data;
 			} other;
 		};
-		typedef std::function<void(Event*, Body*, Body)> Copier;
+		typedef std::function<void(Body*, Body)> Copier;
 		static const Copier DefaultCopy;
 		static const std::function<void(void*)> DefaultFree;
 
@@ -199,7 +200,7 @@ Event::Event(T val) {
 	m_body.other.size = sizeof(T);
 	m_body.other.data = new T;
 	*((T*) m_body.other.data) = val;
-	m_copy = [](Event *me, Body *dest, Event::Body src) {
+	m_copy = [](Body *dest, Event::Body src) {
 		appEventCopy<T>(dest, src);
 	};
 	m_free = [](void *data) {
@@ -213,7 +214,7 @@ Event::Event(int type, T val) {
 	m_body.other.size = sizeof(T);
 	m_body.other.data = new T;
 	*((T*) m_body.other.data) = val;
-	m_copy = [](Event *me, Body *dest, Event::Body src) {
+	m_copy = [](Body *dest, Event::Body src) {
 		appEventCopy<T>(dest, src);
 	};
 	m_free = [](void *data) {
@@ -232,6 +233,7 @@ void Event::appEventCopy(Body *dest, Event::Body src) {
 template<typename T>
 int Event::read(T &val) {
 	auto data = (T*) m_body.other.data;
+
 	if (data && m_body.other.size == sizeof(T)) {
 		val = *data;
 		return 0;

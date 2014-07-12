@@ -121,14 +121,14 @@ TaskState TaskProcessor::run(Event event) {
 			for (int i = 0; i < 100; i++) {
 				auto nt = popActiveTask();
 				if (nt) {
-					runTask(nt, Event::Timeout);
+					runTask(nt, event);
 				} else {
 					break;
 				}
 			}
 			break;
 		case Event::ChannelMessage:
-			runTask(event.task(), Event::ChannelMessage);
+			runTask(event.task(), event);
 			break;
 		case Event::InitTask:
 			if (event.task()) {
@@ -147,7 +147,7 @@ TaskState TaskProcessor::run(Event event) {
 		}
 	} else {
 		if (event.task()) {
-			runTask(event.task(), event.type());
+			runTask(event.task(), event);
 		}
 	}
 
