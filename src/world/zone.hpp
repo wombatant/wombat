@@ -50,6 +50,22 @@ class Zone: public core::Task {
 				void free();
 
 				/**
+				 * Gets the Tile at the given address. Returns null if
+				 * the given address is invalid
+				 * @param x X address of desired Tile
+				 * @param y Y address of desired Tile
+				 * @param layer layer of desired Tile
+				 * @return pointer to the Tile at the given address
+				 */
+				inline Tile *safeAt(int x, int y, int layer) {
+					if (layer < m_layers && y < m_tilesHigh && x < m_tilesWide &&
+						layer >= 0 && y >= 0 && x >= 0) {
+						return &m_tiles[layer][y][x];
+					}
+					return nullptr;
+				}
+
+				/**
 				 * Gets the Tile at the given address.
 				 * @param x X address of desired Tile
 				 * @param y Y address of desired Tile
@@ -158,10 +174,10 @@ class Zone: public core::Task {
 		class Person *getPerson(std::string id);
 
 		/**
-		 * Gets the Tile at the given point
-		 * @param x the x coordinate for the point
-		 * @param y the y coordinate for the point
-		 * @return Tile at the given point
+		 * Gets the Tile at the given address
+		 * @param x the x address the address
+		 * @param y the y address the address
+		 * @return Tile at the given address
 		 */
 		Tile *getTile(int x, int y, int layer);
 

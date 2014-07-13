@@ -97,9 +97,9 @@ class Person: public Sprite, public core::Task {
 		void onZoneChange(ZoneChangeProc zc);
 
 	private:
-		void startMoving(TimeoutProc proc, common::Point addr);
+		Error startMoving(TimeoutProc proc, common::Point addr);
 
-		void updateTimeoutProc();
+		core::TaskState updateTimeoutProc();
 
 		core::TaskState moveIn(int &operand, int goal);
 

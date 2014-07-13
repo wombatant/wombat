@@ -120,26 +120,28 @@ void Camera::updateSize() {
 
 void Camera::keyEvent(Event e) {
 	if (m_person) {
-		auto type = e.type() == Event::KeyDown ? StartMoving : StopMoving;
-		Person::Motion motion;
-		switch (e.key()) {
-		case Key::H:
-			motion = Person::MovingLeft;
-			break;
-		case Key::J:
-			motion = Person::MovingDown;
-			break;
-		case Key::K:
-			motion = Person::MovingUp;
-			break;
-		case Key::L:
-			motion = Person::MovingRight;
-			break;
-		default:
-			motion = Person::Still;
-			break;
+		auto type = e.type();
+		if (type == Event::KeyDown || type == Event::KeyUp) {
+			Person::Motion motion;
+			switch (e.key()) {
+			case Key::H:
+				motion = Person::MovingLeft;
+				break;
+			case Key::J:
+				motion = Person::MovingDown;
+				break;
+			case Key::K:
+				motion = Person::MovingUp;
+				break;
+			case Key::L:
+				motion = Person::MovingRight;
+				break;
+			default:
+				motion = Person::Still;
+				break;
+			}
+			m_person->post(Event(type == Event::KeyDown ? StartMoving : StopMoving, motion));
 		}
-		m_person->post(Event(type, motion));
 	}
 }
 

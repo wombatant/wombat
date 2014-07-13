@@ -17,7 +17,7 @@ using core::TaskState;
 using models::SpriteMotion;
 
 const Person::TimeoutProc Person::c_defaultTimeoutProc = [](Person *me) {
-	return TaskState::Waiting;
+	return me->updateTimeoutProc();
 };
 
 const Person::TimeoutProc Person::c_timeoutMoveUp = [](Person *me) {
@@ -36,7 +36,7 @@ const Person::TimeoutProc Person::c_timeoutMoveRight = [](Person *me) {
 	return me->moveOut(me->m_ptOffset.X, pt(me->m_addr).X + TileWidth);
 };
 
-const core::uint64 Person::c_timeoutInterval = 10;
+const core::uint64 Person::c_timeoutInterval = 100;
 
 Person::Person(models::Sprite model) {
 	m_facing = (models::SpriteDirection) model.Facing;
@@ -58,12 +58,13 @@ TaskState Person::run(Event e) {
 	switch ((int) e.type()) {
 	case StartMoving:
 		{
-			if (m_motion != Person::Still) {
-				retval = 0;
-			}
 			Motion flag;
 			if (e.read(flag) == 0) {
+				bool alreadyMoving = m_motion != Still;
 				m_motion |= flag;
+				if (m_motion != Person::Still && !alreadyMoving) {
+					retval = 0;
+				}
 			}
 		}
 		break;
@@ -71,7 +72,7 @@ TaskState Person::run(Event e) {
 		{
 			Motion flag;
 			if (e.read(flag) == 0) {
-				m_motion |= ~flag;
+				m_motion &= ~flag;
 			}
 		}
 		break;
@@ -79,7 +80,7 @@ TaskState Person::run(Event e) {
 		retval = TaskState::Done;
 		break;
 	case Event::Timeout:
-		m_timeoutProc(this);
+		retval = m_timeoutProc(this);
 		break;
 	}
 
@@ -119,33 +120,42 @@ void Person::onZoneChange(Person::ZoneChangeProc zc) {
 	m_onZoneChange = zc;
 }
 
-void Person::startMoving(TimeoutProc proc, common::Point addr) {
-	const auto pt = world::pt(addr);
-	if (m_zone->getTile(pt.X, pt.Y, m_layer)->claim(this) == 0) {
+Error Person::startMoving(TimeoutProc proc, common::Point addr) {
+	auto tile = m_zone->getTile(addr.X, addr.Y, m_layer);
+	if (tile && tile->claim(this) == 0) {
 		m_timeoutProc = proc;
 		m_addr = addr;
+		return 0;
 	}
+	return 1;
 }
 
-void Person::updateTimeoutProc() {
+TaskState Person::updateTimeoutProc() {
 	auto addr = m_addr;
 	auto timeoutProc = m_timeoutProc;
+	TaskState retval = TaskState::Continue;
 	if (m_motion == Still) {
 		m_timeoutProc = c_defaultTimeoutProc;
-	} else if (m_motion & MovingUp) {
-		timeoutProc = c_timeoutMoveUp;
-		addr.Y--;
-	} else if (m_motion & MovingDown) {
-		timeoutProc = c_timeoutMoveDown;
-		addr.Y++;
-	} else if (m_motion & MovingLeft) {
-		timeoutProc = c_timeoutMoveLeft;
-		addr.X--;
-	} else if (m_motion & MovingRight) {
-		timeoutProc = c_timeoutMoveRight;
-		addr.X++;
+	} else {
+		if (m_motion & MovingUp) {
+			timeoutProc = c_timeoutMoveUp;
+			addr.Y--;
+		} else if (m_motion & MovingDown) {
+			timeoutProc = c_timeoutMoveDown;
+			addr.Y++;
+		} else if (m_motion & MovingLeft) {
+			timeoutProc = c_timeoutMoveLeft;
+			addr.X--;
+		} else if (m_motion & MovingRight) {
+			timeoutProc = c_timeoutMoveRight;
+			addr.X++;
+		}
+
+		if (startMoving(m_timeoutProc, addr) == 0) {
+			retval = c_timeoutInterval;
+		}
 	}
-	startMoving(m_timeoutProc, addr);
+	return retval;
 }
 
 TaskState Person::moveIn(int &operand, int goal) {

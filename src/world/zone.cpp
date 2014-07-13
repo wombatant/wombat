@@ -167,7 +167,7 @@ Sprite *Zone::getSprite(std::string id) {
 }
 
 Tile *Zone::getTile(int x, int y, int layer) {
-	return m_tiles.at(x, y, layer);
+	return m_tiles.safeAt(x, y, layer);
 }
 
 void Zone::load() {
