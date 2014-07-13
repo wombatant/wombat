@@ -21,22 +21,22 @@ const Person::TimeoutProc Person::c_defaultTimeoutProc = [](Person *me) {
 };
 
 const Person::TimeoutProc Person::c_timeoutMoveUp = [](Person *me) {
-	return me->moveIn(me->m_ptOffset.Y, pt(me->m_addr).Y - TileHeight);
+	return me->moveIn(me->m_ptOffset.Y, 0);
 };
 
 const Person::TimeoutProc Person::c_timeoutMoveDown = [](Person *me) {
-	return me->moveOut(me->m_ptOffset.Y, pt(me->m_addr).Y + TileHeight);
+	return me->moveOut(me->m_ptOffset.Y, 0);
 };
 
 const Person::TimeoutProc Person::c_timeoutMoveLeft = [](Person *me) {
-	return me->moveIn(me->m_ptOffset.X, pt(me->m_addr).X - TileWidth);
+	return me->moveIn(me->m_ptOffset.X, 0);
 };
 
 const Person::TimeoutProc Person::c_timeoutMoveRight = [](Person *me) {
-	return me->moveOut(me->m_ptOffset.X, pt(me->m_addr).X + TileWidth);
+	return me->moveOut(me->m_ptOffset.X, 0);
 };
 
-const core::uint64 Person::c_timeoutInterval = 100;
+const core::uint64 Person::c_timeoutInterval = 16;
 
 Person::Person(models::Sprite model) {
 	m_facing = (models::SpriteDirection) model.Facing;
@@ -72,7 +72,7 @@ TaskState Person::run(Event e) {
 		{
 			Motion flag;
 			if (e.read(flag) == 0) {
-				m_motion &= ~flag;
+				m_motion ^= flag;
 			}
 		}
 		break;
@@ -89,7 +89,7 @@ TaskState Person::run(Event e) {
 
 void Person::draw(core::Graphics &gfx, common::Point pt) {
 	auto motion = m_motion == Still ? SpriteMotion::Still : SpriteMotion::Walking;
-	m_class->draw(gfx, pt, m_facing, motion);
+	m_class->draw(gfx, pt + m_ptOffset, m_facing, motion);
 }
 
 std::string Person::id() {
@@ -100,8 +100,8 @@ void Person::setZone(Zone *zone) {
 	m_zone = zone;
 }
 
-void Person::setAddress(common::Point pt) {
-	m_addr = pt;
+void Person::setAddress(common::Point addr) {
+	m_pt = pt(addr);
 }
 
 Zone *Person::getZone() {
@@ -109,49 +109,61 @@ Zone *Person::getZone() {
 }
 
 common::Point Person::getAddress() {
-	return m_addr;
+	return addr(m_pt);
 }
 
 common::Point Person::getWorldPoint() {
-	return pt(m_addr) + m_zone->bounds().pt1();
+	return m_pt + m_ptOffset + m_zone->bounds().pt1();
 }
 
 void Person::onZoneChange(Person::ZoneChangeProc zc) {
 	m_onZoneChange = zc;
 }
 
-Error Person::startMoving(TimeoutProc proc, common::Point addr) {
-	auto tile = m_zone->getTile(addr.X, addr.Y, m_layer);
+Error Person::startMoving(TimeoutProc proc, common::Point addr, common::Point newAddr) {
+	auto tile = m_zone->getTile(newAddr.X, newAddr.Y, m_layer);
 	if (tile && tile->claim(this) == 0) {
+		auto oldTile = m_zone->getTile(addr.X, addr.Y, m_layer);
+		if (oldTile) {
+			oldTile->release();
+		}
+
 		m_timeoutProc = proc;
-		m_addr = addr;
+		m_pt = pt(newAddr);
 		return 0;
 	}
 	return 1;
 }
 
 TaskState Person::updateTimeoutProc() {
-	auto addr = m_addr;
+	auto newAddr = getAddress();
+	auto ptOffset = m_ptOffset;
 	auto timeoutProc = m_timeoutProc;
 	TaskState retval = TaskState::Continue;
 	if (m_motion == Still) {
 		m_timeoutProc = c_defaultTimeoutProc;
 	} else {
 		if (m_motion & MovingUp) {
+			newAddr.Y--;
+			ptOffset.Y += TileHeight;
 			timeoutProc = c_timeoutMoveUp;
-			addr.Y--;
 		} else if (m_motion & MovingDown) {
+			newAddr.Y++;
+			ptOffset.Y -= TileHeight;
 			timeoutProc = c_timeoutMoveDown;
-			addr.Y++;
 		} else if (m_motion & MovingLeft) {
+			newAddr.X--;
+			ptOffset.X += TileWidth;
 			timeoutProc = c_timeoutMoveLeft;
-			addr.X--;
 		} else if (m_motion & MovingRight) {
+			newAddr.X++;
+			ptOffset.X -= TileWidth;
 			timeoutProc = c_timeoutMoveRight;
-			addr.X++;
 		}
 
-		if (startMoving(m_timeoutProc, addr) == 0) {
+		if (startMoving(m_timeoutProc, getAddress(), newAddr) == 0) {
+			m_timeoutProc = timeoutProc;
+			m_ptOffset = ptOffset;
 			retval = c_timeoutInterval;
 		}
 	}
@@ -159,8 +171,8 @@ TaskState Person::updateTimeoutProc() {
 }
 
 TaskState Person::moveIn(int &operand, int goal) {
-	operand -= 2;
-	if (operand < goal) {
+	operand -= 1;
+	if (operand <= goal) {
 		operand = goal;
 		updateTimeoutProc();
 	}
@@ -168,8 +180,8 @@ TaskState Person::moveIn(int &operand, int goal) {
 }
 
 TaskState Person::moveOut(int &operand, int goal) {
-	operand += 2;
-	if (operand > goal) {
+	operand += 1;
+	if (operand >= goal) {
 		operand = goal;
 		updateTimeoutProc();
 	}

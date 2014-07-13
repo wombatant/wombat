@@ -45,7 +45,7 @@ class Person: public Sprite, public core::Task {
 		ZoneChangeProc m_onZoneChange = []() {};
 		TimeoutProc m_timeoutProc = c_defaultTimeoutProc;
 		std::string m_id;
-		common::Point m_addr;
+		common::Point m_pt;
 		common::Point m_ptOffset;
 		int m_layer = 0;
 		int m_motion = Still;
@@ -70,7 +70,7 @@ class Person: public Sprite, public core::Task {
 
 		void setZone(class Zone *zone) override;
 
-		void setAddress(common::Point pt) override;
+		void setAddress(common::Point addr) override;
 
 		/**
 		 * Gets the Zone of this Person.
@@ -97,7 +97,7 @@ class Person: public Sprite, public core::Task {
 		void onZoneChange(ZoneChangeProc zc);
 
 	private:
-		Error startMoving(TimeoutProc proc, common::Point addr);
+		Error startMoving(TimeoutProc proc, common::Point oldAddr, common::Point newAddr);
 
 		core::TaskState updateTimeoutProc();
 
