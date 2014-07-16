@@ -24,9 +24,6 @@ void Tile::draw(core::Graphics &gfx, Point pt) {
 		m_tileClass->drawLower(gfx, pt);
 		m_tileClass->drawUpper(gfx, pt);
 	}
-	if (m_occupant) {
-		m_occupant->draw(gfx, pt);
-	}
 
 	if (_debug) {
 		gfx.drawLine(pt.X, pt.Y, pt.X, pt.Y + TileHeight);

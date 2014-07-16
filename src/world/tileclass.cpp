@@ -44,13 +44,9 @@ void TileClass::drawLower(core::Graphics &g, common::Point p) {
 
 void TileClass::draw(core::Graphics &g, int x, int y, AnimLayer &anim) {
 	if (anim.animation) {
-		g.pushClipRect(x, y, TileWidth, TileHeight);
-		{
-			auto x = anim.point.X;
-			auto y = anim.point.Y;
-			g.draw(anim.animation->getImage(), x, y);
-		}
-		g.popClipRect();
+		x += anim.point.X;
+		y += anim.point.Y;
+		g.draw(anim.animation->getImage(), x, y);
 	}
 }
 

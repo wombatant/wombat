@@ -107,7 +107,8 @@ Bounds Zone::bounds() {
 	return bnds;
 }
 
-void Zone::draw(core::Graphics &g, Bounds bnds, Point translation) {
+void Zone::draw(core::Graphics &g, Bounds bnds,
+                Point translation, std::pair<Sprite*, common::Point> focus) {
 	auto loc = pt(bounds().pt1()) + translation;
 
 	for (auto l = 0; l < m_tiles.layers(); l++) {
@@ -115,6 +116,23 @@ void Zone::draw(core::Graphics &g, Bounds bnds, Point translation) {
 			for (auto x = bnds.X; x < bnds.x2(); x += TileWidth) {
 				auto tile = m_tiles.at(x / TileWidth, y / TileHeight, l);
 				tile->draw(g, pt(addr(Point(x, y))) + loc);
+			}
+		}
+	}
+
+	for (auto l = 0; l < m_tiles.layers(); l++) {
+		for (auto y = bnds.Y; y < bnds.y2(); y += TileHeight) {
+			for (auto x = bnds.X; x < bnds.x2(); x += TileWidth) {
+				auto oc = m_tiles.at(x / TileWidth, y / TileHeight, l)->getOccupant();
+				if (oc) {
+					common::Point pt;
+					if (oc != focus.first) {
+						pt = world::pt(addr(Point(x, y))) + loc;
+					} else {
+						pt = focus.second;
+					}
+					oc->draw(g, pt);
+				}
 			}
 		}
 	}

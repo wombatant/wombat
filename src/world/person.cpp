@@ -36,7 +36,7 @@ const Person::TimeoutProc Person::c_timeoutMoveRight = [](Person *me) {
 	return me->moveOut(me->m_ptOffset.X, 0);
 };
 
-const core::uint64 Person::c_timeoutInterval = 16;
+const core::uint64 Person::c_timeoutInterval = 8;
 
 Person::Person(models::Sprite model) {
 	m_facing = (models::SpriteDirection) model.Facing;
@@ -89,7 +89,7 @@ TaskState Person::run(Event e) {
 
 void Person::draw(core::Graphics &gfx, common::Point pt) {
 	auto motion = m_motion == Still ? SpriteMotion::Still : SpriteMotion::Walking;
-	m_class->draw(gfx, pt + m_ptOffset, m_facing, motion);
+	m_class->draw(gfx, pt, m_facing, motion);
 }
 
 std::string Person::id() {

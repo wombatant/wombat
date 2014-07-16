@@ -49,13 +49,17 @@ TaskState Camera::run(Event e) {
 
 void Camera::draw(core::Graphics &g) {
 	Point translation;
+	std::pair<Sprite*, common::Point> focus;
 	if (m_person) {
 		auto dispSize = Point(core::displayWidth(), core::displayHeight());
 		auto loc = (m_person->getWorldPoint() - (dispSize / 2));
+		// always keep the focus sprite centered
+		auto focusPt = dispSize / 2 - common::Point(TileWidth, TileHeight) / 2;
 		loc += Point(TileWidth, TileHeight) / 2;
 		m_bounds.X = loc.X;
 		m_bounds.Y = loc.Y;
 		translation = loc * -1;
+		focus = std::pair<Sprite*, common::Point>(m_person, focusPt);
 	}
 
 	findZones();
@@ -79,7 +83,7 @@ void Camera::draw(core::Graphics &g) {
 			bnds.Height = zbnds.y2() - bnds.Y;
 		}
 
-		z->draw(g, bnds, translation);
+		z->draw(g, bnds, translation, focus);
 	}
 }
 
