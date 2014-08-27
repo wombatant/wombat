@@ -8,6 +8,7 @@
 #include <vector>
 
 #include <SDL.h>
+#include <SDL_opengl.h>
 
 #include "../core.hpp"
 
@@ -58,7 +59,7 @@ const auto Event_DrawEvent = SDL_RegisterEvents(1);
 const auto Event_SemaphorePost = SDL_RegisterEvents(1);
 
 SDL_Window *_display = nullptr;
-SDL_Renderer *_renderer = nullptr;
+SDL_GLContext _glContext = nullptr;
 
 Key toWombatKey(SDL_Event);
 void _updateEventTime();
@@ -117,12 +118,18 @@ void draw() {
 }
 
 void _draw() {
-	SDL_RenderClear(_renderer);
+	//SDL_RenderClear(_renderer);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	for (auto d : _drawers) {
+		//glTranslated((double) -(w / 2), (double) -(h / 2), 0);
+		//glTranslated((double) translation->getX(), (double) translation->getY(), 0);
+
 		d.first->draw(*d.second);
 		d.second->resetViewport();
 	}
-	SDL_RenderPresent(_renderer);
+	SDL_GL_SwapWindow(_display);
 }
 
 void main() {
@@ -150,6 +157,9 @@ void main() {
 			}
 		} else if (t == SDL_WINDOWEVENT) {
 			if (sev.window.event == SDL_WINDOWEVENT_RESIZED) {
+				glLoadIdentity();
+				glViewport(0, 0, displayWidth(), displayHeight());
+				glOrtho(0.0f, displayWidth(), displayHeight(), 0.0f, -1.0f, 1.0f);
 				_submgr.post(Event::ScreenSizeChange);
 			}
 		} else if (t == SDL_QUIT) {
@@ -181,12 +191,22 @@ int init(models::Settings settings) {
 	} else {
 		flags = (SDL_WindowFlags) (flags | SDL_WINDOW_RESIZABLE);
 	}
+
 	_display = SDL_CreateWindow("Wombat", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, flags);
-	if (!_display)
-		return -3;
-	_renderer = SDL_CreateRenderer(_display, -1, SDL_RENDERER_ACCELERATED);
-	if (!_renderer)
-		return -4;
+	if (!_display) {
+		return -2;
+	}
+
+
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+	SDL_GL_SetSwapInterval(1);
+	_glContext = SDL_GL_CreateContext(_display);
+
+	glLoadIdentity();
+	glOrtho(0.0f, displayWidth(), displayHeight(), 0.0f, -1.0f, 1.0f);
 
 	_running = true;
 	_updateEventTime();

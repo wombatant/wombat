@@ -13,7 +13,7 @@ namespace world {
 using models::SpriteDirection;
 using models::SpriteMotion;
 
-core::Flyweight<models::PersonClass> PersonClass::c_personClasses(
+core::ModelFlyweight<models::PersonClass> PersonClass::c_personClasses(
 	[](models::PersonClass model) {
 		if (model.Import != "") {
 			core::read(model, model.Import);

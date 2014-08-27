@@ -26,9 +26,8 @@ void Graphics::draw(Image *img, common::Point pt) {
 
 // Image
 
-Flyweight<models::Image> imageCache([](models::cyborgbear::Model &key) -> Image* {
-	models::Image &mod = (models::Image&) key;
-	Image *i = new Image(mod);
+ModelFlyweight<models::Image> _imageCache([](models::Image &key) -> Image* {
+	Image *i = new Image(key);
 	if (i->loaded()) {
 		return i;
 	} else {
@@ -43,16 +42,16 @@ Image *checkoutImage(Path path) {
 	img.SpriteSheet = path;
 	img.DefaultSize.Width = -1;
 	img.DefaultSize.Height = -1;
-	return (Image*) imageCache.checkout(img);
+	return (Image*) _imageCache.checkout(img);
 }
 
 Image *checkoutImage(models::Image img) {
-	return (Image*) imageCache.checkout(img);
+	return (Image*) _imageCache.checkout(img);
 }
 
 
 void checkinImage(Image *i) {
-	imageCache.checkin(i->key());
+	_imageCache.checkin(i->key());
 }
 
 std::string Image::key() {
@@ -70,7 +69,7 @@ int Image::defaultHeight() {
 
 // Animation
 
-Flyweight<models::Animation> animCache([](models::Animation &key) -> Animation* {
+ModelFlyweight<models::Animation> _animCache([](models::Animation &key) -> Animation* {
 	if (key.Import != "") {
 		core::read(key, key.Import);
 	}
@@ -84,15 +83,15 @@ Flyweight<models::Animation> animCache([](models::Animation &key) -> Animation* 
 });
 
 Animation *checkoutAnimation(std::string path) {
-	return (Animation*) animCache.checkout(path);
+	return (Animation*) _animCache.checkout(path);
 }
 
 Animation *checkoutAnimation(models::Animation &anim) {
-	return (Animation*) animCache.checkout(anim);
+	return (Animation*) _animCache.checkout(anim);
 }
 
 void checkinAnimation(Animation *i) {
-	animCache.checkin(i->key());
+	_animCache.checkin(i->key());
 }
 
 Animation::Animation(models::Animation model) {

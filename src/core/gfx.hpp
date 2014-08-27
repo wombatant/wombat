@@ -18,14 +18,13 @@ namespace wombat {
 namespace core {
 
 int displayWidth();
-
 int displayHeight();
 
 
-class Image: public Flyweight<models::Image>::Value {
+class Image: public ModelFlyweight<models::Image>::Value {
 	friend class Graphics;
 	private:
-		void *m_img = nullptr;
+		uint m_img = 0;
 		models::Size m_defaultSize;
 		std::string m_key;
 
@@ -72,7 +71,7 @@ class Image: public Flyweight<models::Image>::Value {
 		std::string key();
 };
 
-class Animation: public Flyweight<models::Animation>::Value {
+class Animation: public ModelFlyweight<models::Animation>::Value {
 	private:
 		std::vector<Image*> m_imgs;
 		uint64 m_lastUpdate;
@@ -110,8 +109,6 @@ class Graphics {
 
 	public:
 		void drawLine(int x1, int y1, int x2, int y2);
-
-		void draw(Image *img, int x, int y, int w, int h);
 
 		void draw(Image *img, int x, int y);
 

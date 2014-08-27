@@ -53,10 +53,10 @@ models::cyborgbear::Error read(models::cyborgbear::Model &model, Path path);
  * Manages Model IO, preventing redundancies in memory.
  */
 template <class Model>
-class Flyweight {
+class ModelFlyweight {
 	public:
 		class Value {
-			friend class Flyweight;
+			friend class ModelFlyweight;
 			protected:
 				int dependents;
 			public:
@@ -64,7 +64,7 @@ class Flyweight {
 				virtual std::string key() = 0;
 		};
 		class GenericValue: public Value {
-			friend class Flyweight;
+			friend class ModelFlyweight;
 			protected:
 				std::string m_key;
 			public:
@@ -81,7 +81,7 @@ class Flyweight {
 		core::Mutex m_lock;
 
 	public:
-		Flyweight(FlyweightNodeBuilder build) {
+		ModelFlyweight(FlyweightNodeBuilder build) {
 			m_build = build;
 		}
 

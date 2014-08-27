@@ -14,9 +14,9 @@
 namespace wombat {
 namespace world {
 
-class SpriteClass: public core::Flyweight<models::SpriteClass>::GenericValue {
+class SpriteClass: public core::ModelFlyweight<models::SpriteClass>::GenericValue {
 	private:
-		static core::Flyweight<models::SpriteClass> c_spriteClasses;
+		static core::ModelFlyweight<models::SpriteClass> c_spriteClasses;
 		std::vector<std::vector<AnimLayer>> m_anims;
 
 	public:

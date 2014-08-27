@@ -10,6 +10,14 @@
 namespace wombat {
 namespace core {
 
+Locker::Locker(Mutex &mutex): m_mutex(mutex) {
+	m_mutex.lock();
+}
+
+Locker::~Locker() {
+	m_mutex.unlock();
+}
+
 bool EventQueue::hasPosts() {
 	return !m_posts.empty();
 }

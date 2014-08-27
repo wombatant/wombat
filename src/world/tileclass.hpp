@@ -14,9 +14,9 @@
 namespace wombat {
 namespace world {
 
-class TileClass: public core::Flyweight<models::TileClass>::GenericValue {
+class TileClass: public core::ModelFlyweight<models::TileClass>::GenericValue {
 	private:
-		static core::Flyweight<models::TileClass> c_tileClasses;
+		static core::ModelFlyweight<models::TileClass> c_tileClasses;
 
 		int m_terrainFlags = 0;
 		AnimLayer m_upperAnim;

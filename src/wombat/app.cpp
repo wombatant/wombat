@@ -49,6 +49,7 @@ TaskState App::run(Event e) {
 		break;
 	case Event::Timeout:
 		core::draw();
+		cout << "draw\n";
 		retval = 16;
 		break;
 	case Event::Quit:

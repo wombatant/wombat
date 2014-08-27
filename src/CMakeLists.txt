@@ -4,7 +4,6 @@ project(wombat)
 
 set(WOMBAT_BUILD_TYPE "Native" CACHE STRING "The type of build to produce(Native/GBA)")
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/../cmake/Modules)
 include(address_sanitizer)
 
 add_definitions(
@@ -30,6 +29,11 @@ if(WOMBAT_BUILD_TYPE STREQUAL "Native")
 	find_package(SDL_IMAGE REQUIRED)
 	include_directories(${SDL_IMAGE_INCLUDE_DIR})
 	set(LIBS ${LIBS} ${SDL_IMAGE_LIBRARY})
+
+	find_package(OpenGL REQUIRED)
+	include_directories(${OpenGL_INCLUDE_DIRS})
+	add_definitions(${OpenGL_DEFINITIONS})
+	set(LIBS ${LIBS} ${OPENGL_LIBRARIES})
 elseif(WOMBAT_BUILD_TYPE STREQUAL "GBA")
 	set(LIBS ${LIBS} ${GBA_LIBRARY})
 	set(LIBS ${LIBS} ${FILESYSTEM_LIBRARY})

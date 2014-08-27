@@ -13,7 +13,7 @@ namespace world {
 
 // Static
 
-core::Flyweight<models::TileClass> TileClass::c_tileClasses(
+core::ModelFlyweight<models::TileClass> TileClass::c_tileClasses(
 	[](models::TileClass model) {
 		if (model.Import != "") {
 			core::read(model, model.Import);

@@ -14,6 +14,7 @@
 namespace wombat {
 namespace core {
 
+
 class Mutex {
 	private:
 		void *m_mutex;
@@ -45,6 +46,23 @@ class Mutex {
 		Mutex(const Mutex&);
 		Mutex &operator=(const Mutex&);
 }; 
+
+class Locker {
+	private:
+		Mutex &m_mutex;
+	public:
+		/**
+		 * Locks the given Mutex
+		 * @param mutex the Mutex to lock
+		 */
+		Locker(Mutex &mutex);
+
+		/**
+		 * Destructor
+		 * Unlocks the Mutex of this Locker.
+		 */
+		~Locker();
+};
 
 class BaseEventQueue {
 	public:

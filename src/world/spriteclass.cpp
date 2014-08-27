@@ -11,7 +11,7 @@
 namespace wombat {
 namespace world {
 
-core::Flyweight<models::SpriteClass> SpriteClass::c_spriteClasses(
+core::ModelFlyweight<models::SpriteClass> SpriteClass::c_spriteClasses(
 	[](models::SpriteClass model) -> SpriteClass* {
 		switch ((models::SpriteType) model.SpriteType) {
 		case models::SpriteType::Inanimate:
