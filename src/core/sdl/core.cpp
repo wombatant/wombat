@@ -109,13 +109,6 @@ bool SdlMainEventQueue::hasPosts() {
 
 // Main TaskProcessor modifiers
 
-void draw() {
-	SDL_Event ev;
-	SDL_zero(ev);
-	ev.type = Event_DrawEvent;
-	SDL_PushEvent(&ev);
-}
-
 void _draw() {
 	SDL_RenderClear(_renderer);
 	for (auto d : _drawers) {
@@ -123,6 +116,17 @@ void _draw() {
 		d.second->resetViewport();
 	}
 	SDL_RenderPresent(_renderer);
+}
+
+void draw() {
+	// TODO: Make it run this commented out code if the current thread is
+	//       not the main thread.
+	//SDL_Event ev;
+	//SDL_zero(ev);
+	//ev.type = Event_DrawEvent;
+	//SDL_PushEvent(&ev);
+
+	_draw();
 }
 
 void main() {

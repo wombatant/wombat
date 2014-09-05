@@ -24,11 +24,6 @@ void Tile::draw(core::Graphics &gfx, Point pt) {
 		m_tileClass->drawLower(gfx, pt);
 		m_tileClass->drawUpper(gfx, pt);
 	}
-
-	if (_debug) {
-		gfx.drawLine(pt.X, pt.Y, pt.X, pt.Y + TileHeight);
-		gfx.drawLine(pt.X, pt.Y, pt.X + TileWidth, pt.Y);
-	}
 }
 
 Sprite *Tile::getOccupant() {

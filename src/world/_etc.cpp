@@ -12,7 +12,7 @@
 namespace wombat {
 namespace world {
 
-bool _debug = true;
+bool _debug = false;
 
 int TileWidth = 32;
 int TileHeight = 32;
