@@ -71,6 +71,11 @@ class Image: public Flyweight<models::Image>::Value {
 		bool loaded();
 
 		std::string key();
+
+	private:
+		// disallow copying
+		Image(Image&);
+		Image &operator=(Image&);
 };
 
 class Animation: public Flyweight<models::Animation>::Value {
