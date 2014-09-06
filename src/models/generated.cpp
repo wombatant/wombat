@@ -2388,16 +2388,28 @@ cyborgbear::Error PersonClass::loadJsonObj(cyborgbear::JsonVal in) {
 							this->Overhead[i].resize(size);
 							for (unsigned int ii = 0; ii < size; ii++) {
 								cyborgbear::JsonValOut obj2 = cyborgbear::arrayRead(array1, ii);
-								{
-									cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj2);
-									if (cyborgbear::isObj(finalObj)) {
-										retval |= this->Overhead[i][ii].loadJsonObj(obj2);
-									} else {
-										if (cyborgbear::isNull(obj2)) {
-											retval |= cyborgbear::Error_MissingField;
-										} else {
-											retval |= cyborgbear::Error_TypeMismatch;
+								if (!cyborgbear::isNull(obj2)) {
+									if (cyborgbear::isArray(obj2)) {
+										cyborgbear::JsonArrayOut array2 = cyborgbear::toArray(obj2);
+										unsigned int size = cyborgbear::arraySize(array2);
+										this->Overhead[i][ii].resize(size);
+										for (unsigned int iii = 0; iii < size; iii++) {
+											cyborgbear::JsonValOut obj3 = cyborgbear::arrayRead(array2, iii);
+											{
+												cyborgbear::JsonValOut finalObj = cyborgbear::toObj(obj3);
+												if (cyborgbear::isObj(finalObj)) {
+													retval |= this->Overhead[i][ii][iii].loadJsonObj(obj3);
+												} else {
+													if (cyborgbear::isNull(obj3)) {
+														retval |= cyborgbear::Error_MissingField;
+													} else {
+														retval |= cyborgbear::Error_TypeMismatch;
+													}
+												}
+											}
 										}
+									} else {
+										retval |= cyborgbear::Error_TypeMismatch;
 									}
 								}
 							}
@@ -3369,20 +3381,25 @@ cyborgbear::JsonValOut PersonClass::buildJsonObj() {
 		cyborgbear::decref(out1);
 	}
 	{
-		cyborgbear::JsonArrayOut out2 = cyborgbear::newJsonArray();
+		cyborgbear::JsonArrayOut out3 = cyborgbear::newJsonArray();
 		for (cyborgbear::VectorIterator i = 0; i < this->Overhead.size(); i++) {
-			cyborgbear::JsonArrayOut out1 = cyborgbear::newJsonArray();
+			cyborgbear::JsonArrayOut out2 = cyborgbear::newJsonArray();
 			for (cyborgbear::VectorIterator ii = 0; ii < this->Overhead[i].size(); ii++) {
-				cyborgbear::JsonValOut obj0 = this->Overhead[i][ii].buildJsonObj();
-				cyborgbear::JsonValOut out0 = obj0;
-				cyborgbear::arrayAdd(out1, out0);
-				cyborgbear::decref(out0);
+				cyborgbear::JsonArrayOut out1 = cyborgbear::newJsonArray();
+				for (cyborgbear::VectorIterator iii = 0; iii < this->Overhead[i][ii].size(); iii++) {
+					cyborgbear::JsonValOut obj0 = this->Overhead[i][ii][iii].buildJsonObj();
+					cyborgbear::JsonValOut out0 = obj0;
+					cyborgbear::arrayAdd(out1, out0);
+					cyborgbear::decref(out0);
+				}
+				cyborgbear::arrayAdd(out2, out1);
+				cyborgbear::decref(out1);
 			}
-			cyborgbear::arrayAdd(out2, out1);
-			cyborgbear::decref(out1);
+			cyborgbear::arrayAdd(out3, out2);
+			cyborgbear::decref(out2);
 		}
-		cyborgbear::objSet(obj, "Overhead", out2);
-		cyborgbear::decref(out2);
+		cyborgbear::objSet(obj, "Overhead", out3);
+		cyborgbear::decref(out3);
 	}
 	{
 		cyborgbear::JsonValOut obj0 = this->FrontView.buildJsonObj();

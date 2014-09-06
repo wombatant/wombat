@@ -12,6 +12,7 @@ namespace world {
 
 using models::SpriteDirection;
 using models::SpriteMotion;
+using models::TerrainType;
 
 core::Flyweight<models::PersonClass> PersonClass::c_personClasses(
 	[](models::PersonClass model) {
@@ -29,22 +30,26 @@ PersonClass::PersonClass(models::PersonClass model) {
 	for (uint i = 0; i < model.Overhead.size(); i++) {
 		m_animations[i].resize(model.Overhead[i].size());
 		for (uint ii = 0; ii < model.Overhead[i].size(); ii++) {
-			m_animations[i][ii].load(model.Overhead[i][ii]);
+			m_animations[i][ii].resize(model.Overhead[i][ii].size());
+			for (uint iii = 0; iii < model.Overhead[i][ii].size(); iii++) {
+				m_animations[i][ii][iii].load(model.Overhead[i][ii][iii]);
+			}
 		}
 	}
 }
 
-void PersonClass::draw(core::Graphics &gfx, common::Point pt, SpriteDirection facing, SpriteMotion motion) {
-	auto anim = this->anim(facing, motion);
+void PersonClass::draw(core::Graphics &gfx, common::Point pt,
+                       TerrainType tt, SpriteDirection facing, SpriteMotion motion) {
+	auto anim = this->anim(tt, facing, motion);
 	if (anim.animation) {
 		gfx.draw(anim.animation->getImage(), pt + anim.point);
 	}
 }
 
-AnimLayer PersonClass::anim(SpriteDirection facing, SpriteMotion motion) {
+AnimLayer PersonClass::anim(TerrainType tt, SpriteDirection facing, SpriteMotion motion) {
 	for (int i = 0; i < 2; i++) {
 		if ((uint) facing < m_animations.size() && (uint) motion < m_animations[(uint) facing].size()) {
-			return m_animations[(uint) facing][(uint) motion];
+			return m_animations[(uint) tt][(uint) facing][(uint) motion];
 		}
 		facing = (SpriteDirection) 0;
 		motion = (SpriteMotion) 0;

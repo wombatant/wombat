@@ -1604,7 +1604,7 @@ class PersonClass: public cyborgbear::Model {
 #endif
 		string Import;
 		std::map< string, string > Title;
-		std::vector< std::vector< models::AnimLayer > > Overhead;
+		std::vector< std::vector< std::vector< models::AnimLayer > > > Overhead;
 		models::Animation FrontView;
 		models::Animation BackView;
 };

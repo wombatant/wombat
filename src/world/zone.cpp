@@ -123,7 +123,8 @@ void Zone::draw(core::Graphics &g, Bounds bnds,
 	for (auto l = 0; l < m_tiles.layers(); l++) {
 		for (auto y = bnds.Y; y < bnds.y2(); y += TileHeight) {
 			for (auto x = bnds.X; x < bnds.x2(); x += TileWidth) {
-				auto oc = m_tiles.at(x / TileWidth, y / TileHeight, l)->getOccupant();
+				auto tile = m_tiles.at(x / TileWidth, y / TileHeight, l);
+				auto oc = tile->getOccupant();
 				if (oc) {
 					common::Point pt;
 					if (oc != focus.first) {
@@ -131,7 +132,7 @@ void Zone::draw(core::Graphics &g, Bounds bnds,
 					} else {
 						pt = focus.second;
 					}
-					oc->draw(g, pt);
+					oc->draw(g, tile, pt);
 				}
 			}
 		}

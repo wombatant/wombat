@@ -18,7 +18,7 @@ class PersonClass: public core::Flyweight<models::PersonClass>::GenericValue {
 	private:
 		static core::Flyweight<models::PersonClass> c_personClasses;
 		std::string m_title;
-		std::vector<std::vector<AnimLayer>> m_animations;
+		std::vector<std::vector<std::vector<AnimLayer>>> m_animations;
 
 	public:
 		/**
@@ -27,10 +27,13 @@ class PersonClass: public core::Flyweight<models::PersonClass>::GenericValue {
 		 */
 		explicit PersonClass(models::PersonClass model);
 
-		void draw(core::Graphics &gfx, common::Point pt, models::SpriteDirection facing, models::SpriteMotion motion);
+		void draw(core::Graphics &gfx, common::Point pt,
+		          models::TerrainType tt,
+		          models::SpriteDirection facing,
+		          models::SpriteMotion motion);
 
 	private:
-		AnimLayer anim(models::SpriteDirection, models::SpriteMotion);
+		AnimLayer anim(models::TerrainType tt, models::SpriteDirection, models::SpriteMotion);
 
 	public:
 		/**

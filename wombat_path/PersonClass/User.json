@@ -1,7 +1,9 @@
 {
 	"Overhead": [
 		[
-			{"Animation": "Animations/Animation1"}
+			[
+				{"Animation": "Animations/Animation1"}
+			]
 		]
 	]
 }

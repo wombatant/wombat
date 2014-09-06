@@ -39,7 +39,6 @@ class Person: public Sprite, public core::Task {
 		static const uint64_t c_timeoutInterval;
 
 		models::SpriteDirection m_facing = models::SpriteDirection::North;
-		models::Person m_model; // model representing this person
 		PersonClass *m_class = nullptr;
 		class Zone *m_zone = nullptr;
 		ZoneChangeProc m_onZoneChange = []() {};
@@ -65,7 +64,7 @@ class Person: public Sprite, public core::Task {
 
 		core::TaskState run(core::Event) override;
 
-		void draw(core::Graphics &gfx, common::Point pt) override;
+		void draw(core::Graphics &gfx, class Tile *tile, common::Point pt) override;
 
 		std::string id() override;
 
