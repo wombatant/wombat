@@ -188,7 +188,7 @@ int init(models::Settings settings) {
 	_display = SDL_CreateWindow("Wombat", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, flags);
 	if (!_display)
 		return -3;
-	_renderer = SDL_CreateRenderer(_display, -1, SDL_RENDERER_ACCELERATED);
+	_renderer = SDL_CreateRenderer(_display, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (!_renderer)
 		return -4;
 

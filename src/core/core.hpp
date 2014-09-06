@@ -8,6 +8,7 @@
 #ifndef WOMBAT_CORE_CORE_HPP
 #define WOMBAT_CORE_CORE_HPP
 
+#include <cstdint>
 #include <iostream>
 #include <common/common.hpp>
 #include <models/models.hpp>
@@ -23,5 +24,13 @@
 
 using std::cout;
 using std::endl;
+using std::int8_t;
+using std::uint8_t;
+using std::int16_t;
+using std::uint16_t;
+using std::int32_t;
+using std::uint32_t;
+using std::int64_t;
+using std::uint64_t;
 
 #endif
