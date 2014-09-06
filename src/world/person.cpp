@@ -38,7 +38,7 @@ const Person::TimeoutProc Person::c_timeoutMoveRight = [](Person *me) {
 	return me->moveOut(me->m_ptOffset.X, 0);
 };
 
-const core::uint64 Person::c_timeoutInterval = 8;
+const uint64_t Person::c_timeoutInterval = 8;
 
 Person::Person(models::Sprite model) {
 	m_facing = (models::SpriteDirection) model.Facing;
@@ -47,7 +47,7 @@ Person::Person(models::Sprite model) {
 	models::Person person;
 	core::read(person, model.Data);
 	m_class = PersonClass::checkout(person.PersonClass);
-	m_creatures = person.Creatures;
+	generateAbilities(person);
 }
 
 Person::~Person() {
@@ -124,6 +124,21 @@ void Person::onZoneChange(Person::ZoneChangeProc zc) {
 
 bool Person::hasAbility(WorldAbilityFlags ability) {
 	return ((int) ability) & ((int) m_abilities);
+}
+
+void Person::generateAbilities(models::Person person) {
+	m_abilities = WorldAbilityFlags::None;
+
+	for (auto path : person.Creatures) {
+		models::Creature c;
+		core::read(c, path);
+
+		for (auto mi : c.Moves) {
+			models::CreatureMove cm;
+			core::read(cm, mi.CreatureMove);
+			m_abilities = (WorldAbilityFlags) (((int) m_abilities) | ((int) cm.WorldAbilityFlags));
+		}
+	}
 }
 
 bool Person::canTraverse(TerrainType type) {

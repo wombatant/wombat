@@ -36,13 +36,12 @@ class Person: public Sprite, public core::Task {
 		static const TimeoutProc c_timeoutMoveDown;
 		static const TimeoutProc c_timeoutMoveLeft;
 		static const TimeoutProc c_timeoutMoveRight;
-		static const core::uint64 c_timeoutInterval;
+		static const uint64_t c_timeoutInterval;
 
 		models::SpriteDirection m_facing = models::SpriteDirection::North;
 		models::Person m_model; // model representing this person
 		PersonClass *m_class = nullptr;
 		class Zone *m_zone = nullptr;
-		std::vector<std::string> m_creatures;
 		ZoneChangeProc m_onZoneChange = []() {};
 		TimeoutProc m_timeoutProc = c_defaultTimeoutProc;
 		std::string m_id;
@@ -106,6 +105,11 @@ class Person: public Sprite, public core::Task {
 		bool hasAbility(models::WorldAbilityFlags ability);
 
 	private:
+		/**
+		 * Fills out this Person's abilities according the abilities of the creatures in its party.
+		 */
+		void generateAbilities(models::Person);
+
 		bool canTraverse(models::TerrainType);
 
 		Error startMoving(TimeoutProc proc, common::Point oldAddr, common::Point newAddr);

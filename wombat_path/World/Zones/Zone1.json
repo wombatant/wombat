@@ -3,24 +3,26 @@
 	"Tiles": [
 		[
 			[
-				{"TileClass": {
-					 "Import": "",
-					 "TerrainType": 1,
-					 "LowerAnim": {
-						  "Animation": "Animations/Dirt",
-						  "Point": {
-								"X": 0,
-								"Y": 0
-						  }
-					 },
-					 "UpperAnim": {
-						  "Animation": "",
-						  "Point": {
-								"X": 0,
-								"Y": 0
-						  }
-					 }
-				}},
+				{
+					"TileClass": {
+						 "Import": "",
+						 "TerrainType": 1,
+						 "LowerAnim": {
+							  "Animation": "Animations/Dirt",
+							  "Point": {
+									"X": 0,
+									"Y": 0
+							  }
+						 },
+						 "UpperAnim": {
+							  "Animation": "",
+							  "Point": {
+									"X": 0,
+									"Y": 0
+							  }
+						 }
+					}
+				},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},
 				{"TileClass": {"Import": "World/Tiles/Tile1"}},

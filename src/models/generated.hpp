@@ -979,6 +979,69 @@ namespace models {
 
 using cyborgbear::string;
 
+class ZoneInstance: public cyborgbear::Model {
+
+	public:
+
+		ZoneInstance();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const ZoneInstance&) const;
+
+		bool operator!=(const ZoneInstance&) const;
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		string AccessorID;
+		string ZoneHeader;
+		models::Point Address;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
+class CreatureType: public cyborgbear::Model {
+
+	public:
+
+		CreatureType();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const CreatureType&) const;
+
+		bool operator!=(const CreatureType&) const;
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		std::map< string, string > Name;
+		bool Special;
+		std::vector< string > StrongAgainst;
+		std::vector< string > WeakAgainst;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
 class AnimationSlide: public cyborgbear::Model {
 
 	public:
@@ -1161,129 +1224,27 @@ namespace models {
 
 using cyborgbear::string;
 
-class CreatureMove: public cyborgbear::Model {
+class Fraction: public cyborgbear::Model {
 
 	public:
 
-		CreatureMove();
+		Fraction();
 
 		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
 
 		cyborgbear::JsonValOut buildJsonObj();
 
-		bool operator==(const CreatureMove&) const;
+		bool operator==(const Fraction&) const;
 
-		bool operator!=(const CreatureMove&) const;
+		bool operator!=(const Fraction&) const;
 #ifdef CYBORGBEAR_BOOST_ENABLED
 
 		virtual string toBoostBinary();
 
 		virtual void fromBoostBinary(string dat);
 #endif
-		std::map< string, string > Name;
-		string Type;
-		int Power;
-		bool RequiresRegarge;
-		string Script;
-		models::StatusEffect Burn;
-		models::StatusEffect Freeze;
-		models::StatusEffect Paralyze;
-		models::StatusEffect Poison;
-		models::StatusEffect Sleep;
-		int WorldAbilityFlags;
-};
-
-}
-
-
-namespace models {
-
-using cyborgbear::string;
-
-class Animation: public cyborgbear::Model {
-
-	public:
-
-		Animation();
-
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
-		bool operator==(const Animation&) const;
-
-		bool operator!=(const Animation&) const;
-#ifdef CYBORGBEAR_BOOST_ENABLED
-
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		string Import;
-		std::vector< models::AnimationSlide > Images;
-};
-
-}
-
-
-namespace models {
-
-using cyborgbear::string;
-
-class TileClass: public cyborgbear::Model {
-
-	public:
-
-		TileClass();
-
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
-		bool operator==(const TileClass&) const;
-
-		bool operator!=(const TileClass&) const;
-#ifdef CYBORGBEAR_BOOST_ENABLED
-
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		string Import;
-		int TerrainType;
-		models::AnimLayer LowerAnim;
-		models::AnimLayer UpperAnim;
-};
-
-}
-
-
-namespace models {
-
-using cyborgbear::string;
-
-class ZoneInstance: public cyborgbear::Model {
-
-	public:
-
-		ZoneInstance();
-
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
-		bool operator==(const ZoneInstance&) const;
-
-		bool operator!=(const ZoneInstance&) const;
-#ifdef CYBORGBEAR_BOOST_ENABLED
-
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		string AccessorID;
-		string ZoneHeader;
-		models::Point Address;
+		int Current;
+		int Available;
 };
 
 }
@@ -1324,6 +1285,141 @@ namespace models {
 
 using cyborgbear::string;
 
+class Animation: public cyborgbear::Model {
+
+	public:
+
+		Animation();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Animation&) const;
+
+		bool operator!=(const Animation&) const;
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		string Import;
+		std::vector< models::AnimationSlide > Images;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
+class CreatureMove: public cyborgbear::Model {
+
+	public:
+
+		CreatureMove();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const CreatureMove&) const;
+
+		bool operator!=(const CreatureMove&) const;
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		std::map< string, string > Name;
+		string Type;
+		int Power;
+		bool RequiresRegarge;
+		string Script;
+		models::StatusEffect Burn;
+		models::StatusEffect Freeze;
+		models::StatusEffect Paralyze;
+		models::StatusEffect Poison;
+		models::StatusEffect Sleep;
+		int WorldAbilityFlags;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
+class CreatureClass: public cyborgbear::Model {
+
+	public:
+
+		CreatureClass();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const CreatureClass&) const;
+
+		bool operator!=(const CreatureClass&) const;
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		std::map< string, string > Name;
+		string Successor;
+		string Predecessor;
+		std::vector< string > Types;
+		std::vector< string > CanLearn;
+		std::map< int, string > LearnsAtLevel;
+		models::Animation FrontView;
+		models::Animation BackView;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
+class CreatureMoveInstance: public cyborgbear::Model {
+
+	public:
+
+		CreatureMoveInstance();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const CreatureMoveInstance&) const;
+
+		bool operator!=(const CreatureMoveInstance&) const;
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		string CreatureMove;
+		models::Fraction PP;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
 class World: public cyborgbear::Model {
 
 	public:
@@ -1344,6 +1440,81 @@ class World: public cyborgbear::Model {
 		virtual void fromBoostBinary(string dat);
 #endif
 		std::vector< models::ZoneInstance > Zones;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
+class Creature: public cyborgbear::Model {
+
+	public:
+
+		Creature();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const Creature&) const;
+
+		bool operator!=(const Creature&) const;
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		int ID;
+		std::map< string, string > Name;
+		string CreatureClass;
+		bool Male;
+		int Level;
+		models::Fraction Health;
+		int Attack;
+		int SpecAttack;
+		int Defense;
+		int SpecDefense;
+		bool Burned;
+		bool Frozen;
+		bool Poisoned;
+		bool Asleep;
+		std::vector< models::CreatureMoveInstance > Moves;
+};
+
+}
+
+
+namespace models {
+
+using cyborgbear::string;
+
+class TileClass: public cyborgbear::Model {
+
+	public:
+
+		TileClass();
+
+		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
+
+		cyborgbear::JsonValOut buildJsonObj();
+
+		bool operator==(const TileClass&) const;
+
+		bool operator!=(const TileClass&) const;
+#ifdef CYBORGBEAR_BOOST_ENABLED
+
+		virtual string toBoostBinary();
+
+		virtual void fromBoostBinary(string dat);
+#endif
+		string Import;
+		int TerrainType;
+		models::AnimLayer LowerAnim;
+		models::AnimLayer UpperAnim;
 };
 
 }
@@ -1549,6 +1720,21 @@ void serialize(Archive &ar, models::ZoneHeader &model, const unsigned int) {
 }
 
 template<class Archive>
+void serialize(Archive &ar, models::ZoneInstance &model, const unsigned int) {
+	ar & model.AccessorID;
+	ar & model.ZoneHeader;
+	ar & model.Address;
+}
+
+template<class Archive>
+void serialize(Archive &ar, models::CreatureType &model, const unsigned int) {
+	ar & model.Name;
+	ar & model.Special;
+	ar & model.StrongAgainst;
+	ar & model.WeakAgainst;
+}
+
+template<class Archive>
 void serialize(Archive &ar, models::AnimationSlide &model, const unsigned int) {
 	ar & model.Interval;
 	ar & model.Image;
@@ -1587,6 +1773,25 @@ void serialize(Archive &ar, models::StatusEffect &model, const unsigned int) {
 }
 
 template<class Archive>
+void serialize(Archive &ar, models::Fraction &model, const unsigned int) {
+	ar & model.Current;
+	ar & model.Available;
+}
+
+template<class Archive>
+void serialize(Archive &ar, models::SpriteClass &model, const unsigned int) {
+	ar & model.AnimLayers;
+	ar & model.SpriteType;
+	ar & model.Attributes;
+}
+
+template<class Archive>
+void serialize(Archive &ar, models::Animation &model, const unsigned int) {
+	ar & model.Import;
+	ar & model.Images;
+}
+
+template<class Archive>
 void serialize(Archive &ar, models::CreatureMove &model, const unsigned int) {
 	ar & model.Name;
 	ar & model.Type;
@@ -1602,9 +1807,45 @@ void serialize(Archive &ar, models::CreatureMove &model, const unsigned int) {
 }
 
 template<class Archive>
-void serialize(Archive &ar, models::Animation &model, const unsigned int) {
-	ar & model.Import;
-	ar & model.Images;
+void serialize(Archive &ar, models::CreatureClass &model, const unsigned int) {
+	ar & model.Name;
+	ar & model.Successor;
+	ar & model.Predecessor;
+	ar & model.Types;
+	ar & model.CanLearn;
+	ar & model.LearnsAtLevel;
+	ar & model.FrontView;
+	ar & model.BackView;
+}
+
+template<class Archive>
+void serialize(Archive &ar, models::CreatureMoveInstance &model, const unsigned int) {
+	ar & model.CreatureMove;
+	ar & model.PP;
+}
+
+template<class Archive>
+void serialize(Archive &ar, models::World &model, const unsigned int) {
+	ar & model.Zones;
+}
+
+template<class Archive>
+void serialize(Archive &ar, models::Creature &model, const unsigned int) {
+	ar & model.ID;
+	ar & model.Name;
+	ar & model.CreatureClass;
+	ar & model.Male;
+	ar & model.Level;
+	ar & model.Health;
+	ar & model.Attack;
+	ar & model.SpecAttack;
+	ar & model.Defense;
+	ar & model.SpecDefense;
+	ar & model.Burned;
+	ar & model.Frozen;
+	ar & model.Poisoned;
+	ar & model.Asleep;
+	ar & model.Moves;
 }
 
 template<class Archive>
@@ -1613,25 +1854,6 @@ void serialize(Archive &ar, models::TileClass &model, const unsigned int) {
 	ar & model.TerrainType;
 	ar & model.LowerAnim;
 	ar & model.UpperAnim;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::ZoneInstance &model, const unsigned int) {
-	ar & model.AccessorID;
-	ar & model.ZoneHeader;
-	ar & model.Address;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::SpriteClass &model, const unsigned int) {
-	ar & model.AnimLayers;
-	ar & model.SpriteType;
-	ar & model.Attributes;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::World &model, const unsigned int) {
-	ar & model.Zones;
 }
 
 template<class Archive>
