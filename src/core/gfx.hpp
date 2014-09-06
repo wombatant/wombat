@@ -26,6 +26,7 @@ class Image: public Flyweight<models::Image>::Value {
 	friend class Graphics;
 	private:
 		void *m_img = nullptr;
+		std::string m_spriteSheetKey;
 		models::Size m_defaultSize;
 		std::string m_key;
 

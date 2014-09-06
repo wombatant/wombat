@@ -18,6 +18,17 @@ using std::string;
 extern SDL_Window *_display;
 extern SDL_Renderer *_renderer;
 
+common::Flyweight<std::string, SDL_Texture*> _spriteSheets(
+	[](std::string key) {
+		SDL_Surface *s = IMG_Load(path(key).c_str());
+		auto out = SDL_CreateTextureFromSurface(_renderer, s);
+		SDL_FreeSurface(s);
+		return out;
+	},
+	[](SDL_Texture *value) {
+		SDL_DestroyTexture((SDL_Texture*) value);
+	}
+);
 
 int displayWidth() {
 	int w;
@@ -36,9 +47,8 @@ int displayHeight() {
 Image::Image(models::Image img) {
 	models::SpriteSheet ss;
 	read(ss, img.SpriteSheet);
-	SDL_Surface *s = IMG_Load(path(ss.SrcFile).c_str());
-	m_img = SDL_CreateTextureFromSurface(_renderer, s);
-	SDL_FreeSurface(s);
+	m_spriteSheetKey = ss.SrcFile;
+	m_img = _spriteSheets.checkout(m_spriteSheetKey);
 	m_bounds = ss.Images[img.ImgId].SrcBounds;
 	m_defaultSize.Width = img.DefaultSize.Width;
 	m_defaultSize.Height = img.DefaultSize.Height;
@@ -46,7 +56,7 @@ Image::Image(models::Image img) {
 }
 
 Image::~Image() {
-	SDL_DestroyTexture((SDL_Texture*) m_img);
+	_spriteSheets.checkin(m_spriteSheetKey);
 }
 
 int Image::width() {
