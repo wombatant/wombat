@@ -101,6 +101,7 @@ class Zone: public core::Task {
 		int m_dependents = 0;
 		bool m_loaded = false;
 		std::map<std::string, Sprite*> m_sprites;
+		// general mutex used for any atomic operations on this Zone
 		core::Mutex m_mutex;
 		core::TaskProcessor *m_taskProcessor = new core::TaskProcessor();
 

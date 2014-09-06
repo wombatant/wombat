@@ -14,9 +14,17 @@ namespace world {
 
 using common::Point;
 
+Tile::~Tile() {
+	unload();
+}
+
 void Tile::load(models::Tile model) {
 	m_tileClass = TileClass::checkout(model.TileClass);
 	m_occupant = loadSprite(model.Occupant);
+}
+
+void Tile::unload() {
+	TileClass::checkin(m_tileClass);
 }
 
 void Tile::draw(core::Graphics &gfx, Point pt) {

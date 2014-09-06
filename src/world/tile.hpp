@@ -21,7 +21,11 @@ class Tile {
 		TileClass *m_tileClass = nullptr;
 
 	public:
+		~Tile();
+
 		void load(models::Tile model);
+
+		void unload();
 
 		void draw(core::Graphics &gfx, common::Point pt);
 
@@ -35,7 +39,7 @@ class Tile {
 		Error claim(Sprite *occupant);
 
 		/**
-		 * Unclaims this Tile.
+		 * Releases the current occupant's claim on this Tile.
 		 */
 		void release();
 };
