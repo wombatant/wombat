@@ -15,6 +15,8 @@ namespace world {
 using core::Event;
 using core::TaskState;
 using models::SpriteMotion;
+using models::TerrainType;
+using models::WorldAbilityFlags;
 
 const Person::TimeoutProc Person::c_defaultTimeoutProc = [](Person *me) {
 	return me->updateTimeoutProc();
@@ -120,9 +122,27 @@ void Person::onZoneChange(Person::ZoneChangeProc zc) {
 	m_onZoneChange = zc;
 }
 
+bool Person::hasAbility(WorldAbilityFlags ability) {
+	return ((int) ability) & ((int) m_abilities);
+}
+
+bool Person::canTraverse(TerrainType type) {
+	switch (type) {
+	case TerrainType::Land:
+		return true;
+	case TerrainType::Water:
+		return hasAbility(WorldAbilityFlags::Swim);
+	case TerrainType::Waterfall:
+		return hasAbility(WorldAbilityFlags::Waterfall);
+	case TerrainType::Whirlpool:
+		return hasAbility(WorldAbilityFlags::Whirlpool);
+	}
+	return false;
+}
+
 Error Person::startMoving(TimeoutProc proc, common::Point addr, common::Point newAddr) {
 	auto tile = m_zone->getTile(newAddr.X, newAddr.Y, m_layer);
-	if (tile && tile->claim(this) == 0) {
+	if (tile && canTraverse(tile->terrainType()) && tile->claim(this) == 0) {
 		auto oldTile = m_zone->getTile(addr.X, addr.Y, m_layer);
 		if (oldTile) {
 			oldTile->release();

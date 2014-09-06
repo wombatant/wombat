@@ -20,7 +20,7 @@ core::Flyweight<models::TileClass> TileClass::c_tileClasses(
 		}
 
 		auto tc = new TileClass();
-		tc->m_terrainFlags = model.TerrainType;
+		tc->m_terrainType = (models::TerrainType) model.TerrainType;
 		tc->m_upperAnim.load(model.UpperAnim);
 		tc->m_lowerAnim.load(model.LowerAnim);
 
@@ -42,12 +42,8 @@ void TileClass::drawLower(core::Graphics &g, common::Point p) {
 	draw(g, p.X, p.Y, m_lowerAnim);
 }
 
-void TileClass::draw(core::Graphics &g, int x, int y, AnimLayer &anim) {
-	if (anim.animation) {
-		x += anim.point.X;
-		y += anim.point.Y;
-		g.draw(anim.animation->getImage(), x, y);
-	}
+models::TerrainType TileClass::terrainType() {
+	return m_terrainType;
 }
 
 TileClass *TileClass::checkout(models::TileClass model) {
@@ -61,6 +57,14 @@ TileClass *TileClass::checkout(std::string path) {
 void TileClass::checkin(TileClass *&tc) {
 	c_tileClasses.checkin(tc);
 	tc = 0;
+}
+
+void TileClass::draw(core::Graphics &g, int x, int y, AnimLayer &anim) {
+	if (anim.animation) {
+		x += anim.point.X;
+		y += anim.point.Y;
+		g.draw(anim.animation->getImage(), x, y);
+	}
 }
 
 }

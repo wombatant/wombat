@@ -32,6 +32,11 @@ class Tile {
 		Sprite *getOccupant();
 
 		/**
+		 * @return a models::TerrainType representing the terrain type (Land, Water, Whirlpool, Waterfall)
+		 */
+		models::TerrainType terrainType();
+
+		/**
 		 * Claims this Tile for the given Sprite.
 		 * @param occupant the Sprite wanting to claim this Tile
 		 * @return 0 for success

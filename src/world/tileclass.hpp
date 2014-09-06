@@ -18,7 +18,7 @@ class TileClass: public core::Flyweight<models::TileClass>::GenericValue {
 	private:
 		static core::Flyweight<models::TileClass> c_tileClasses;
 
-		int m_terrainFlags = 0;
+		models::TerrainType m_terrainType = models::TerrainType::Land;
 		AnimLayer m_upperAnim;
 		AnimLayer m_lowerAnim;
 
@@ -35,6 +35,11 @@ class TileClass: public core::Flyweight<models::TileClass>::GenericValue {
 
 		void drawUpper(core::Graphics &g, common::Point p);
 		void drawLower(core::Graphics &g, common::Point p);
+
+		/**
+		 * @return a models::TerrainType representing the terrain type (Land, Water, Whirlpool, Waterfall)
+		 */
+		models::TerrainType terrainType();
 
 		/**
 		 * Checks out the TileClass object matching the given model.

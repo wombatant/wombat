@@ -39,6 +39,7 @@ class Person: public Sprite, public core::Task {
 		static const core::uint64 c_timeoutInterval;
 
 		models::SpriteDirection m_facing = models::SpriteDirection::North;
+		models::Person m_model; // model representing this person
 		PersonClass *m_class = nullptr;
 		class Zone *m_zone = nullptr;
 		std::vector<std::string> m_creatures;
@@ -49,6 +50,7 @@ class Person: public Sprite, public core::Task {
 		common::Point m_ptOffset;
 		int m_layer = 0;
 		int m_motion = Still;
+		models::WorldAbilityFlags m_abilities = models::WorldAbilityFlags::None;
 
 	public:
 		/**
@@ -96,7 +98,16 @@ class Person: public Sprite, public core::Task {
 		 */
 		void onZoneChange(ZoneChangeProc zc);
 
+		/**
+		 * Returns whether or not this Person has the specified ability.
+		 * @param ability the ability capability being queried
+		 * @return whether or not this Person has the specified ability
+		 */
+		bool hasAbility(models::WorldAbilityFlags ability);
+
 	private:
+		bool canTraverse(models::TerrainType);
+
 		Error startMoving(TimeoutProc proc, common::Point oldAddr, common::Point newAddr);
 
 		core::TaskState updateTimeoutProc();

@@ -10,22 +10,37 @@
 
 namespace models {
 
-enum class SpriteType: int {
-	Inanimate = 1,
-	Person,
-	Creature
-};
-
-enum class SpriteDirection: int {
+enum class SpriteDirection {
 	North = 0,
-	South,
-	East,
-	West
+	South = 1,
+	East  = 2,
+	West  = 3
 };
 
-enum class SpriteMotion: int {
-	Still = 0,
-	Walking
+enum class SpriteMotion {
+	Still   = 0,
+	Walking = 1
+};
+
+enum class SpriteType {
+	Inanimate = 1,
+	Person    = 2,
+	Creature  = 3
+};
+
+enum class TerrainType {
+	Land      = 0,
+	Water     = 1,
+	Whirlpool = 2,
+	Waterfall = 3
+};
+
+enum class WorldAbilityFlags {
+	None      = 0,
+	Swim      = 1,
+	Whirlpool = 2,
+	Waterfall = 4,
+	Cut       = 8
 };
 
 }

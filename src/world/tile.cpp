@@ -13,6 +13,7 @@ namespace wombat {
 namespace world {
 
 using common::Point;
+using models::TerrainType;
 
 Tile::~Tile() {
 	unload();
@@ -36,6 +37,10 @@ void Tile::draw(core::Graphics &gfx, Point pt) {
 
 Sprite *Tile::getOccupant() {
 	return m_occupant;
+}
+
+TerrainType Tile::terrainType() {
+	return m_tileClass->terrainType();
 }
 
 Error Tile::claim(Sprite *occupant) {
