@@ -12,5 +12,5 @@ namespace = "namespace wombat {\nnamespace %s {\n\n}\n}" % pkg
 hpp = "#ifndef %s\n#define %s\n\n%s\n\n#endif" % (ifdef, ifdef, namespace)
 cpp = "#include \"%s.hpp\"\n\n%s" % (name, namespace)
 
-open("%s/%s.hpp" % (pkg, name), "w").write(hpp)
-open("%s/%s.cpp" % (pkg, name), "w").write(cpp)
+open("src/%s/%s.hpp" % (pkg, name), "w").write(hpp)
+open("src/%s/%s.cpp" % (pkg, name), "w").write(cpp)
