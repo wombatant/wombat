@@ -22,6 +22,43 @@ int displayWidth();
 int displayHeight();
 
 
+struct Color {
+	uint8 r, g, b, a;
+};
+
+class Font {
+	protected:
+		void *m_data = nullptr;
+
+	public:
+		Font(std::string path, int size);
+
+		~Font();
+
+		class Text *buildText(std::string txt, Color color);
+	
+	private:
+		Font(Font&);
+		Font &operator=(Font&);
+};
+
+class Text {
+	friend class Font;
+	friend class Graphics;
+	protected:
+		void *m_data = nullptr;
+
+	protected:
+		Text(void *texture);
+
+	public:
+		~Text();
+	
+	private:
+		Text(Text&);
+		Text &operator=(Text&);
+};
+
 class Image: public Flyweight<models::Image>::Value {
 	friend class Graphics;
 	private:
@@ -122,6 +159,10 @@ class Graphics {
 		void draw(Image *img, int x, int y);
 
 		void draw(Image *img, common::Point pt);
+
+		void draw(Text *txt, int x, int y);
+
+		void draw(Text *txt, common::Point pt);
 
 		/**
 		 * Sets the color for primitives to draw with.

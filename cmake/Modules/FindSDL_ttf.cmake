@@ -40,7 +40,7 @@ find_path(SDL_TTF_INCLUDE_DIR SDL_ttf.h
   HINTS
     ENV SDLTTFDIR
     ENV SDLDIR
-  PATH_SUFFIXES include/SDL include/SDL12 include/SDL11 include
+  PATH_SUFFIXES include/SDL2 include
 )
 
 if(NOT SDL_TTF_LIBRARY AND SDLTTF_LIBRARY)
@@ -48,7 +48,7 @@ if(NOT SDL_TTF_LIBRARY AND SDLTTF_LIBRARY)
 initialized from old variable name")
 endif()
 find_library(SDL_TTF_LIBRARY
-  NAMES SDL_ttf
+  NAMES SDL2_ttf
   HINTS
     ENV SDLTTFDIR
     ENV SDLDIR
@@ -74,7 +74,7 @@ endif()
 set(SDL_TTF_LIBRARIES ${SDL_TTF_LIBRARY})
 set(SDL_TTF_INCLUDE_DIRS ${SDL_TTF_INCLUDE_DIR})
 
-include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+include(FindPackageHandleStandardArgs)
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL_ttf
                                   REQUIRED_VARS SDL_TTF_LIBRARIES SDL_TTF_INCLUDE_DIRS

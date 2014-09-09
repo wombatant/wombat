@@ -8,6 +8,7 @@
 #include <vector>
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 #include "../core.hpp"
 
@@ -191,6 +192,9 @@ int init(models::Settings settings) {
 	_renderer = SDL_CreateRenderer(_display, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (!_renderer)
 		return -4;
+	if (TTF_Init() != 0) {
+		return -5;
+	}
 
 	_running = true;
 	_updateEventTime();

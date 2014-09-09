@@ -7,6 +7,7 @@
  */
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 #include "../core.hpp"
 
@@ -42,7 +43,49 @@ int displayHeight() {
 	return h;
 }
 
-//Image
+// Font
+
+Font::Font(std::string path, int size) {
+	m_data = TTF_OpenFont(path.c_str(), size);
+}
+
+Font::~Font() {
+	TTF_CloseFont((TTF_Font*) m_data);
+}
+
+Text *Font::buildText(std::string txt, Color color) {
+	SDL_Color scolor;
+	scolor.r = color.r;
+	scolor.g = color.g;
+	scolor.b = color.b;
+	scolor.a = color.a;
+
+	auto surface = TTF_RenderText_Blended((TTF_Font*) m_data, txt.c_str(), scolor);
+	if (surface == nullptr){
+		return nullptr;
+	}
+	auto texture = SDL_CreateTextureFromSurface(_renderer, surface);
+	SDL_FreeSurface(surface);
+	if (texture == nullptr){
+		return nullptr;
+	}
+
+	return new Text(texture);
+}
+
+
+// Text
+
+Text::Text(void *texture) {
+	m_data = texture;
+}
+
+Text::~Text() {
+	SDL_DestroyTexture((SDL_Texture*) m_data);
+}
+
+
+// Image
 
 Image::Image(models::Image img) {
 	models::SpriteSheet ss;
@@ -76,7 +119,7 @@ bool Image::loaded() {
 }
 
 
-//Graphics
+// Graphics
 
 void Graphics::drawLine(int x1, int y1, int x2, int y2) {
 	SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
@@ -127,6 +170,26 @@ void Graphics::draw(Image *img, int x, int y) {
 
 		SDL_RenderCopy(_renderer, (SDL_Texture*) img->m_img, &src, &dest);
 	}
+}
+
+void Graphics::draw(Text *txt, int x, int y) {
+	auto texture = (SDL_Texture*) txt->m_data;
+	if (texture) {
+		SDL_Rect dest, src;
+		dest.x = m_origin.X + x;
+		dest.y = m_origin.Y + y;
+		SDL_QueryTexture(texture, nullptr, nullptr, &dest.w, &dest.h);
+
+		src.x = 0;
+		src.y = 0;
+		src.w = dest.w;
+		src.h = dest.h;
+		SDL_RenderCopy(_renderer, texture, &src, &dest);
+	}
+}
+
+void Graphics::draw(Text *txt, common::Point pt) {
+	draw(txt, pt.X, pt.Y);
 }
 
 void Graphics::setRGBA(int r, int g, int b, int a) {
