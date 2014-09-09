@@ -147,8 +147,6 @@ class Graphics {
 	friend void _draw();
 	private:
 		common::Point m_origin;
-
-	protected:
 		ClipRectStack m_cliprect;
 
 	public:
