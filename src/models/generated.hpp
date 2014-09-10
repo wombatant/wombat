@@ -1244,6 +1244,7 @@ class Font: public cyborgbear::Model {
 
 		virtual void fromBoostBinary(string dat);
 #endif
+		int Size;
 		string TtfPath;
 };
 
@@ -1835,6 +1836,7 @@ void serialize(Archive &ar, models::InitFile &model, const unsigned int) {
 
 template<class Archive>
 void serialize(Archive &ar, models::Font &model, const unsigned int) {
+	ar & model.Size;
 	ar & model.TtfPath;
 }
 

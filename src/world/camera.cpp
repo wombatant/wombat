@@ -85,6 +85,7 @@ void Camera::draw() {
 
 		z->draw(bnds, translation, focus);
 	}
+	m_textPane.draw();
 }
 
 Bounds Camera::bounds() {

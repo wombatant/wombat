@@ -7,6 +7,7 @@
  */
 #include <string.h>
 #include <core/core.hpp>
+#include <ui/ui.hpp>
 #include "app.hpp"
 #include "tests.hpp"
 
@@ -27,6 +28,10 @@ int main(int argc, const char **args) {
 
 	if (core::init(settings) != 0) {
 		return 1;
+	}
+
+	if (ui::init() != 0) {
+		return 2;
 	}
 
 	core::Drawer *test = nullptr;

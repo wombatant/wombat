@@ -47,12 +47,19 @@ int displayHeight() {
 
 // Font
 
-Font::Font(std::string path, int size) {
-	m_data = TTF_OpenFont(path.c_str(), size);
+Font::Font(models::Font font) {
+	auto path = core::path(font.TtfPath);
+	m_data = TTF_OpenFont(path.c_str(), font.Size);
 }
 
 Font::~Font() {
-	TTF_CloseFont((TTF_Font*) m_data);
+	if (good()) {
+		TTF_CloseFont((TTF_Font*) m_data);
+	}
+}
+
+bool Font::good() {
+	return m_data;
 }
 
 Text *Font::buildText(std::string txt, Color color) {
@@ -192,6 +199,24 @@ void draw(Text *txt, int x, int y) {
 
 void draw(Text *txt, common::Point pt) {
 	draw(txt, pt.X, pt.Y);
+}
+
+void drawRect(int x, int y, int w, int h) {
+	SDL_Rect r;
+	r.x = x + _drawOrigin.X;
+	r.y = y + _drawOrigin.Y;
+	r.w = w;
+	r.h = h;
+	SDL_RenderDrawRect(_renderer, &r);
+}
+
+void fillRect(int x, int y, int w, int h) {
+	SDL_Rect r;
+	r.x = x + _drawOrigin.X;
+	r.y = y + _drawOrigin.Y;
+	r.w = w;
+	r.h = h;
+	SDL_RenderFillRect(_renderer, &r);
 }
 
 void setRGBA(int r, int g, int b, int a) {

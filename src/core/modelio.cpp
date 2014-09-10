@@ -68,7 +68,7 @@ models::cyborgbear::Error read(models::cyborgbear::Model &m, Path path) {
 	}
 
 	// missing fields are not considered an error here
-	retval ^= Error_MissingField;
+	retval = (retval | Error_MissingField) ^ Error_MissingField;
 
 	return retval;
 }

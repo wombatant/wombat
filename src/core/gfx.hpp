@@ -31,11 +31,16 @@ class Font {
 		void *m_data = nullptr;
 
 	public:
-		Font(std::string path, int size);
+		Font(models::Font);
 
 		~Font();
 
 		class Text *buildText(std::string txt, Color color);
+
+		/**
+		 * @return true if the Font loaded correctly
+		 */
+		bool good();
 	
 	private:
 		Font(Font&);
@@ -159,6 +164,10 @@ void draw(Image *img, common::Point pt);
 void draw(Text *txt, int x, int y);
 
 void draw(Text *txt, common::Point pt);
+
+void drawRect(int x, int y, int w, int h);
+
+void fillRect(int x, int y, int w, int h);
 
 /**
  * Sets the color for primitives to draw with.

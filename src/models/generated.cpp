@@ -331,6 +331,7 @@ InitFile::InitFile() {
 }
 
 Font::Font() {
+	this->Size = 0;
 	this->TtfPath = "";
 }
 
@@ -1347,6 +1348,20 @@ cyborgbear::Error Font::loadJsonObj(cyborgbear::JsonVal in) {
 	cyborgbear::Error retval = cyborgbear::Error_Ok;
 	cyborgbear::JsonObjOut inObj = cyborgbear::toObj(in);
 
+	{
+		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "Size");
+		{
+			if (cyborgbear::isInt(obj0)) {
+				this->Size = cyborgbear::toInt(obj0);
+			} else {
+				if (cyborgbear::isNull(obj0)) {
+					retval |= cyborgbear::Error_MissingField;
+				} else {
+					retval |= cyborgbear::Error_TypeMismatch;
+				}
+			}
+		}
+	}
 	{
 		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "TtfPath");
 		{
@@ -3016,6 +3031,11 @@ cyborgbear::JsonValOut InitFile::buildJsonObj() {
 cyborgbear::JsonValOut Font::buildJsonObj() {
 	cyborgbear::JsonObjOut obj = cyborgbear::newJsonObj();
 	{
+		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Size);
+		cyborgbear::objSet(obj, "Size", out0);
+		cyborgbear::decref(out0);
+	}
+	{
 		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->TtfPath);
 		cyborgbear::objSet(obj, "TtfPath", out0);
 		cyborgbear::decref(out0);
@@ -3694,6 +3714,7 @@ bool InitFile::operator==(const InitFile &o) const {
 }
 
 bool Font::operator==(const Font &o) const {
+	if (Size != o.Size) return false;
 	if (TtfPath != o.TtfPath) return false;
 
 	return true;
@@ -3969,6 +3990,7 @@ bool InitFile::operator!=(const InitFile &o) const {
 }
 
 bool Font::operator!=(const Font &o) const {
+	if (Size != o.Size) return true;
 	if (TtfPath != o.TtfPath) return true;
 
 	return false;

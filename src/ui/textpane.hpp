@@ -7,7 +7,11 @@ namespace wombat {
 namespace ui {
 
 class TextPane {
-	void draw();
+	private:
+		core::Text *m_text = nullptr;
+
+	public:
+		void draw();
 };
 
 }

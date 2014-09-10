@@ -9,6 +9,7 @@
 #define WOMBAT_WORLD_CAMERA_HPP
 
 #include <core/core.hpp>
+#include <ui/ui.hpp>
 #include "person.hpp"
 #include "world.hpp"
 
@@ -21,6 +22,7 @@ class Camera: public core::Drawer, public core::Task {
 		std::vector<Zone*> m_zones;
 		World *m_world = nullptr;
 		Person *m_person = nullptr;
+		ui::TextPane m_textPane;
 
 	public:
 		/**
