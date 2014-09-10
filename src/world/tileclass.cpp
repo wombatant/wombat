@@ -34,12 +34,12 @@ TileClass::TileClass() {
 TileClass::~TileClass() {
 }
 
-void TileClass::drawUpper(core::Graphics &g, common::Point p) {
-	draw(g, p.X, p.Y, m_upperAnim);
+void TileClass::drawUpper(common::Point p) {
+	draw(p.X, p.Y, m_upperAnim);
 }
 
-void TileClass::drawLower(core::Graphics &g, common::Point p) {
-	draw(g, p.X, p.Y, m_lowerAnim);
+void TileClass::drawLower(common::Point p) {
+	draw(p.X, p.Y, m_lowerAnim);
 }
 
 models::TerrainType TileClass::terrainType() {
@@ -59,11 +59,11 @@ void TileClass::checkin(TileClass *&tc) {
 	tc = 0;
 }
 
-void TileClass::draw(core::Graphics &g, int x, int y, AnimLayer &anim) {
+void TileClass::draw(int x, int y, AnimLayer &anim) {
 	if (anim.animation) {
 		x += anim.point.X;
 		y += anim.point.Y;
-		g.draw(anim.animation->getImage(), x, y);
+		core::draw(anim.animation->getImage(), x, y);
 	}
 }
 

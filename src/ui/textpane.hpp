@@ -7,7 +7,7 @@ namespace wombat {
 namespace ui {
 
 class TextPane {
-	void draw(core::Graphics &gfx);
+	void draw();
 };
 
 }

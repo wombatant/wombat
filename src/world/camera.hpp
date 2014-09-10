@@ -34,9 +34,8 @@ class Camera: public core::Drawer, public core::Task {
 
 		/**
 		 * Draws what the Camera is currently hovering over.
-		 * @param g the Graphics instance to draw the Camera's sight with
 		 */
-		void draw(core::Graphics &g) override;
+		void draw() override;
 
 		/**
 		 * Gets the bounds of this Camera.

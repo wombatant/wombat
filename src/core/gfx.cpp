@@ -11,16 +11,16 @@
 namespace wombat {
 namespace core {
 
-std::vector<std::pair<Drawer*, Graphics*>> _drawers;
+std::vector<Drawer*> _drawers;
 
 
 void addDrawer(Drawer *d) {
-	_drawers.push_back(std::pair<Drawer*, Graphics*>(d, new Graphics()));
+	_drawers.push_back(d);
 }
 
 // Graphics
 
-void Graphics::draw(Image *img, common::Point pt) {
+void draw(Image *img, common::Point pt) {
 	draw(img, pt.X, pt.Y);
 }
 

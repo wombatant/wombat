@@ -47,7 +47,7 @@ TaskState Camera::run(Event e) {
 	return retval;
 }
 
-void Camera::draw(core::Graphics &g) {
+void Camera::draw() {
 	Point translation;
 	std::pair<Sprite*, common::Point> focus;
 	if (m_person) {
@@ -83,7 +83,7 @@ void Camera::draw(core::Graphics &g) {
 			bnds.Height = zbnds.y2() - bnds.Y;
 		}
 
-		z->draw(g, bnds, translation, focus);
+		z->draw(bnds, translation, focus);
 	}
 }
 

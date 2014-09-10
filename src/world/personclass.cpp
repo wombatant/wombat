@@ -38,11 +38,11 @@ PersonClass::PersonClass(models::PersonClass model) {
 	}
 }
 
-void PersonClass::draw(core::Graphics &gfx, common::Point pt,
+void PersonClass::draw(common::Point pt,
                        TerrainType tt, SpriteDirection facing, SpriteMotion motion) {
 	auto anim = this->anim(tt, facing, motion);
 	if (anim.animation) {
-		gfx.draw(anim.animation->getImage(), pt + anim.point);
+		core::draw(anim.animation->getImage(), pt + anim.point);
 	}
 }
 

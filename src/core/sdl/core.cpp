@@ -16,7 +16,7 @@ namespace wombat {
 namespace core {
 
 extern SubscriptionManager _submgr;
-extern std::vector<std::pair<Drawer*, Graphics*>> _drawers;
+extern std::vector<Drawer*> _drawers;
 extern bool _running;
 
 class SdlMainEventQueue: public BaseEventQueue {
@@ -113,8 +113,8 @@ bool SdlMainEventQueue::hasPosts() {
 void _draw() {
 	SDL_RenderClear(_renderer);
 	for (auto d : _drawers) {
-		d.first->draw(*d.second);
-		d.second->resetViewport();
+		d->draw();
+		resetViewport();
 	}
 	SDL_RenderPresent(_renderer);
 }

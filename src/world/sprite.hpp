@@ -29,7 +29,7 @@ class Sprite {
 
 		virtual std::string id();
 
-		virtual void draw(core::Graphics &gfx, class Tile *tile, common::Point pt) = 0;
+		virtual void draw(class Tile *tile, common::Point pt) = 0;
 };
 
 Sprite *loadSprite(models::Sprite model);

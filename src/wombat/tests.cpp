@@ -29,10 +29,10 @@ AnimationTest::AnimationTest(std::string path) {
 	m_anim = new Animation(anim);
 }
 
-void AnimationTest::draw(Graphics &g) {
+void AnimationTest::draw() {
 	if (m_anim->loaded()) {
 		auto img = m_anim->getImage();
-		g.draw(img, 42, 42);
+		core::draw(img, 42, 42);
 	}
 }
 
@@ -43,9 +43,9 @@ TileClassTest::TileClassTest(std::string path) {
 	m_tileClass = world::TileClass::checkout(path);
 }
 
-void TileClassTest::draw(Graphics &g) {
-	m_tileClass->drawLower(g, common::Point(42, 42));
-	m_tileClass->drawUpper(g, common::Point(42, 42));
+void TileClassTest::draw() {
+	m_tileClass->drawLower(common::Point(42, 42));
+	m_tileClass->drawUpper(common::Point(42, 42));
 }
 
 }

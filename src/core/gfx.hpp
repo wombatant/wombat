@@ -44,7 +44,9 @@ class Font {
 
 class Text {
 	friend class Font;
-	friend class Graphics;
+	friend void draw(Text *txt, int x, int y);
+	friend void draw(Text *txt, common::Point pt);
+
 	protected:
 		void *m_data = nullptr;
 
@@ -60,7 +62,10 @@ class Text {
 };
 
 class Image: public Flyweight<models::Image>::Value {
-	friend class Graphics;
+	friend void draw(Image *img, int x, int y, int w, int h);
+	friend void draw(Image *img, int x, int y);
+	friend void draw(Image *img, common::Point pt);
+
 	private:
 		void *m_img = nullptr;
 		std::string m_spriteSheetKey;
@@ -143,74 +148,66 @@ class Animation: public Flyweight<models::Animation>::Value {
 		int size();
 };
 
-class Graphics {
-	friend void _draw();
-	private:
-		common::Point m_origin;
-		ClipRectStack m_cliprect;
+void drawLine(int x1, int y1, int x2, int y2);
 
-	public:
-		void drawLine(int x1, int y1, int x2, int y2);
+void draw(Image *img, int x, int y, int w, int h);
 
-		void draw(Image *img, int x, int y, int w, int h);
+void draw(Image *img, int x, int y);
 
-		void draw(Image *img, int x, int y);
+void draw(Image *img, common::Point pt);
 
-		void draw(Image *img, common::Point pt);
+void draw(Text *txt, int x, int y);
 
-		void draw(Text *txt, int x, int y);
+void draw(Text *txt, common::Point pt);
 
-		void draw(Text *txt, common::Point pt);
+/**
+ * Sets the color for primitives to draw with.
+ * @param r red value (0-255)
+ * @param g green value (0-255)
+ * @param b blue value (0-255)
+ * @param a alpha value (0-255)
+ */
+void setRGBA(int r, int g, int b, int a);
 
-		/**
-		 * Sets the color for primitives to draw with.
-		 * @param r red value (0-255)
-		 * @param g green value (0-255)
-		 * @param b blue value (0-255)
-		 * @param a alpha value (0-255)
-		 */
-		void setRGBA(int r, int g, int b, int a);
+/**
+ * Sets the color for primitives to draw with.
+ * @param r red value (0-255)
+ * @param g green value (0-255)
+ * @param b blue value (0-255)
+ */
+void setRGB(int r, int g, int b);
 
-		/**
-		 * Sets the color for primitives to draw with.
-		 * @param r red value (0-255)
-		 * @param g green value (0-255)
-		 * @param b blue value (0-255)
-		 */
-		void setRGB(int r, int g, int b);
+/**
+ * Pushs the given view port the viewports stack.
+ * This will get cleared out at the end of this draw iteration regardless
+ * of whether or not it is manually popped.
+ * @param bnds the bounds of the desired viewport 
+ */
+void pushClipRect(common::Bounds bnds);
 
-		/**
-		 * Pushs the given view port the viewports stack.
-		 * This will get cleared out at the end of this draw iteration regardless
-		 * of whether or not it is manually popped.
-		 * @param bnds the bounds of the desired viewport 
-		 */
-		void pushClipRect(common::Bounds bnds);
+/**
+ * Pushs the given view port the viewports stack.
+ * This will get cleared out at the end of this draw iteration regardless
+ * of whether or not it is manually popped.
+ * @param x the left border of the clip rect
+ * @param y the right border of the clip rect
+ * @param w the width of the clip rect
+ * @param h the height of the clip rect
+ */
+void pushClipRect(int x, int y, int w, int h);
 
-		/**
-		 * Pushs the given view port the viewports stack.
-		 * This will get cleared out at the end of this draw iteration regardless
-		 * of whether or not it is manually popped.
-		 * @param x the left border of the clip rect
-		 * @param y the right border of the clip rect
-		 * @param w the width of the clip rect
-		 * @param h the height of the clip rect
-		 */
-		void pushClipRect(int x, int y, int w, int h);
+/**
+ * Pop the current clip rect.
+ */
+void popClipRect();
 
-		/**
-		 * Pop the current clip rect.
-		 */
-		void popClipRect();
+void resetViewport();
 
-	protected:
-		void resetViewport();
-};
 
 class Drawer {
 	public:
 		virtual ~Drawer() {};
-		virtual void draw(Graphics&) = 0;
+		virtual void draw() = 0;
 };
 
 void addDrawer(Drawer*);

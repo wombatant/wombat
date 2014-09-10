@@ -130,7 +130,7 @@ class Zone: public core::Task {
 		 */
 		common::Bounds bounds();
 
-		void draw(core::Graphics &g, common::Bounds crop, common::Point translation,
+		void draw(common::Bounds crop, common::Point translation,
 		          std::pair<Sprite*, common::Point> focus);
 
 		/**

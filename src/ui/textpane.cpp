@@ -3,7 +3,7 @@
 namespace wombat {
 namespace ui {
 
-void TextPane::draw(core::Graphics &gfx) {
+void TextPane::draw() {
 }
 
 }

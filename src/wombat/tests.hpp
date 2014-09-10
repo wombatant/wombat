@@ -22,7 +22,7 @@ class AnimationTest: public core::Drawer {
 		core::Animation *m_anim;
 	public:
 		AnimationTest(std::string path);
-		void draw(core::Graphics&);
+		void draw();
 };
 
 class TileClassTest: public core::Drawer {
@@ -30,7 +30,7 @@ class TileClassTest: public core::Drawer {
 		world::TileClass *m_tileClass;
 	public:
 		TileClassTest(std::string path);
-		void draw(core::Graphics&);
+		void draw();
 };
 
 core::Drawer *test(std::vector<std::string>&);

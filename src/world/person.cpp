@@ -89,9 +89,9 @@ TaskState Person::run(Event e) {
 	return retval;
 }
 
-void Person::draw(core::Graphics &gfx, Tile *tile, common::Point pt) {
+void Person::draw(Tile *tile, common::Point pt) {
 	auto motion = m_motion == Still ? SpriteMotion::Still : SpriteMotion::Walking;
-	m_class->draw(gfx, pt, tile->terrainType(), m_facing, motion);
+	m_class->draw(pt, tile->terrainType(), m_facing, motion);
 }
 
 std::string Person::id() {

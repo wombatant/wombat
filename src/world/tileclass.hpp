@@ -33,8 +33,8 @@ class TileClass: public core::Flyweight<models::TileClass>::GenericValue {
 		 */
 		~TileClass();
 
-		void drawUpper(core::Graphics &g, common::Point p);
-		void drawLower(core::Graphics &g, common::Point p);
+		void drawUpper(common::Point p);
+		void drawLower(common::Point p);
 
 		/**
 		 * @return a models::TerrainType representing the terrain type (Land, Water, Whirlpool, Waterfall)
@@ -60,7 +60,7 @@ class TileClass: public core::Flyweight<models::TileClass>::GenericValue {
 		static void checkin(TileClass *&tc);
 
 	private:
-		void draw(core::Graphics &g, int x, int y, AnimLayer &anims);
+		void draw(int x, int y, AnimLayer &anims);
 
 		// prevent copies
 		TileClass(const TileClass&);

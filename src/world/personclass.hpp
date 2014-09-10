@@ -27,7 +27,7 @@ class PersonClass: public core::Flyweight<models::PersonClass>::GenericValue {
 		 */
 		explicit PersonClass(models::PersonClass model);
 
-		void draw(core::Graphics &gfx, common::Point pt,
+		void draw(common::Point pt,
 		          models::TerrainType tt,
 		          models::SpriteDirection facing,
 		          models::SpriteMotion motion);

@@ -28,10 +28,10 @@ void Tile::unload() {
 	TileClass::checkin(m_tileClass);
 }
 
-void Tile::draw(core::Graphics &gfx, Point pt) {
+void Tile::draw(Point pt) {
 	if (m_tileClass) {
-		m_tileClass->drawLower(gfx, pt);
-		m_tileClass->drawUpper(gfx, pt);
+		m_tileClass->drawLower(pt);
+		m_tileClass->drawUpper(pt);
 	}
 }
 

@@ -18,6 +18,8 @@ using std::string;
 
 extern SDL_Window *_display;
 extern SDL_Renderer *_renderer;
+common::Point _drawOrigin;
+ClipRectStack _clipRect;
 
 common::Flyweight<std::string, SDL_Texture*> _spriteSheets(
 	[](std::string key) {
@@ -121,16 +123,16 @@ bool Image::loaded() {
 
 // Graphics
 
-void Graphics::drawLine(int x1, int y1, int x2, int y2) {
+void drawLine(int x1, int y1, int x2, int y2) {
 	SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
 }
 
-void Graphics::draw(Image *img, int x, int y, int w, int h) {
+void draw(Image *img, int x, int y, int w, int h) {
 	if (img->loaded()) {
 		SDL_SetTextureAlphaMod((SDL_Texture*) img->m_img, 255);
 		SDL_Rect dest, src;
-		dest.x = m_origin.X = x;
-		dest.y = m_origin.Y = y;
+		dest.x = _drawOrigin.X = x;
+		dest.y = _drawOrigin.Y = y;
 		dest.w = w;
 		dest.h = h;
 
@@ -143,7 +145,7 @@ void Graphics::draw(Image *img, int x, int y, int w, int h) {
 	}
 }
 
-void Graphics::draw(Image *img, int x, int y) {
+void draw(Image *img, int x, int y) {
 	if (img->loaded()) {
 		int w, h;
 		if (img->defaultWidth() == -1)
@@ -158,8 +160,8 @@ void Graphics::draw(Image *img, int x, int y) {
 
 		SDL_SetTextureAlphaMod((SDL_Texture*) img->m_img, 255);
 		SDL_Rect dest, src;
-		dest.x = m_origin.X + x;
-		dest.y = m_origin.Y + y;
+		dest.x = _drawOrigin.X + x;
+		dest.y = _drawOrigin.Y + y;
 		dest.w = w;
 		dest.h = h;
 
@@ -172,12 +174,12 @@ void Graphics::draw(Image *img, int x, int y) {
 	}
 }
 
-void Graphics::draw(Text *txt, int x, int y) {
+void draw(Text *txt, int x, int y) {
 	auto texture = (SDL_Texture*) txt->m_data;
 	if (texture) {
 		SDL_Rect dest, src;
-		dest.x = m_origin.X + x;
-		dest.y = m_origin.Y + y;
+		dest.x = _drawOrigin.X + x;
+		dest.y = _drawOrigin.Y + y;
 		SDL_QueryTexture(texture, nullptr, nullptr, &dest.w, &dest.h);
 
 		src.x = 0;
@@ -188,29 +190,29 @@ void Graphics::draw(Text *txt, int x, int y) {
 	}
 }
 
-void Graphics::draw(Text *txt, common::Point pt) {
+void draw(Text *txt, common::Point pt) {
 	draw(txt, pt.X, pt.Y);
 }
 
-void Graphics::setRGBA(int r, int g, int b, int a) {
+void setRGBA(int r, int g, int b, int a) {
 	SDL_SetRenderDrawColor(_renderer, r, g, b, a);
 }
 
-void Graphics::setRGB(int r, int g, int b) {
+void setRGB(int r, int g, int b) {
 	SDL_SetRenderDrawColor(_renderer, r, g, b, 255);
 }
 
-void Graphics::pushClipRect(int x, int y, int w, int h) {
+void pushClipRect(int x, int y, int w, int h) {
 	common::Bounds bnds;
 	bnds.X = x;
 	bnds.Y = y;
 	bnds.Width = w;
 	bnds.Height = h;
 
-	m_origin.X -= m_cliprect.translate().X;
-	m_origin.Y -= m_cliprect.translate().Y;
-	m_cliprect.push(bnds);
-	auto r = m_cliprect.bounds();
+	_drawOrigin.X -= _clipRect.translate().X;
+	_drawOrigin.Y -= _clipRect.translate().Y;
+	_clipRect.push(bnds);
+	auto r = _clipRect.bounds();
 
 	SDL_Rect sdlRct;
 	sdlRct.x = r.X;
@@ -220,19 +222,19 @@ void Graphics::pushClipRect(int x, int y, int w, int h) {
 
 	SDL_RenderSetClipRect(_renderer, &sdlRct);
 
-	m_origin.X = m_cliprect.bounds().X;
-	m_origin.Y = m_cliprect.bounds().Y;
-	m_origin.X += m_cliprect.translate().X;
-	m_origin.Y += m_cliprect.translate().Y;
+	_drawOrigin.X = _clipRect.bounds().X;
+	_drawOrigin.Y = _clipRect.bounds().Y;
+	_drawOrigin.X += _clipRect.translate().X;
+	_drawOrigin.Y += _clipRect.translate().Y;
 }
 
-void Graphics::popClipRect() {
-	if (m_cliprect.size()) {
-		m_origin.X -= m_cliprect.translate().X;
-		m_origin.Y -= m_cliprect.translate().Y;
+void popClipRect() {
+	if (_clipRect.size()) {
+		_drawOrigin.X -= _clipRect.translate().X;
+		_drawOrigin.Y -= _clipRect.translate().Y;
 
-		m_cliprect.pop();
-		auto r = m_cliprect.bounds();
+		_clipRect.pop();
+		auto r = _clipRect.bounds();
 		if (r.Width == -1) {
 			r.Width = displayWidth();
 		}
@@ -247,17 +249,17 @@ void Graphics::popClipRect() {
 		sdlRct.h = r.Height;
 		SDL_RenderSetClipRect(_renderer, &sdlRct);
 
-		m_origin.X = m_cliprect.bounds().X;
-		m_origin.Y = m_cliprect.bounds().Y;
-		m_origin.X += m_cliprect.translate().X;
-		m_origin.Y += m_cliprect.translate().Y;
+		_drawOrigin.X = _clipRect.bounds().X;
+		_drawOrigin.Y = _clipRect.bounds().Y;
+		_drawOrigin.X += _clipRect.translate().X;
+		_drawOrigin.Y += _clipRect.translate().Y;
 	}
 }
 
-void Graphics::resetViewport() {
-	m_cliprect.clear();
-	m_origin.X = 0;
-	m_origin.Y = 0;
+void resetViewport() {
+	_clipRect.clear();
+	_drawOrigin.X = 0;
+	_drawOrigin.Y = 0;
 }
 
 }

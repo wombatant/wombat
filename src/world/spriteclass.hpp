@@ -30,7 +30,7 @@ class SpriteClass: public core::Flyweight<models::SpriteClass>::GenericValue {
 		 */
 		~SpriteClass();
 
-		virtual void draw(core::Graphics &gfx, common::Point pt, models::SpriteDirection facing) = 0;
+		virtual void draw(common::Point pt, models::SpriteDirection facing) = 0;
 
 		/**
 		 * Checks out the SpriteClass object from the given model.

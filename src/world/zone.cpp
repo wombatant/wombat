@@ -107,7 +107,7 @@ Bounds Zone::bounds() {
 	return bnds;
 }
 
-void Zone::draw(core::Graphics &g, Bounds bnds,
+void Zone::draw(Bounds bnds,
                 Point translation, std::pair<Sprite*, common::Point> focus) {
 	auto loc = pt(bounds().pt1()) + translation;
 
@@ -115,7 +115,7 @@ void Zone::draw(core::Graphics &g, Bounds bnds,
 		for (auto y = bnds.Y; y < bnds.y2(); y += TileHeight) {
 			for (auto x = bnds.X; x < bnds.x2(); x += TileWidth) {
 				auto tile = m_tiles.at(x / TileWidth, y / TileHeight, l);
-				tile->draw(g, pt(addr(Point(x, y))) + loc);
+				tile->draw(pt(addr(Point(x, y))) + loc);
 			}
 		}
 	}
@@ -132,7 +132,7 @@ void Zone::draw(core::Graphics &g, Bounds bnds,
 					} else {
 						pt = focus.second;
 					}
-					oc->draw(g, tile, pt);
+					oc->draw(tile, pt);
 				}
 			}
 		}

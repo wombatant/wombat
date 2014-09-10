@@ -27,7 +27,7 @@ class Tile {
 
 		void unload();
 
-		void draw(core::Graphics &gfx, common::Point pt);
+		void draw(common::Point pt);
 
 		Sprite *getOccupant();
 
