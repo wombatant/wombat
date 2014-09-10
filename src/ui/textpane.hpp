@@ -11,7 +11,18 @@ class TextPane {
 		core::Text *m_text = nullptr;
 
 	public:
+		TextPane();
+
+		~TextPane();
+
 		void draw();
+
+		void setText(std::string txt);
+
+		/**
+		 * Deletes the current text if there is any.
+		 */
+		void dumpText();
 };
 
 }

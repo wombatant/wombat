@@ -20,6 +20,15 @@ void addDrawer(Drawer *d) {
 
 // Graphics
 
+Color::Color(uint8 r, uint8 g, uint8 b, uint8 a) {
+	this->r = r;
+	this->g = g;
+	this->b = b;
+	this->a = a;
+}
+
+// Graphics
+
 void draw(Image *img, common::Point pt) {
 	draw(img, pt.X, pt.Y);
 }

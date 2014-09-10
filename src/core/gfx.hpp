@@ -24,6 +24,8 @@ int displayHeight();
 
 struct Color {
 	uint8 r, g, b, a;
+
+	Color(uint8 r, uint8 g, uint8 b, uint8 a = 255);
 };
 
 class Font {

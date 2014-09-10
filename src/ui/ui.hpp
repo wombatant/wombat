@@ -1,15 +1,15 @@
 #ifndef WOMBAT_UI_PKG
 #define WOMBAT_UI_PKG
 
-#include "ui.hpp"
 #include "textpane.hpp"
+#include "ui.hpp"
 
 #else
 
 #ifndef WOMBAT_UI_UI_HPP
 #define WOMBAT_UI_UI_HPP
 
-#include "textpane.hpp"
+#include "ui.hpp"
 
 namespace wombat {
 namespace ui {
