@@ -1,13 +1,13 @@
 {
     "Import": "",
     "LowerAnim": {
-        "Animation": "Animations/Dirt",
+        "Animation": "Animation/Water",
         "Point": {
             "X": 0,
             "Y": 0
         }
     },
-    "TerrainType": 0,
+    "TerrainType": 1,
     "UpperAnim": {
         "Animation": "",
         "Point": {

@@ -2,7 +2,7 @@
 	"Zones": [
 		{
 			"AccessorID": "Zone1",
-			"ZoneHeader": "World/ZoneHeaders/Zone1",
+			"ZoneHeader": "World/ZoneHeader/Zone1",
 			"Address": {
 				"X": 0,
 				"Y": 0
