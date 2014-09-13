@@ -56,7 +56,7 @@ TileClass *TileClass::checkout(std::string path) {
 
 void TileClass::checkin(TileClass *&tc) {
 	c_tileClasses.checkin(tc);
-	tc = 0;
+	tc = nullptr;
 }
 
 void TileClass::draw(int x, int y, AnimLayer &anim) {
