@@ -14,8 +14,8 @@ namespace world {
 
 bool _debug = false;
 
-int TileWidth = 32;
-int TileHeight = 32;
+const int TileWidth = 32;
+const int TileHeight = 32;
 
 std::map<core::TaskProcessor*, Zone*> m_zoneMap;
 

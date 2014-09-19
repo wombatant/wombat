@@ -15,8 +15,8 @@ namespace world {
 
 extern bool _debug;
 
-extern int TileWidth;
-extern int TileHeight;
+extern const int TileWidth;
+extern const int TileHeight;
 
 extern std::map<core::TaskProcessor*, class Zone*> m_zoneMap;
 
