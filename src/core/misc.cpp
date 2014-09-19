@@ -11,7 +11,7 @@
 #include <vector>
 #include <chrono>
 #include <time.h>
-#include "core.hpp"
+#include "task.hpp"
 
 namespace wombat {
 namespace core {

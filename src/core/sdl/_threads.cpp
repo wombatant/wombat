@@ -33,7 +33,7 @@ void startThread(std::function<void()> f) {
 	threadCount++;
 }
 
-void sleep(uint64 ms) {
+void sleep(uint64_t ms) {
 	SDL_Delay(ms);
 }
 

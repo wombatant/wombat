@@ -1,7 +1,7 @@
 #ifndef WOMBAT_UI_TEXTPANE_HPP
 #define WOMBAT_UI_TEXTPANE_HPP
 
-#include <core/core.hpp>
+#include <core/gfx.hpp>
 
 namespace wombat {
 namespace ui {

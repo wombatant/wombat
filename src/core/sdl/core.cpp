@@ -10,7 +10,9 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
-#include "../core.hpp"
+#include "../gfx.hpp"
+#include "../task.hpp"
+#include "../types.hpp"
 
 namespace wombat {
 namespace core {
@@ -37,7 +39,7 @@ class SdlMainEventQueue: public BaseEventQueue {
 
 		Event wait() override;
 
-		Event wait(uint64 timeout) override;
+		Event wait(uint64_t timeout) override;
 
 		void post(Event wakeup = Event::GenericPost) override;
 
@@ -76,7 +78,7 @@ Event SdlMainEventQueue::wait() {
 	return Event::UnknownEvent;
 }
 
-Event SdlMainEventQueue::wait(uint64 timeout) {
+Event SdlMainEventQueue::wait(uint64_t timeout) {
 	return Event::UnknownEvent;
 }
 

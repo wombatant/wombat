@@ -8,7 +8,8 @@
 #ifndef WOMBAT_WORLD__ETC_HPP
 #define WOMBAT_WORLD__ETC_HPP
 
-#include <core/core.hpp>
+#include <common/point.hpp>
+#include <core/task.hpp>
 
 namespace wombat {
 namespace world {

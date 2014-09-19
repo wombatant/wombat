@@ -8,7 +8,8 @@
 #ifndef WOMBAT_WORLD_ANIMLAYER_HPP
 #define WOMBAT_WORLD_ANIMLAYER_HPP
 
-#include <core/core.hpp>
+#include <models/models.hpp>
+#include <core/gfx.hpp>
 
 namespace wombat {
 namespace world {

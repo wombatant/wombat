@@ -8,16 +8,17 @@
 #ifndef WOMBAT_CORE__MEMFS_HPP
 #define WOMBAT_CORE__MEMFS_HPP
 
+#include "_memfs.hpp"
 #include "core.hpp"
 
 namespace wombat {
 namespace core {
 
-typedef uint32 MemFsPtr;
+typedef uint32_t MemFsPtr;
 
 class MemFs {
 	public:
-		static uint32 version;
+		static uint32_t version;
 	private:
 		struct Record {
 			// the next Record in memory
@@ -31,11 +32,11 @@ class MemFs {
 			MemFsPtr pathLen();
 			MemFsPtr size();
 			void setPath(std::string);
-			void setData(uint8 *data, int size);
+			void setData(uint8_t *data, int size);
 		};
 
-		uint8 *m_begin, *m_end;
-		uint32 &m_version;
+		uint8_t *m_begin, *m_end;
+		uint32_t &m_version;
 		// the last Record in the MemFs's memory chunk
 		MemFsPtr &m_lastRec;
 		Record *m_root;
@@ -46,7 +47,7 @@ class MemFs {
 		 * @param begin pointer to the beginning of this MemFs's memory chunk
 		 * @param end pointer to the end of this MemFs's memory chunk
 		 */
-		MemFs(uint8 *begin, uint8 *end);
+		MemFs(uint8_t *begin, uint8_t *end);
 
 		/**
 		 * Initializes the memory chunk of this MemFs was given.
@@ -60,7 +61,7 @@ class MemFs {
 		 * @param data the contents of the file
 		 * @param dataLen the number of bytes data points to
 		 */
-		void write(std::string path, uint8 *data, MemFsPtr dataLen);
+		void write(std::string path, uint8_t *data, MemFsPtr dataLen);
 
 		/**
 		 * Reads the "file" at the given path. You are responsible for freeing
@@ -70,7 +71,7 @@ class MemFs {
 		 * @param size pointer to a value that will be assigned the size of data
 		 * @return 0 if read is a success
 		 */
-		int read(std::string path, uint8 **data, MemFsPtr *size);
+		int read(std::string path, uint8_t **data, MemFsPtr *size);
 
 	private:
 		/**

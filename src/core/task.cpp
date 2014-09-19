@@ -8,6 +8,8 @@
 #include "_misc.hpp"
 #include "_tls.hpp"
 #include "_threads.hpp"
+#include "core.hpp"
+#include "corecapabilities.hpp"
 #include "task.hpp"
 
 namespace wombat {
@@ -28,7 +30,7 @@ int subscribe(Event::Type et) {
 
 // TaskState
 
-TaskState::TaskState(uint64 sleep) {
+TaskState::TaskState(uint64_t sleep) {
 	state = Running;
 	sleepDuration = sleep;
 }

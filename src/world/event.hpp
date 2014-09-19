@@ -8,6 +8,8 @@
 #ifndef WOMBAT_WORLD_EVENT_HPP
 #define WOMBAT_WORLD_EVENT_HPP
 
+#include <core/event.hpp>
+
 namespace wombat {
 namespace world {
 

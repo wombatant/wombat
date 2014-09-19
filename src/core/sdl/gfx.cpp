@@ -9,7 +9,10 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-#include "../core.hpp"
+#include <models/models.hpp>
+#include "../_cliprectstack.hpp"
+#include "../gfx.hpp"
+#include "../modelio.hpp"
 
 namespace wombat {
 namespace core {

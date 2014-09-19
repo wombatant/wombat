@@ -9,6 +9,7 @@
 #define WOMBAT_CORE__MISC_HPP
 
 #include "core.hpp"
+#include "task.hpp"
 
 namespace wombat {
 namespace core {
@@ -18,7 +19,7 @@ namespace core {
  * This time is not necessarily the actual time.
  * @return the time used by the scheduler
  */
-uint64 _schedTime();
+uint64_t _schedTime();
 
 extern BaseEventQueue &_mainEventQueue;
 

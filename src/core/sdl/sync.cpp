@@ -6,6 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 #include <SDL.h>
+#include "../misc.hpp"
+#include "../sync.hpp"
 #include "../core.hpp"
 
 namespace wombat {
@@ -54,7 +56,7 @@ Event EventQueue::wait() {
 	return post;
 }
 
-Event EventQueue::wait(uint64 timeout) {
+Event EventQueue::wait(uint64_t timeout) {
 	Event post;
 	const auto origTimeout = timeout;
 	const auto startTime = core::time();

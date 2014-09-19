@@ -8,7 +8,7 @@
 #ifndef WOMBAT_CORE__TLS_HPP
 #define WOMBAT_CORE__TLS_HPP
 
-#include "core.hpp"
+#include "task.hpp"
 
 namespace wombat {
 namespace core {
