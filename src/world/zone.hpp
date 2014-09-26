@@ -8,7 +8,7 @@
 #ifndef WOMBAT_WORLD_ZONE_HPP
 #define WOMBAT_WORLD_ZONE_HPP
 
-#include <core/core.hpp>
+#include <core/task.hpp>
 #include "event.hpp"
 #include "person.hpp"
 #include "tile.hpp"

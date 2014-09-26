@@ -8,7 +8,7 @@
 #ifndef WOMBAT_WORLD_PERSONCLASS_HPP
 #define WOMBAT_WORLD_PERSONCLASS_HPP
 
-#include <core/core.hpp>
+#include <core/modelio.hpp>
 #include "animlayer.hpp"
 
 namespace wombat {

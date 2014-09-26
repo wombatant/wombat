@@ -8,7 +8,7 @@
 #ifndef WOMBAT_WORLD_TILECLASS_HPP
 #define WOMBAT_WORLD_TILECLASS_HPP
 
-#include <core/core.hpp>
+#include <core/modelio.hpp>
 #include "animlayer.hpp"
 
 namespace wombat {

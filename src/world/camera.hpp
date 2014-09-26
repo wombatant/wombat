@@ -8,7 +8,7 @@
 #ifndef WOMBAT_WORLD_CAMERA_HPP
 #define WOMBAT_WORLD_CAMERA_HPP
 
-#include <core/core.hpp>
+#include <core/task.hpp>
 #include <ui/ui.hpp>
 #include "person.hpp"
 #include "world.hpp"

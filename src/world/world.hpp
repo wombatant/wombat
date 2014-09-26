@@ -8,7 +8,6 @@
 #ifndef WOMBAT_WORLD_WORLD_HPP
 #define WOMBAT_WORLD_WORLD_HPP
 
-#include <core/core.hpp>
 #include "zone.hpp"
 
 namespace wombat {

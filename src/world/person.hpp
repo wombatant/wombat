@@ -8,7 +8,7 @@
 #ifndef WOMBAT_WORLD_PERSON_HPP
 #define WOMBAT_WORLD_PERSON_HPP
 
-#include <core/core.hpp>
+#include <core/task.hpp>
 #include "_etc.hpp"
 #include "event.hpp"
 #include "personclass.hpp"
