@@ -11,8 +11,8 @@
 #include <map>
 #include <string>
 #include <functional>
+#include <models/models.hpp>
 #include "sync.hpp"
-#include "models/models.hpp"
 
 namespace wombat {
 namespace core {
