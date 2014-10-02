@@ -1,0 +1,11 @@
+# Site settings
+title: wombat
+email: gtalent2@gmail.com
+description: "World's finest Pokemon clone!"
+baseurl: ""
+twitter_username: gtalent2
+github_username:  gtalent
+
+# Build settings
+markdown: kramdown
+permalink: pretty
