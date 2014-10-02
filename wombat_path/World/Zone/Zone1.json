@@ -3,26 +3,7 @@
 	"Tiles": [
 		[
 			[
-				{
-					"TileClass": {
-						 "Import": "",
-						 "TerrainType": 1,
-						 "LowerAnim": {
-							  "Animation": "Animation/Dirt",
-							  "Point": {
-									"X": 0,
-									"Y": 0
-							  }
-						 },
-						 "UpperAnim": {
-							  "Animation": "",
-							  "Point": {
-									"X": 0,
-									"Y": 0
-							  }
-						 }
-					}
-				},
+				{"TileClass": {"Import": "World/TileClass/Water"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -47,8 +28,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -88,8 +69,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -115,8 +96,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -142,8 +123,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -169,8 +150,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -196,8 +177,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -223,8 +204,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -250,8 +231,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -277,8 +258,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -304,8 +285,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -331,8 +312,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -358,8 +339,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -385,8 +366,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -412,8 +393,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -439,8 +420,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -466,8 +447,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -493,8 +474,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -520,8 +501,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -547,8 +528,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -574,8 +555,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -601,8 +582,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -628,8 +609,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -655,8 +636,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
@@ -682,8 +663,8 @@
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}}
-			],                                          
-			[                                           
+			],
+			[
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
 				{"TileClass": {"Import": "World/TileClass/Dirt"}},
