@@ -9,3 +9,5 @@ github_username:  gtalent
 # Build settings
 markdown: kramdown
 permalink: pretty
+safe: true
+lsi: false

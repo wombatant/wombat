@@ -8,7 +8,7 @@ permalink: /about/
 wombat is the world's the one million and first Pokemon clone.
 
 ### Cool, when will the game be released?
-I don't know that there will ever be a game, as the project has now artists or musicians, or really anyone that is particularly passionate about games. I care about the software, there might be a game at some point if the right team comes along.
+I don't know that there will ever be a game, as the project has no artists or musicians, or really anyone that is particularly passionate about games. I care about the software, there might be a game at some point if the right team comes along.
 
 ### So how far along is it?
 Not very...
