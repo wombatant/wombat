@@ -5,6 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+#include <iostream>
 #include "bounds.hpp"
 
 namespace wombat {
@@ -20,11 +21,8 @@ Bounds::Bounds(models::Bounds bnds) {
 	Height = bnds.Height;
 }
 
-bool Bounds::intersects(Bounds b) const {
-	return contains(b.X, b.Y) || contains(b.X, b.y2()) ||
-		contains(b.x2(), b.Y) || contains(b.x2(), b.y2()) ||
-		b.contains(X, Y) || b.contains(X, y2()) ||
-		b.contains(x2(), Y) || b.contains(x2(), y2());
+bool Bounds::intersects(Bounds o) const {
+	return o.x2() >= X && x2() >= o.X && o.y2() >= Y && y2() >= o.Y;
 }
 
 bool Bounds::contains(int x, int y) const {
