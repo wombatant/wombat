@@ -40,14 +40,8 @@ void SubscriptionManager::post(Event e) {
 	}
 }
 
-void SubscriptionManager::run(Event e) {
-	for (auto t : m_subs[(int) e.type()]) {
-		t->run(e);
-	}
-}
-
-int SubscriptionManager::subs(Event::Type et) {
-	return m_subs[(int) et].size();
+std::vector<Task*> &SubscriptionManager::subs(Event::Type et) {
+	return m_subs[(int) et];
 }
 
 }

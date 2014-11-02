@@ -30,16 +30,18 @@ class TaskState {
 			/**
 			 * This option tell the TaskProcessor not to change any thing about the Task's state.
 			 */
-			Continue,
+			Continue = 0,
 			Running,
 			Waiting,
 			Done
-		} state;
+		};
+
+		State state = Continue;
 
 		/**
 		 * Time (milliseconds) til the Task wants to run again.
 		 */
-		uint64 sleepDuration;
+		uint64 sleepDuration = 0;
 
 		/**
 		 * Constructor

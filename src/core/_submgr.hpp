@@ -47,17 +47,11 @@ class SubscriptionManager {
 		void post(Event event);
 
 		/**
-		 * Calls run on the given Event for all subscribers to the Event's Event::Type.
-		 * @param event the Event to publish
-		 */
-		void run(Event event);
-
-		/**
-		 * Gets the number of subscribers to the given Event::Type.
+		 * Gets the subscribers to the given Event::Type.
 		 * @param et the Event::Type to return the number of subscribers of
-		 * @return the number of subscribers to the given Event::Type.
+		 * @return the subscribers to the given Event::Type.
 		 */
-		int subs(Event::Type et);
+		std::vector<Task*> &subs(Event::Type et);
 };
 
 }

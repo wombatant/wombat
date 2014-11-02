@@ -113,7 +113,10 @@ TaskState TaskProcessor::run(Event event) {
 	setActiveTaskProcessor(this);
 
 	if (event.type() < Event::OptionalEventTypeRange) {
-		m_submgr.run(event);
+		auto &subs = m_submgr.subs(event.type());
+		for (auto t : subs) {
+			runTask(t, event);
+		}
 	}
 
 	if (!event.getTaskPost()) {
@@ -217,7 +220,7 @@ void TaskProcessor::post(Event event) {
 }
 
 void TaskProcessor::addSubscription(Event::Type et) {
-	if (m_submgr.subs(et) == 0) {
+	if (m_submgr.subs(et).size() == 0) {
 		_submgr.addSubscription(et, this);
 	}
 

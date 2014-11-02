@@ -53,6 +53,7 @@ TaskState App::run(Event e) {
 		break;
 	case Event::Quit:
 		quit();
+		retval = TaskState::Done;
 		break;
 	case Event::KeyDown:
 		switch (e.key()) {
