@@ -51,7 +51,7 @@ class SubscriptionManager {
 		 * @param et the Event::Type to return the number of subscribers of
 		 * @return the subscribers to the given Event::Type.
 		 */
-		std::vector<Task*> &subs(Event::Type et);
+		const std::vector<Task*> &subs(Event::Type et);
 };
 
 }

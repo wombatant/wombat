@@ -40,7 +40,7 @@ void SubscriptionManager::post(Event e) {
 	}
 }
 
-std::vector<Task*> &SubscriptionManager::subs(Event::Type et) {
+const std::vector<Task*> &SubscriptionManager::subs(Event::Type et) {
 	return m_subs[(int) et];
 }
 
