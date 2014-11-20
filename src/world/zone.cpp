@@ -194,11 +194,17 @@ void Zone::load() {
 	core::read(zone, m_path);
 	m_tiles.allocate();
 
-	zone.Tiles.resize(m_tiles.layers());
+	if ((int) zone.Tiles.size() < m_tiles.layers()) {
+		zone.Tiles.resize(m_tiles.layers());
+	}
 	for (int l = 0; l < m_tiles.layers(); l++) {
-		zone.Tiles[l].resize(m_tiles.tilesHigh());
+		if ((int) zone.Tiles[l].size() < m_tiles.tilesHigh()) {
+			zone.Tiles[l].resize(m_tiles.tilesHigh());
+		}
 		for (int y = 0; y < m_tiles.tilesHigh(); y++) {
-			zone.Tiles[l][y].resize(m_tiles.tilesWide());
+			if ((int) zone.Tiles[l][y].size() < m_tiles.tilesWide()) {
+				zone.Tiles[l][y].resize(m_tiles.tilesWide());
+			}
 			for (int x = 0; x < m_tiles.tilesWide(); x++) {
 				auto tile = m_tiles.at(x, y, l);
 				auto model = zone.Tiles[l][y][x];
