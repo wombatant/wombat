@@ -28,7 +28,7 @@
     },
     "RecycledImageIds": [
     ],
-    "SrcFile": "Resources/SpriteSheets/SpriteSheet1.png",
+    "SrcFile": "Resources/SpriteSheet/SpriteSheet1.png",
     "TileHeight": 32,
     "TileWidth": 32,
     "TilesHigh": 32,

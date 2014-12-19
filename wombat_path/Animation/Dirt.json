@@ -7,7 +7,7 @@
                     "Width": 32
                 },
                 "ImgId": 2,
-                "SpriteSheet": "Resources/SpriteSheets/SpriteSheet1.json"
+                "SpriteSheet": "Resources/SpriteSheet/SpriteSheet1.json"
             },
             "Interval": 1000
         }
