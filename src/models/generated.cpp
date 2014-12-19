@@ -13,7 +13,7 @@
 using namespace models;
 using namespace models::cyborgbear;
 
-string models::cyborgbear::version = "1.1.1";
+string models::cyborgbear::version = "1.1.2";
 
 int Model::readJsonFile(string path) {
 	try {
@@ -38,9 +38,12 @@ void Model::writeJsonFile(string path, cyborgbear::JsonSerializationSettings stt
 }
 
 int Model::fromJson(string json) {
+	cyborgbear::Error retval = cyborgbear::Error_GenericParsingError;
 	cyborgbear::JsonValOut obj = cyborgbear::read(json);
-	cyborgbear::Error retval = loadJsonObj(obj);
-	cyborgbear::decref(obj);
+	if (!cyborgbear::isNull(obj)) {
+		retval = loadJsonObj(obj);
+		cyborgbear::decref(obj);
+	}
 	return retval;
 }
 
@@ -346,7 +349,6 @@ Fraction::Fraction() {
 }
 
 SpriteClass::SpriteClass() {
-	this->SpriteType = 0;
 	this->Attributes = "";
 }
 
@@ -1489,20 +1491,6 @@ cyborgbear::Error SpriteClass::loadJsonObj(cyborgbear::JsonVal in) {
 				}
 			} else {
 				retval |= cyborgbear::Error_TypeMismatch;
-			}
-		}
-	}
-	{
-		cyborgbear::JsonValOut obj0 = cyborgbear::objRead(inObj, "SpriteType");
-		{
-			if (cyborgbear::isInt(obj0)) {
-				this->SpriteType = cyborgbear::toInt(obj0);
-			} else {
-				if (cyborgbear::isNull(obj0)) {
-					retval |= cyborgbear::Error_MissingField;
-				} else {
-					retval |= cyborgbear::Error_TypeMismatch;
-				}
 			}
 		}
 	}
@@ -3092,11 +3080,6 @@ cyborgbear::JsonValOut SpriteClass::buildJsonObj() {
 		cyborgbear::decref(out2);
 	}
 	{
-		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->SpriteType);
-		cyborgbear::objSet(obj, "SpriteType", out0);
-		cyborgbear::decref(out0);
-	}
-	{
 		cyborgbear::JsonValOut out0 = cyborgbear::toJsonVal(this->Attributes);
 		cyborgbear::objSet(obj, "Attributes", out0);
 		cyborgbear::decref(out0);
@@ -3736,7 +3719,6 @@ bool Fraction::operator==(const Fraction &o) const {
 
 bool SpriteClass::operator==(const SpriteClass &o) const {
 	if (AnimLayers != o.AnimLayers) return false;
-	if (SpriteType != o.SpriteType) return false;
 	if (Attributes != o.Attributes) return false;
 
 	return true;
@@ -4012,7 +3994,6 @@ bool Fraction::operator!=(const Fraction &o) const {
 
 bool SpriteClass::operator!=(const SpriteClass &o) const {
 	if (AnimLayers != o.AnimLayers) return true;
-	if (SpriteType != o.SpriteType) return true;
 	if (Attributes != o.Attributes) return true;
 
 	return false;

@@ -7,7 +7,6 @@ add_library(
 		person.cpp
 		personclass.cpp
 		sprite.cpp
-		spriteclass.cpp
 		tile.cpp
 		tileclass.cpp
 		world.cpp
@@ -22,7 +21,6 @@ install(
 		camera.hpp
 		person.hpp
 		sprite.hpp
-		spriteclass.hpp
 		tile.hpp
 		tileclass.hpp
 		world.hpp

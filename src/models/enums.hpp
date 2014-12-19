@@ -25,7 +25,9 @@ enum class SpriteMotion {
 enum class SpriteType {
 	Inanimate = 1,
 	Person    = 2,
-	Creature  = 3
+	Creature  = 3,
+	Item      = 4,
+	Container = 5
 };
 
 enum class TerrainType {

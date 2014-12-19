@@ -8,8 +8,6 @@
 #ifndef WOMBAT_WORLD_SPRITE_HPP
 #define WOMBAT_WORLD_SPRITE_HPP
 
-#include "spriteclass.hpp"
-
 namespace wombat {
 namespace world {
 
