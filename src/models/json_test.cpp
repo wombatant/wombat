@@ -36,16 +36,18 @@ inline Error fromJson(TestModel1 *model, json_t *jo) {
 
 int main() {
 	TestModel1 model;
-	auto json = "{\"field1\": true, \"field2\": 42, \"field3\": 9.9, \"field4\": \"Narf!\", \"field5\": [42]}";
+	string json = "{\"field1\":true,\"field2\":42,\"field3\":9.0,\"field4\":\"Narf!\",\"field5\":[42]}";
 	auto err = fromJson(&model, json);
 	if (err == Error::Ok) {
-		std::cout << "field1: " << model.field1 << std::endl;
-		std::cout << "field2: " << model.field2 << std::endl;
-		std::cout << "field3: " << model.field3 << std::endl;
-		std::cout << "field4: " << model.field4 << std::endl;
-		toJson(model);
+		auto pass = "fail";
+		TestModel1 modelCopy;
+		string generatedJson = toJson(model);
+		if (json == generatedJson) {
+			pass = "pass";
+		}
+		cout << "JSON encode/decode: " << pass << endl;
 	} else {
-		std::cout << "JSON reading broken.";
+		cout << "JSON reading broken.";
 	}
 	return 0;
 }

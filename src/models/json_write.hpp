@@ -25,7 +25,7 @@ template<typename T>
 Error writeVal(json_t *jo, const char *field, T v);
 
 template<typename Model>
-Error toJson(const Model &v);
+string toJson(const Model &v);
 
 
 // template definitions
@@ -58,9 +58,13 @@ Error writeVal(json_t *jo, const char *field, T v) {
 }
 
 template<typename Model>
-Error toJson(const Model &v) {
+string toJson(const Model &v) {
 	json_t *jo = json_object();
-	auto out = writeVal(&jo, v);
+	writeVal(&jo, v);
+	auto flags = JSON_COMPACT | JSON_PRESERVE_ORDER;
+	auto cstr = json_dumps(jo, flags);
+	string out = cstr;
+	free(cstr);
 	json_decref(jo);
 	return out;
 }
