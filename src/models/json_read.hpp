@@ -1,5 +1,5 @@
-#ifndef MODELS_JSON_HPP
-#define MODELS_JSON_HPP
+#ifndef WOMBAT_MODELS_JSON_HPP
+#define WOMBAT_MODELS_JSON_HPP
 
 #include "types.hpp"
 #include <jansson.h>
@@ -18,9 +18,23 @@ Error readVal(json_t *jv, bool *v);
 Error readVal(json_t *jv, string *v);
 
 template<typename T>
-Error readVal(json_t *jo, const char *field, std::vector<T> *v) {
-	auto jv = json_object_get(jo, field);
-	Error err;
+Error readVal(json_t *jv, std::vector<T> *v);
+
+template<typename Model>
+Error readVal(json_t *jv, Model *v);
+
+template<typename T>
+Error readVal(json_t *jo, const char *field, T *v);
+
+template<typename Model>
+Error fromJson(Model *model, string json);
+
+
+// template definitions
+
+template<typename T>
+Error readVal(json_t *jv, std::vector<T> *v) {
+	auto err = Error::Ok;
 	if (json_is_array(jv)) {
 		auto &list = *v;
 		size_t i;
@@ -44,9 +58,18 @@ Error readVal(json_t *jv, Model *v) {
 }
 
 template<typename T>
-static Error readVal(json_t *jo, const char *field, T *v) {
+Error readVal(json_t *jo, const char *field, T *v) {
 	auto jv = json_object_get(jo, field);
 	return models::readVal(jv, v);
+}
+
+template<typename Model>
+Error fromJson(Model *model, string json) {
+	json_t *jv;
+	auto err = parseJson(json, &jv);
+	err |= fromJson(model, jv);
+	json_decref(jv);
+	return err;
 }
 
 }

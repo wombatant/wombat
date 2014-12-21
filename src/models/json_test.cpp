@@ -1,5 +1,6 @@
 #include <iostream>
 #include "json_read.hpp"
+#include "json_write.hpp"
 
 using namespace wombat::models;
 using namespace std;
@@ -13,26 +14,38 @@ class TestModel1 {
 		vector<int> field5;
 };
 
-inline Error fromJson(TestModel1 *model, json_t *jv) {
-	Error err = Error::Ok;
-	err |= readVal(jv, "field1", &model->field1);
-	err |= readVal(jv, "field2", &model->field2);
-	err |= readVal(jv, "field3", &model->field3);
-	err |= readVal(jv, "field4", &model->field4);
-	err |= readVal(jv, "field5", &model->field5);
+inline Error toJson(TestModel1 model, json_t *jo) {
+	auto err = Error::Ok;
+	err |= writeVal(jo, "field1", model.field1);
+	err |= writeVal(jo, "field2", model.field2);
+	err |= writeVal(jo, "field3", model.field3);
+	err |= writeVal(jo, "field4", model.field4);
+	err |= writeVal(jo, "field5", model.field5);
+	return err;
+}
+
+inline Error fromJson(TestModel1 *model, json_t *jo) {
+	auto err = Error::Ok;
+	err |= readVal(jo, "field1", &model->field1);
+	err |= readVal(jo, "field2", &model->field2);
+	err |= readVal(jo, "field3", &model->field3);
+	err |= readVal(jo, "field4", &model->field4);
+	err |= readVal(jo, "field5", &model->field5);
 	return err;
 }
 
 int main() {
 	TestModel1 model;
-	json_t *jv;
-	auto err = parseJson("{\"field1\": true, \"field2\": 42, \"field3\": 9.9, \"field4\": \"Narf!\", \"field5\": [1, 2, 3, 4]}", &jv);
+	auto json = "{\"field1\": true, \"field2\": 42, \"field3\": 9.9, \"field4\": \"Narf!\", \"field5\": [42]}";
+	auto err = fromJson(&model, json);
 	if (err == Error::Ok) {
-		fromJson(&model, jv);
 		std::cout << "field1: " << model.field1 << std::endl;
 		std::cout << "field2: " << model.field2 << std::endl;
 		std::cout << "field3: " << model.field3 << std::endl;
 		std::cout << "field4: " << model.field4 << std::endl;
+		toJson(model);
+	} else {
+		std::cout << "JSON reading broken.";
 	}
 	return 0;
 }

@@ -4,6 +4,7 @@ add_library(
 	WombatModels OBJECT
 		generated.cpp
 		json_read.cpp
+		json_write.cpp
 		types.cpp
 )
 
@@ -21,6 +22,7 @@ install(
 		generated.hpp
 		error.hpp
 		json_read.hpp
+		json_write.hpp
 		types.hpp
 	DESTINATION
 		include/wombat/models

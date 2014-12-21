@@ -18,7 +18,7 @@ Error readVal(json_t *jv, int *v) {
 
 Error readVal(json_t *jv, double *v) {
 	if (json_is_number(jv)) {
-		*v = json_number_value(jv);
+		*v = json_real_value(jv);
 		return Error::Ok;
 	}
 	return Error::TypeMismatch;
@@ -39,10 +39,6 @@ Error readVal(json_t *jv, std::string *v) {
 	}
 	return Error::TypeMismatch;
 }
-
-//inline int operator+(int a, int b) {
-//	return a + b;
-//}
 
 }
 }

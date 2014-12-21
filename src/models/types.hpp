@@ -1,6 +1,7 @@
 #ifndef WOMBAT_MODELS_TYPES_HPP
 #define WOMBAT_MODELS_TYPES_HPP
 
+#include <array>
 #include <string>
 #include <vector>
 #include <cstdint>
