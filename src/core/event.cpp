@@ -40,10 +40,8 @@ Event::Event(const Event &src) {
 }
 
 Event::~Event() {
-	if (type() >= Event::AppEvent) {
-		if (m_body.other.data != nullptr) {
-			m_free(m_body.other.data);
-		}
+	if (m_body.other.data != nullptr) {
+		m_free(m_body.other.data);
 	}
 }
 
