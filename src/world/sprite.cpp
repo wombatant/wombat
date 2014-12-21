@@ -32,6 +32,8 @@ Sprite *loadSprite(models::Sprite model) {
 		return new Person(model);
 	case models::SpriteType::Creature:
 		break;
+	default:
+		break;
 	}
 	return nullptr;
 }
