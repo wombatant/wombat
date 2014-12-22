@@ -2,6 +2,7 @@
 #define WOMBAT_MODELS_TYPES_HPP
 
 #include <array>
+#include <map>
 #include <string>
 #include <vector>
 #include <cstdint>

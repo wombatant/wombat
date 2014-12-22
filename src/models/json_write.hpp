@@ -2,6 +2,7 @@
 #define WOMBAT_MODELS_JSON_WRITE_HPP
 
 #include "types.hpp"
+#include <sstream>
 #include <jansson.h>
 
 namespace wombat {
@@ -14,6 +15,9 @@ Error writeVal(json_t **jv, double v);
 Error writeVal(json_t **jv, bool v);
 
 Error writeVal(json_t **jv, string v);
+
+template<typename Key, typename Value>
+Error writeVal(json_t **jv, std::map<Key, Key> l);
 
 template<typename T>
 Error writeVal(json_t **jv, std::vector<T> v);
@@ -29,6 +33,26 @@ string toJson(const Model &v);
 
 
 // template definitions
+
+template<typename Key, typename Value>
+Error writeVal(json_t **jv, std::map<Key, Value> l) {
+	auto err = Error::Ok;
+	*jv = json_object();
+	for (auto i = l.begin(); i != l.end(); i++) {
+		// build key
+		std::stringstream conv;
+		string key;
+		conv << i->first;
+		conv >> key;
+		// build value
+		json_t *jve;
+		writeVal(&jve, i->second);
+		// place key/value in object
+		json_object_set(*jv, key.c_str(), jve);
+		json_decref(jve);
+	}
+	return err;
+}
 
 template<typename T>
 Error writeVal(json_t **jv, std::vector<T> l) {

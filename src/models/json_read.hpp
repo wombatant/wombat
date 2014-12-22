@@ -2,6 +2,8 @@
 #define WOMBAT_MODELS_JSON_HPP
 
 #include "types.hpp"
+#include <iostream>
+#include <sstream>
 #include <jansson.h>
 
 namespace wombat {
@@ -19,6 +21,9 @@ Error readVal(json_t *jv, string *v);
 
 template<typename T>
 Error readVal(json_t *jv, std::vector<T> *v);
+
+template<typename Key, typename Value>
+Error readVal(json_t *jv, std::map<Key, Value> *v);
 
 template<typename Model>
 Error readVal(json_t *jv, Model *v);
@@ -42,6 +47,26 @@ Error readVal(json_t *jv, std::vector<T> *v) {
 		list.resize(json_array_size(jv));
 		json_array_foreach(jv, i, value) {
 			err |= readVal(value, &list[i]);
+		}
+	} else {
+		err = Error::TypeMismatch;
+	}
+	return err;
+}
+
+template<typename Key, typename Value>
+Error readVal(json_t *jv, std::map<Key, Value> *v) {
+	auto err = Error::Ok;
+	if (json_is_object(jv)) {
+		auto &list = *v;
+		const char *i;
+		json_t *value;
+		json_object_foreach(jv, i, value) {
+			std::stringstream conv;
+			Key key;
+			conv << i;
+			conv >> key;
+			err |= readVal(value, &list[key]);
 		}
 	} else {
 		err = Error::TypeMismatch;

@@ -24,12 +24,13 @@ inline Error fromJson(TestModel2 *model, json_t *jo) {
 
 class TestModel1 {
 	public:
-		bool        field1;
-		int         field2;
-		double      field3;
-		string      field4;
-		vector<int> field5;
-		TestModel2  field6;
+		bool          field1;
+		int           field2;
+		double        field3;
+		string        field4;
+		vector<int>   field5;
+		TestModel2    field6;
+		map<string, int> field7;
 };
 
 inline Error toJson(TestModel1 model, json_t *jo) {
@@ -40,6 +41,7 @@ inline Error toJson(TestModel1 model, json_t *jo) {
 	err |= writeVal(jo, "field4", model.field4);
 	err |= writeVal(jo, "field5", model.field5);
 	err |= writeVal(jo, "field6", model.field6);
+	err |= writeVal(jo, "field7", model.field7);
 	return err;
 }
 
@@ -51,24 +53,24 @@ inline Error fromJson(TestModel1 *model, json_t *jo) {
 	err |= readVal(jo, "field4", &model->field4);
 	err |= readVal(jo, "field5", &model->field5);
 	err |= readVal(jo, "field6", &model->field6);
+	err |= readVal(jo, "field7", &model->field7);
 	return err;
 }
 
 int main() {
 	TestModel1 model;
-	string json = "{\"field1\":true,\"field2\":42,\"field3\":9.0,\"field4\":\"Narf!\",\"field5\":[42],\"field6\":{\"field1\":42}}";
+	string json = "{\"field1\":true,\"field2\":42,\"field3\":9.0,\"field4\":\"Narf!\",\"field5\":[42],\"field6\":{\"field1\":42},\"field7\":{\"4\":5}}";
 	auto err = fromJson(&model, json);
 	if (err == Error::Ok) {
 		auto pass = "fail";
 		TestModel1 modelCopy;
 		string generatedJson = toJson(model);
-		cout << generatedJson << endl;
 		if (json == generatedJson) {
 			pass = "pass";
 		}
 		cout << "JSON encode/decode: " << pass << endl;
 	} else {
-		cout << "JSON reading broken.";
+		cout << "JSON read/write broken.";
 	}
 	return 0;
 }
