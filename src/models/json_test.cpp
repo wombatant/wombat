@@ -81,11 +81,14 @@ int readWriteTest() {
 
 int missingFieldTest() {
 	TestModel1 model;
-	string json = "{\"field1\":true}";
-	bool pass = false;
-	auto err = fromJson(&model, json);
-	if ((bool) (err & Error::MissingField)) {
-		pass = true;
+	string good = "{\"field1\":true,\"field2\":42,\"field3\":9.0,\"field4\":\"Narf!\",\"field5\":[42],\"field6\":{\"field1\":42},\"field7\":{\"4\":5}}";
+	string bad = "{\"field1\":true}";
+	bool pass = true;
+	if ((bool) (fromJson(&model, good) & Error::MissingField)) {
+		pass = false;
+	}
+	if (!(bool) (fromJson(&model, bad) & Error::MissingField)) {
+		pass = false;
 	}
 	// report result
 	if (pass) {
