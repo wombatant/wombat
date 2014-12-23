@@ -57,20 +57,60 @@ inline Error fromJson(TestModel1 *model, json_t *jo) {
 	return err;
 }
 
-int main() {
+int readWriteTest() {
 	TestModel1 model;
 	string json = "{\"field1\":true,\"field2\":42,\"field3\":9.0,\"field4\":\"Narf!\",\"field5\":[42],\"field6\":{\"field1\":42},\"field7\":{\"4\":5}}";
+	bool pass = false;
 	auto err = fromJson(&model, json);
 	if (err == Error::Ok) {
-		auto pass = "fail";
 		TestModel1 modelCopy;
 		string generatedJson = toJson(model);
 		if (json == generatedJson) {
-			pass = "pass";
+			pass = true;
 		}
-		cout << "JSON encode/decode: " << pass << endl;
-	} else {
-		cout << "JSON read/write broken.";
 	}
-	return 0;
+	// report result
+	if (pass) {
+		cout << "JSON read/write:              pass\n";
+		return 0;
+	} else {
+		cout << "JSON read/write:              fail\n";
+		return 1;
+	}
+}
+
+int missingFieldTest() {
+	TestModel1 model;
+	string json = "{\"field1\":true}";
+	bool pass = false;
+	auto err = fromJson(&model, json);
+	if ((bool) (err & Error::MissingField)) {
+		pass = true;
+	}
+	// report result
+	if (pass) {
+		cout << "JSON missing field detection: pass\n";
+		return 0;
+	} else {
+		cout << "JSON missing field detection: fail\n";
+		return 1;
+	}
+}
+
+int main(int argc, char **args) {
+	cout << args[0] << endl;
+	int testNo;
+	if (argc > 1) {
+		testNo = args[1][0] - '0';
+	}
+	int retval = 0;
+	// general read/write test
+	if (argc == 1 || testNo == 0) {
+		retval |= readWriteTest();
+	}
+	// missing field detection test
+	if (argc == 1 || testNo == 1) {
+		retval |= missingFieldTest();
+	}
+	return retval;
 }
