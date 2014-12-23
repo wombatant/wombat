@@ -130,7 +130,7 @@ int main(int argc, char **args) {
 		retval |= typeMismatchTest();
 	}
 	// missing field detection test
-	if (argc == 1 || testNo == 1) {
+	if (argc == 1 || testNo == 2) {
 		retval |= missingFieldTest();
 	}
 	return retval;
