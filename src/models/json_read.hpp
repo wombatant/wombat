@@ -1,10 +1,10 @@
 #ifndef WOMBAT_MODELS_JSON_HPP
 #define WOMBAT_MODELS_JSON_HPP
 
-#include "types.hpp"
 #include <iostream>
 #include <sstream>
 #include <jansson.h>
+#include "types.hpp"
 
 namespace wombat {
 namespace models {
@@ -28,11 +28,11 @@ Error readVal(json_t *jv, std::map<Key, Value> *v);
 template<typename Model>
 Error readVal(json_t *jv, Model *v);
 
-template<typename T>
-Error readVal(json_t *jo, const char *field, T *v);
-
 template<typename Model>
 Error fromJson(Model *model, string json);
+
+template<typename T>
+Error readVal(json_t *jo, const char *field, T *v);
 
 
 // template definitions
@@ -82,12 +82,6 @@ Error readVal(json_t *jv, Model *v) {
 	return Error::TypeMismatch;
 }
 
-template<typename T>
-Error readVal(json_t *jo, const char *field, T *v) {
-	auto jv = json_object_get(jo, field);
-	return models::readVal(jv, v);
-}
-
 template<typename Model>
 Error fromJson(Model *model, string json) {
 	json_t *jv;
@@ -95,6 +89,16 @@ Error fromJson(Model *model, string json) {
 	err |= fromJson(model, jv);
 	json_decref(jv);
 	return err;
+}
+
+template<typename T>
+Error readVal(json_t *jo, const char *field, T *v) {
+	auto jv = json_object_get(jo, field);
+	if (jv) {
+		return models::readVal(jv, v);
+	} else {
+		return Error::MissingField;
+	}
 }
 
 }

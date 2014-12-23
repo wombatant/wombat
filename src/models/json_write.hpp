@@ -1,9 +1,9 @@
 #ifndef WOMBAT_MODELS_JSON_WRITE_HPP
 #define WOMBAT_MODELS_JSON_WRITE_HPP
 
-#include "types.hpp"
 #include <sstream>
 #include <jansson.h>
+#include "types.hpp"
 
 namespace wombat {
 namespace models {

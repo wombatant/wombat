@@ -5,7 +5,11 @@ namespace models {
 
 Error parseJson(string json, json_t **out) {
 	*out = json_loads(json.c_str(), 0, nullptr);
-	return Error::Ok;
+	if (*out) {
+		return Error::Ok;
+	} else {
+		return Error::GenericParsingError;
+	}
 }
 
 Error readVal(json_t *jv, int *v) {

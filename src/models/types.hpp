@@ -15,7 +15,10 @@ typedef std::int64_t int64_t;
 
 enum class Error: std::uint64_t {
 	Ok = 0,
-	TypeMismatch = 1
+	TypeMismatch = 1,
+	MissingField = 2,
+	CouldNotAccessFile = 4,
+	GenericParsingError = 8
 };
 
 inline Error operator|(Error a, Error b) {
