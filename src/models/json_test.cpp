@@ -57,17 +57,38 @@ inline Error fromJson(TestModel1 *model, json_t *jo) {
 	return err;
 }
 
+// tests
+
+int test(string good, string bad, string testLbl, Error errType) {
+	TestModel1 model;
+	bool pass = true;
+	if ((bool) (fromJson(&model, good) & errType)) {
+		pass = false;
+	}
+	if (!(bool) (fromJson(&model, bad) & errType)) {
+		pass = false;
+	}
+	// report result
+	if (pass) {
+		cout << testLbl << " pass\n";
+		return 0;
+	} else {
+		cout << testLbl << " fail\n";
+		return 1;
+	}
+}
+
 int readWriteTest() {
 	TestModel1 model;
-	string json = "{\"field1\":true,\"field2\":42,\"field3\":9.0,\"field4\":\"Narf!\",\"field5\":[42],\"field6\":{\"field1\":42},\"field7\":{\"4\":5}}";
 	bool pass = false;
-	auto err = fromJson(&model, json);
-	if (err == Error::Ok) {
-		TestModel1 modelCopy;
-		string generatedJson = toJson(model);
-		if (json == generatedJson) {
-			pass = true;
-		}
+	// read JSON
+	string json = "{\"field1\":true,\"field2\":42,\"field3\":9.0,\"field4\":\"Narf!\",\"field5\":[42],\"field6\":{\"field1\":42},\"field7\":{\"4\":5}}";
+	fromJson(&model, json);
+	//write JSON
+	string generatedJson = toJson(model);
+	// test to see if input matches output
+	if (json == generatedJson) {
+		pass = true;
 	}
 	// report result
 	if (pass) {
@@ -79,25 +100,18 @@ int readWriteTest() {
 	}
 }
 
+int typeMismatchTest() {
+	auto good = "{\"field2\":42}";
+	auto bad = "{\"field2\":{}}";
+	auto testLbl = "JSON type mismatch detection:";
+	return test(good, bad, testLbl, Error::TypeMismatch);
+}
+
 int missingFieldTest() {
-	TestModel1 model;
-	string good = "{\"field1\":true,\"field2\":42,\"field3\":9.0,\"field4\":\"Narf!\",\"field5\":[42],\"field6\":{\"field1\":42},\"field7\":{\"4\":5}}";
-	string bad = "{\"field1\":true}";
-	bool pass = true;
-	if ((bool) (fromJson(&model, good) & Error::MissingField)) {
-		pass = false;
-	}
-	if (!(bool) (fromJson(&model, bad) & Error::MissingField)) {
-		pass = false;
-	}
-	// report result
-	if (pass) {
-		cout << "JSON missing field detection: pass\n";
-		return 0;
-	} else {
-		cout << "JSON missing field detection: fail\n";
-		return 1;
-	}
+	auto good = "{\"field1\":true,\"field2\":42,\"field3\":0,\"field4\":\"\",\"field5\":[],\"field6\":{\"field1\":42},\"field7\":{}}";
+	auto bad = "{\"field1\":true}";
+	auto testLbl = "JSON missing field detection:";
+	return test(good, bad, testLbl, Error::MissingField);
 }
 
 int main(int argc, char **args) {
@@ -110,6 +124,10 @@ int main(int argc, char **args) {
 	// general read/write test
 	if (argc == 1 || testNo == 0) {
 		retval |= readWriteTest();
+	}
+	// type mismatch detection test
+	if (argc == 1 || testNo == 1) {
+		retval |= typeMismatchTest();
 	}
 	// missing field detection test
 	if (argc == 1 || testNo == 1) {
