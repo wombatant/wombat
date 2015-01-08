@@ -8,6 +8,7 @@
 #ifndef WOMBAT_MODELS_JSON_WRITE_HPP
 #define WOMBAT_MODELS_JSON_WRITE_HPP
 
+#include <fstream>
 #include <sstream>
 #include <jansson.h>
 #include "types.hpp"
@@ -103,12 +104,15 @@ string toJson(const Model &v) {
 
 template<typename Model>
 Error writeJsonFile(const Model &v, string path) {
-	Error err = Error::Ok;
-	json_t *jo;
-	writeVal(&jo, v);
-	auto flags = JSON_COMPACT | JSON_PRESERVE_ORDER;
-	err = json_dump_file(jo, path.c_str(), flags) ? Error::CouldNotAccessFile : err;
-	json_decref(jo);
+	auto err = Error::CouldNotAccessFile;
+	std::ofstream out;
+	out.open(path);
+	if (out.is_open()) {
+		std::string json = toJson(v);
+		out << json << "\0";
+		out.close();
+		err = Error::Ok;
+	}
 	return err;
 }
 
