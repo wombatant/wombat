@@ -107,7 +107,7 @@ Image::Image(models::Image img) {
 	m_bounds = ss.Images[img.ImgId].SrcBounds;
 	m_defaultSize.Width = img.DefaultSize.Width;
 	m_defaultSize.Height = img.DefaultSize.Height;
-	m_key = img.toJson();
+	m_key = toJson(img);
 }
 
 Image::~Image() {

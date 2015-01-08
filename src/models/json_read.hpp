@@ -1,3 +1,10 @@
+/*
+ * Copyright 2013-2014 gtalent2@gmail.com
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 #ifndef WOMBAT_MODELS_JSON_HPP
 #define WOMBAT_MODELS_JSON_HPP
 
@@ -10,6 +17,8 @@ namespace wombat {
 namespace models {
 
 Error parseJson(string json, json_t **out);
+
+Error parseJsonFile(string path, json_t **out);
 
 Error readVal(json_t *jv, int *v);
 
@@ -86,6 +95,15 @@ template<typename Model>
 Error fromJson(Model *model, string json) {
 	json_t *jv;
 	auto err = parseJson(json, &jv);
+	err |= fromJson(model, jv);
+	json_decref(jv);
+	return err;
+}
+
+template<typename Model>
+Error readJsonFile(Model *model, string path) {
+	json_t *jv;
+	auto err = parseJsonFile(path, &jv);
 	err |= fromJson(model, jv);
 	json_decref(jv);
 	return err;

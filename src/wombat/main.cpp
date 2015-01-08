@@ -11,19 +11,19 @@
 #include "app.hpp"
 #include "tests.hpp"
 
-using namespace models;
+using namespace wombat::models;
 using namespace wombat;
 using core::TaskState;
 
 const auto SettingsPath = "settings.json";
 
 int main(int argc, const char **args) {
-	models::Settings settings;
-	if (settings.readJsonFile(SettingsPath) != 0) {
+	Settings settings;
+	if (readJsonFile(&settings, SettingsPath) != Error::Ok) {
 		settings.Fullscreen = false;
 		settings.Width = 800;
 		settings.Height = 600;
-		settings.writeJsonFile(SettingsPath, models::cyborgbear::Readable);
+		writeJsonFile(settings, SettingsPath);
 	}
 
 	if (core::init(settings) != 0) {
@@ -55,7 +55,7 @@ int main(int argc, const char **args) {
 	if (test)
 		delete test;
 
-	settings.writeJsonFile(SettingsPath, models::cyborgbear::Readable);
+	writeJsonFile(settings, SettingsPath);
 
 	return 0;
 }

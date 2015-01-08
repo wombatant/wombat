@@ -1,3 +1,10 @@
+/*
+ * Copyright 2013-2014 gtalent2@gmail.com
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 #include <iostream>
 #include "json_read.hpp"
 #include "json_write.hpp"
@@ -24,12 +31,12 @@ inline Error fromJson(TestModel2 *model, json_t *jo) {
 
 class TestModel1 {
 	public:
-		bool          field1;
-		int           field2;
-		double        field3;
-		string        field4;
-		vector<int>   field5;
-		TestModel2    field6;
+		bool             field1;
+		int              field2;
+		double           field3;
+		string           field4;
+		vector<int>      field5;
+		TestModel2       field6;
 		map<string, int> field7;
 };
 

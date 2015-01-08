@@ -36,7 +36,7 @@ void draw(Image *img, common::Point pt) {
 
 // Image
 
-Flyweight<models::Image> imageCache([](models::cyborgbear::Model &key) -> Image* {
+Flyweight<models::Image> imageCache([](models::Model &key) -> Image* {
 	models::Image &mod = (models::Image&) key;
 	Image *i = new Image(mod);
 	if (i->loaded()) {
@@ -117,7 +117,7 @@ Animation::Animation(models::Animation model) {
 	for (auto img : model.Images) {
 		add(checkoutImage(img.Image));
 	}
-	m_key = model.toJson();
+	m_key = toJson(model);
 }
 
 Animation::~Animation() {

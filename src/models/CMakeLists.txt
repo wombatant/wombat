@@ -5,7 +5,9 @@ add_library(
 		generated.cpp
 		json_read.cpp
 		json_write.cpp
+		ptr.cpp
 		types.cpp
+		unknown.cpp
 )
 
 add_executable(
@@ -23,7 +25,9 @@ install(
 		error.hpp
 		json_read.hpp
 		json_write.hpp
+		ptr.hpp
 		types.hpp
+		unknown.hpp
 	DESTINATION
 		include/wombat/models
 )

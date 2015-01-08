@@ -1,3 +1,10 @@
+/*
+ * Copyright 2013-2014 gtalent2@gmail.com
+ * 
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 #ifndef WOMBAT_MODELS_JSON_WRITE_HPP
 #define WOMBAT_MODELS_JSON_WRITE_HPP
 
@@ -92,6 +99,17 @@ string toJson(const Model &v) {
 	free(cstr);
 	json_decref(jo);
 	return out;
+}
+
+template<typename Model>
+Error writeJsonFile(const Model &v, string path) {
+	Error err = Error::Ok;
+	json_t *jo;
+	writeVal(&jo, v);
+	auto flags = JSON_COMPACT | JSON_PRESERVE_ORDER;
+	err = json_dump_file(jo, path.c_str(), flags) ? Error::CouldNotAccessFile : err;
+	json_decref(jo);
+	return err;
 }
 
 }
