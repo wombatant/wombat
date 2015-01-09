@@ -8,7 +8,7 @@
 #ifndef WOMBAT_MODELS_PTR_HPP
 #define WOMBAT_MODELS_PTR_HPP
 
-#include "json_read.hpp"
+#include "types.hpp"
 
 namespace wombat {
 namespace models {
@@ -17,13 +17,14 @@ typedef string Path;
 const extern Path NullPath;
 
 template<typename Value>
-class ptr {
-	friend Error fromJson(ptr *model, json_t *jo);
+class ptr_template {
+	friend Error readVal(json_t *jv, ptr_template<Value> *v);
+	friend Error writeVal(json_t **jv, ptr_template<Value> v);
 	protected:
 		Path m_key;
 
 	public:
-		ptr() = default;
+		ptr_template() = default;
 
 	void setKey(Value key) {
 		m_key = key;
@@ -35,9 +36,11 @@ class ptr {
 };
 
 template<typename Value>
-inline Error fromJson(ptr<Value> *model, json_t *jo) {
+inline Error fromJson(ptr_template<Value> *model, json_t *jo) {
 	return readVal(jo, &model->m_key);
 }
+
+typedef ptr_template<Path> ptr;
 
 }
 }

@@ -12,6 +12,8 @@
 #include <sstream>
 #include <jansson.h>
 #include "types.hpp"
+#include "ptr.hpp"
+#include "unknown.hpp"
 
 namespace wombat {
 namespace models {
@@ -23,6 +25,10 @@ Error writeVal(json_t **jv, double v);
 Error writeVal(json_t **jv, bool v);
 
 Error writeVal(json_t **jv, string v);
+
+Error writeVal(json_t **jv, ptr v);
+
+Error writeVal(json_t **jv, unknown v);
 
 template<typename Key, typename Value>
 Error writeVal(json_t **jv, std::map<Key, Key> l);

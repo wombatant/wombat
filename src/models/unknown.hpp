@@ -8,7 +8,6 @@
 #ifndef WOMBAT_MODELS_UNKNOWN_HPP
 #define WOMBAT_MODELS_UNKNOWN_HPP
 
-#include "json_read.hpp"
 #include "types.hpp"
 
 namespace wombat {
@@ -16,7 +15,7 @@ namespace models {
 
 class unknown {
 	friend Error writeVal(json_t **jv, unknown v);
-	friend Error fromJson(unknown *model, json_t *jo);
+	friend Error readVal(json_t *jv, unknown *v);
 	protected:
 		json_t *m_val = nullptr;
 
@@ -58,25 +57,6 @@ Error unknown::getVal(T *val) {
 template<typename T>
 Error unknown::setVal(T val) {
 	return writeVal(&m_val, val);
-}
-
-
-
-inline Error writeVal(json_t **jv, unknown v) {
-	*jv = json_incref(v.m_val);
-	return Error::Ok;
-}
-
-inline Error fromJson(unknown *model, json_t *jo) {
-	Error err = Error::Ok;
-	if (model->m_val) {
-		json_decref(model->m_val);
-	}
-	if (jo) {
-		model->m_val = jo;
-		json_incref(jo);
-	}
-	return err;
 }
 
 }

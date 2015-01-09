@@ -12,6 +12,8 @@
 #include <sstream>
 #include <jansson.h>
 #include "types.hpp"
+#include "ptr.hpp"
+#include "unknown.hpp"
 
 namespace wombat {
 namespace models {
@@ -27,6 +29,10 @@ Error readVal(json_t *jv, double *v);
 Error readVal(json_t *jv, bool *v);
 
 Error readVal(json_t *jv, string *v);
+
+Error readVal(json_t *jv, ptr *v);
+
+Error readVal(json_t *jv, unknown *v);
 
 template<typename T>
 Error readVal(json_t *jv, std::vector<T> *v);
@@ -113,7 +119,7 @@ template<typename T>
 Error readVal(json_t *jo, const char *field, T *v) {
 	auto jv = json_object_get(jo, field);
 	if (jv) {
-		return models::readVal(jv, v);
+		return readVal(jv, v);
 	} else {
 		return Error::MissingField;
 	}

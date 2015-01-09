@@ -67,5 +67,22 @@ Error readVal(json_t *jv, std::string *v) {
 	return Error::TypeMismatch;
 }
 
+Error readVal(json_t *jv, ptr *v) {
+	return readVal(jv, &v->m_key);
+}
+
+Error readVal(json_t *jv, unknown *v) {
+	if (v->m_val) {
+		json_decref(v->m_val);
+	}
+	if (jv) {
+		v->m_val = jv;
+		json_incref(jv);
+	} else {
+		v->m_val = nullptr;
+	}
+	return Error::Ok;
+}
+
 }
 }

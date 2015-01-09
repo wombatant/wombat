@@ -30,5 +30,14 @@ Error writeVal(json_t **jv, std::string v) {
 	return Error::Ok;
 }
 
+Error writeVal(json_t **jv, ptr v) {
+	return writeVal(jv, v.m_key);
+}
+
+Error writeVal(json_t **jv, unknown v) {
+	*jv = json_incref(v.m_val);
+	return Error::Ok;
+}
+
 }
 }
