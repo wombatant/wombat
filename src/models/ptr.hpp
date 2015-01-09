@@ -24,21 +24,24 @@ class ptr_template {
 		Path m_key;
 
 	public:
-		ptr_template() = default;
 
-	void setKey(Value key) {
-		m_key = key;
-	}
+		void setKey(Value key) {
+			m_key = key;
+		}
 
-	Error writeValue(Value val) {
-		return Error::Ok;
-	}
+		Error writeValue(Value val) {
+			return Error::Ok;
+		}
+
+		bool operator==(const ptr_template &o) const {
+			return m_key == o.m_key;
+		}
+
+		bool operator!=(const ptr_template &o) const {
+			return m_key != o.m_key;
+		}
+
 };
-
-template<typename Value>
-inline Error fromJson(ptr_template<Value> *model, json_t *jo) {
-	return readVal(jo, &model->m_key);
-}
 
 typedef ptr_template<Path> ptr;
 
