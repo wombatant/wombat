@@ -47,16 +47,21 @@ bool ClArgs::operator[](std::string arg) {
 	return m_args[arg];
 }
 
-
-int run(ClArgs args) {
-	core::debugOn(args["debug"]);
+Settings loadSettings(Path path) {
 	Settings settings;
-	if (readJsonFile(&settings, SettingsPath) != Error::Ok) {
+	if (readJsonFile(&settings, path) != Error::Ok) {
 		settings.Fullscreen = false;
 		settings.Width = 800;
 		settings.Height = 600;
-		writeJsonFile(settings, SettingsPath);
+		writeJsonFile(settings, path);
 	}
+	return settings;
+}
+
+
+int run(ClArgs args) {
+	core::debugOn(args["debug"]);
+	auto settings = loadSettings(SettingsPath);
 
 	if (core::init(settings) != 0) {
 		return 1;
