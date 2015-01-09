@@ -12,6 +12,7 @@
 #include <string>
 #include <functional>
 #include <models/models.hpp>
+#include "misc.hpp"
 #include "sync.hpp"
 
 namespace wombat {
@@ -61,13 +62,13 @@ models::Error read(Model &m, models::Path path) {
 		retval = readJsonFile(&m, p);
 
 		if (Error::Ok != (retval & Error::TypeMismatch)) {
-			printf("Warning: type mismatch in \"%s\"\n", path.c_str());
+			core::debug("Warning: type mismatch in \"" + path + "\"");
 		}
 		if (Error::Ok != (retval & Error::GenericParsingError)) {
-			printf("Warning: generic parsing error in \"%s\"\n", path.c_str());
+			core::debug("Warning: generic parsing error in \"" + path + "\"");
 		}
 		if (Error::Ok != (retval & Error::CouldNotAccessFile)) {
-			printf("Warning: could not access \"%s\"\n", path.c_str());
+			core::debug("Warning: could not access \"" + path + "\"");
 		}
 	}
 

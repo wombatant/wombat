@@ -17,7 +17,39 @@ using core::TaskState;
 
 const auto SettingsPath = "settings.json";
 
-int main(int argc, const char **args) {
+class ClArgs {
+
+	private:
+
+		std::map<std::string, bool> m_args;
+
+	public:
+
+		ClArgs(int argc, const char **args);
+
+		bool operator[](std::string arg);
+
+};
+
+ClArgs::ClArgs(int argc, const char **args) {
+	for (int i = 0; i < argc; i++) {
+		std::string arg = args[i];
+		if (arg[0] == '-') {
+			while (arg[0] == '-' && arg.size()) {
+				arg = arg.substr(1);
+			}
+			m_args[arg] = true;
+		}
+	}
+}
+
+bool ClArgs::operator[](std::string arg) {
+	return m_args[arg];
+}
+
+
+int run(ClArgs args) {
+	core::debugOn(args["debug"]);
 	Settings settings;
 	if (readJsonFile(&settings, SettingsPath) != Error::Ok) {
 		settings.Fullscreen = false;
@@ -34,28 +66,14 @@ int main(int argc, const char **args) {
 		return 2;
 	}
 
-	core::Drawer *test = nullptr;
-
-	if (argc > 1 && !strcmp(args[1], "test")) {
-		std::vector<std::string> vargs;
-		for (int i = 0; i < argc; i++) {
-			vargs.push_back(args[i]);
-		}
-		test = tests::test(vargs);
-
-		if (test) {
-			core::addDrawer(test);
-		}
-	} else {
-		core::addTask(new App());
-	}
-
+	core::addTask(new App());
 	core::main();
-
-	if (test)
-		delete test;
 
 	writeJsonFile(settings, SettingsPath);
 
 	return 0;
+}
+
+int main(int argc, const char **args) {
+	return run(ClArgs(argc, args));
 }

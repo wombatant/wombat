@@ -52,6 +52,10 @@ void quit();
 
 void main();
 
+void debugOn(bool debugOn);
+
+bool debugOn();
+
 void debug(std::string);
 
 }
