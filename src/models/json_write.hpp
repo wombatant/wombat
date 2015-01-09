@@ -100,7 +100,7 @@ template<typename Model>
 string toJson(const Model &v) {
 	json_t *jo;
 	writeVal(&jo, v);
-	auto flags = JSON_COMPACT | JSON_PRESERVE_ORDER;
+	auto flags = JSON_INDENT(3) | JSON_PRESERVE_ORDER;
 	auto cstr = json_dumps(jo, flags);
 	string out = cstr;
 	free(cstr);
