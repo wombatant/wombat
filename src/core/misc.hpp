@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 gtalent2@gmail.com
+ * Copyright 2013-2015 gtalent2@gmail.com
  * 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -51,6 +51,10 @@ bool running();
 void quit();
 
 void main();
+
+void debugOn(bool debugOn);
+
+bool debugOn();
 
 void debug(std::string);
 

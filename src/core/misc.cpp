@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 gtalent2@gmail.com
+ * Copyright 2013-2015 gtalent2@gmail.com
  * 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,6 +19,7 @@ namespace core {
 // used to track "event time"
 time_t refTime;
 bool _running = false;
+static bool _debug = false;
 std::string _language = "english";
 extern TaskProcessor _taskProcessor;
 
@@ -59,8 +60,18 @@ uint64 time() {
 	return std::chrono::duration_cast<std::chrono::milliseconds>(t).count();
 }
 
+void debugOn(bool debugOn) {
+	_debug = debugOn;
+}
+
+bool debugOn() {
+	return _debug;
+}
+
 void debug(std::string txt) {
-	printf("%s\n", txt.c_str());
+	if (_debug) {
+		printf("%s\n", txt.c_str());
+	}
 }
 
 }

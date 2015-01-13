@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 gtalent2@gmail.com
+ * Copyright 2013-2015 gtalent2@gmail.com
  * 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,13 +12,13 @@
 #include <string>
 #include <functional>
 #include <models/models.hpp>
+#include "misc.hpp"
 #include "sync.hpp"
 
 namespace wombat {
 namespace core {
 
 typedef std::string Path;
-const Path NullPath = "";
 
 /**
  * Prepends to the path to load models from.
@@ -36,6 +36,11 @@ void prependPath(std::string h);
 void appendPath(std::string path);
 
 /**
+ * Adds the given suffix to the given string if it is not already there.
+ */
+std::string _suffix(std::string path, std::string suffix);
+
+/**
  * Returns the given path with the wombat_home path prepended to it.
  * @param path the of the file to refer to within wombat_home
  * @return the given path with the wombat_home path prepended to it.
@@ -47,7 +52,31 @@ std::string path(Path path);
  * @param model the model to load the file into
  * @prarm path the path within the path to read from
  */
-models::cyborgbear::Error read(models::cyborgbear::Model &model, Path path);
+template<typename Model>
+models::Error read(Model &m, models::Path path) {
+	using models::Error;
+	auto retval = Error::Ok;
+
+	if (path != models::NullPath) {
+		auto p = core::path(_suffix(path, ".json"));
+		retval = readJsonFile(&m, p);
+
+		if (Error::Ok != (retval & Error::TypeMismatch)) {
+			core::debug("Warning: type mismatch in \"" + path + "\"");
+		}
+		if (Error::Ok != (retval & Error::GenericParsingError)) {
+			core::debug("Warning: generic parsing error in \"" + path + "\"");
+		}
+		if (Error::Ok != (retval & Error::CouldNotAccessFile)) {
+			core::debug("Warning: could not access \"" + path + "\"");
+		}
+	}
+
+	// missing fields are not considered an error here
+	retval = (retval | models::Error::MissingField) ^ models::Error::MissingField;
+
+	return retval;
+}
 
 /**
  * Manages Model IO, preventing redundancies in memory.
@@ -107,7 +136,7 @@ class Flyweight {
 
 		Value* checkout(Model &key) {
 			m_lock.lock();
-			std::string keyStr = key.toJson();
+			std::string keyStr = toJson(key);
 			Value *v = m_cache[keyStr];
 			if (!v) {
 				m_cache[keyStr] = v = m_build(key);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 gtalent2@gmail.com
+ * Copyright 2013-2015 gtalent2@gmail.com
  * 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -107,7 +107,7 @@ Image::Image(models::Image img) {
 	m_bounds = ss.Images[img.ImgId].SrcBounds;
 	m_defaultSize.Width = img.DefaultSize.Width;
 	m_defaultSize.Height = img.DefaultSize.Height;
-	m_key = img.toJson();
+	m_key = toJson(img);
 }
 
 Image::~Image() {

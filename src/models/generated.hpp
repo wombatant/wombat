@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 gtalent2@gmail.com
+ * Copyright 2013-2015 gtalent2@gmail.com
  * 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,1585 +9,537 @@
 
 #ifndef GENERATED_HPP
 #define GENERATED_HPP
-#include <string>
-#include <sstream>
 
-#define CYBORGBEAR_USING_JANSSON
+#include "ptr.hpp"
+#include "unknown.hpp"
+#include "json_read.hpp"
+#include "json_write.hpp"
 
 
-#ifdef CYBORGBEAR_USING_QT
-#include <QString>
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QJsonValue>
-#include <QMap>
-#include <QVector>
-#else
-#include <vector>
-#include <map>
-#include <string>
-#include <jansson.h>
-#endif
 
-#ifdef CYBORGBEAR_BOOST_ENABLED
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/map.hpp>
-#include <boost/serialization/string.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
-#endif
-
+namespace wombat {
 namespace models {
 
-namespace cyborgbear {
-
-typedef unsigned long int Error;
-const Error Error_Ok = 0;
-const Error Error_TypeMismatch = 1;
-const Error Error_MissingField = 2;
-const Error Error_CouldNotAccessFile = 4;
-const Error Error_GenericParsingError = 8;
-
-enum JsonSerializationSettings {
-	Compact = 0,
-	Readable = 1
-};
-
-enum Type {
-	Bool,
-	Integer,
-	Double,
-	String,
-	Object
-};
-
-#ifdef CYBORGBEAR_USING_QT
-typedef QJsonObject& JsonObj;
-typedef QJsonValue&  JsonVal;
-typedef QJsonArray&  JsonArray;
-
-typedef QJsonObject  JsonObjOut;
-typedef QJsonValue   JsonValOut;
-typedef QJsonArray   JsonArrayOut;
-
-typedef QJsonObject::iterator JsonObjIterator;
-typedef QString               JsonObjIteratorKey;
-typedef QJsonValueRef         JsonObjIteratorVal;
-
-typedef QString string;
-
-typedef int VectorIterator;
-
-#else
-
-typedef json_t* JsonObj;
-typedef json_t* JsonVal;
-typedef json_t* JsonArray;
-
-typedef json_t* JsonObjOut;
-typedef json_t* JsonValOut;
-typedef json_t* JsonArrayOut;
-
-typedef const char* JsonObjIterator;
-typedef const char* JsonObjIteratorKey;
-typedef json_t*     JsonObjIteratorVal;
-
-typedef std::string string;
-
-typedef unsigned VectorIterator;
-#endif
-
-/**
- * Version of cyborgbear.
- */
-extern string version;
-
-//string ops
-std::string toStdString(string str);
-
-
-JsonObjOut read(string json);
-
-int toInt(JsonVal);
-double toDouble(JsonVal);
-bool toBool(JsonVal);
-string toString(JsonVal);
-JsonArrayOut toArray(JsonVal);
-JsonObjOut toObj(JsonVal);
-
-JsonValOut toJsonVal(int);
-JsonValOut toJsonVal(double);
-JsonValOut toJsonVal(bool);
-JsonValOut toJsonVal(string);
-JsonValOut toJsonVal(JsonArray);
-JsonValOut toJsonVal(JsonObj);
-
-
-//value methods
-
-bool isBool(JsonVal);
-bool isInt(JsonVal);
-bool isDouble(JsonVal);
-bool isString(JsonVal);
-bool isArray(JsonVal);
-bool isObj(JsonVal);
-
-JsonObj incref(JsonObj);
-JsonVal incref(JsonVal);
-JsonArray incref(JsonArray);
-
-void decref(JsonObj);
-void decref(JsonVal);
-void decref(JsonArray);
-
-
-JsonArrayOut newJsonArray();
-
-void arrayAdd(JsonArray, JsonObj);
-void arrayAdd(JsonArray, JsonVal);
-void arrayAdd(JsonArray, JsonArray);
-
-int arraySize(JsonArray);
-
-JsonValOut arrayRead(JsonArray, int);
-
-
-JsonObjOut newJsonObj();
-
-void objSet(JsonObj, string, JsonObj);
-void objSet(JsonObj, string, JsonVal);
-void objSet(JsonObj, string, JsonArray);
-
-JsonValOut objRead(JsonObj, string);
-
-
-JsonObjIterator jsonObjIterator(JsonObj);
-JsonObjIterator jsonObjIteratorNext(JsonObj, JsonObjIterator);
-JsonObjIteratorKey jsonObjIteratorKey(JsonObjIterator);
-JsonObjIteratorVal iteratorValue(JsonObjIterator);
-bool iteratorAtEnd(JsonObjIterator, JsonObj);
-
-
-
-inline string toString(string str) {
-	return str;
-}
-
-
-#ifdef CYBORGBEAR_USING_QT
-
-//string conversions
-inline std::string toStdString(string str) {
-	return str.toStdString();
-}
-
-inline string toString(std::string str) {
-	return QString::fromStdString(str);
-}
-
-
-inline JsonObjOut read(string json) {
-	return QJsonDocument::fromJson(json.toUtf8()).object();
-}
-
-
-//from JsonObjIteratorVal
-inline int toInt(JsonObjIteratorVal v) {
-	return (int) v.toDouble();
-}
-
-inline double toDouble(JsonObjIteratorVal v) {
-	return v.toDouble();
-}
-
-inline bool toBool(JsonObjIteratorVal v) {
-	return v.toBool();
-}
-
-inline string toString(JsonObjIteratorVal v) {
-	return v.toString();
-}
-
-inline JsonArrayOut toArray(JsonObjIteratorVal v) {
-	return v.toArray();
-}
-
-inline JsonObjOut toObj(JsonObjIteratorVal v) {
-	return v.toObject();
-}
-
-//from JsonVal
-inline int toInt(JsonVal v) {
-	return (int) v.toDouble();
-}
-
-inline double toDouble(JsonVal v) {
-	return v.toDouble();
-}
-
-inline bool toBool(JsonVal v) {
-	return v.toBool();
-}
-
-inline string toString(JsonVal v) {
-	return v.toString();
-}
-
-inline JsonArrayOut toArray(JsonVal v) {
-	return v.toArray();
-}
-
-inline JsonObjOut toObj(JsonVal v) {
-	return v.toObject();
-}
-
-
-inline JsonValOut toJsonVal(int v) {
-	return QJsonValue(v);
-}
-
-inline JsonValOut toJsonVal(double v) {
-	return QJsonValue(v);
-}
-
-inline JsonValOut toJsonVal(bool v) {
-	return QJsonValue(v);
-}
-
-inline JsonValOut toJsonVal(string v) {
-	return QJsonValue(v);
-}
-
-inline JsonValOut toJsonVal(JsonArray v) {
-	return QJsonValue(v);
-}
-
-inline JsonValOut toJsonVal(JsonObj v) {
-	return v;
-}
-
-
-inline bool isNull(JsonObjIteratorVal v) {
-	return v.isNull();
-}
-
-inline bool isBool(JsonObjIteratorVal v) {
-	return v.isBool();
-}
-
-inline bool isInt(JsonObjIteratorVal v) {
-	return v.isDouble();
-}
-
-inline bool isDouble(JsonObjIteratorVal v) {
-	return v.isDouble();
-}
-
-inline bool isString(JsonObjIteratorVal v) {
-	return v.isString();
-}
-
-inline bool isArray(JsonObjIteratorVal v) {
-	return v.isArray();
-}
-
-inline bool isObj(JsonObjIteratorVal v) {
-	return v.isObject();
-}
-
-inline bool isBool(JsonVal v) {
-	return v.isBool();
-}
-
-inline bool isInt(JsonVal v) {
-	return v.isDouble();
-}
-
-inline bool isDouble(JsonVal v) {
-	return v.isDouble();
-}
-
-inline bool isString(JsonVal v) {
-	return v.isString();
-}
-
-inline bool isArray(JsonVal v) {
-	return v.isArray();
-}
-
-inline bool isObj(JsonVal v) {
-	return v.isObject();
-}
-
-inline bool isNull(JsonVal v) {
-	return v.isNull();
-}
-
-
-inline JsonVal incref(JsonVal v) {
-	return v;
-}
-
-inline void decref(JsonVal) {}
-
-inline JsonObj incref(JsonObj v) {
-	return v;
-}
-
-inline void decref(JsonObj) {}
-
-inline JsonArray incref(JsonArray v) {
-	return v;
-}
-
-inline void decref(JsonArray) {}
-
-
-inline JsonArrayOut newJsonArray() {
-	return QJsonArray();
-}
-
-inline void arrayAdd(JsonArray a, JsonArray v) {
-	JsonValOut tmp = cyborgbear::toJsonVal(v);
-	a.append(tmp);
-}
-
-inline void arrayAdd(JsonArray a, JsonObj v) {
-	JsonValOut tmp = cyborgbear::toJsonVal(v);
-	a.append(tmp);
-}
-
-inline void arrayAdd(JsonArray a, JsonVal v) {
-	a.append(v);
-}
-
-
-inline JsonValOut arrayRead(JsonArray a, int i) {
-	return a[i];
-}
-
-inline int arraySize(JsonArray a) {
-	return a.size();
-}
-
-
-inline JsonObjOut newJsonObj() {
-	return QJsonObject();
-}
-
-inline void objSet(JsonObj o, string k, JsonArray v) {
-	JsonValOut tmp = cyborgbear::toJsonVal(v);
-	o.insert(k, tmp);
-}
-
-inline void objSet(JsonObj o, string k, JsonObj v) {
-	JsonValOut tmp = cyborgbear::toJsonVal(v);
-	o.insert(k, tmp);
-}
-
-inline void objSet(JsonObj o, string k, JsonVal v) {
-	o.insert(k, v);
-}
-
-
-inline JsonValOut objRead(JsonObj o, string k) {
-	return o[k];
-}
-
-inline JsonObjIterator jsonObjIterator(JsonObj o) {
-	return o.begin();
-}
-
-inline JsonObjIterator jsonObjIteratorNext(JsonObj, JsonObjIterator i) {
-	return i + 1;
-}
-
-inline JsonObjIteratorKey jsonObjIteratorKey(JsonObjIterator i) {
-	return i.key();
-}
-
-inline bool iteratorAtEnd(JsonObjIterator i, JsonObj o) {
-	return i == o.end();
-}
-
-inline JsonObjIteratorVal iteratorValue(JsonObjIterator i) {
-	return i.value();
-}
-
-inline string write(JsonObj obj, JsonSerializationSettings sttngs) {
-	QJsonDocument doc(obj);
-	return doc.toJson(sttngs == Compact ? QJsonDocument::Compact : QJsonDocument::Indented);
-}
-
-#else
-
-inline std::string toStdString(string str) {
-	return str;
-}
-
-
-inline JsonObjOut read(string json) {
-	return json_loads(json.c_str(), 0, NULL);
-}
-
-inline string write(JsonObj obj, JsonSerializationSettings sttngs) {
-	char *tmp = json_dumps(obj, sttngs == Compact ? JSON_COMPACT : JSON_INDENT(3));
-	if (!tmp)
-		return "{}";
-	string out = tmp;
-	free(tmp);
-	cyborgbear::decref(obj);
-	return out;
-}
-
-//value methods
-
-inline int toInt(JsonVal v) {
-	return (int) json_integer_value(v);
-}
-
-inline double toDouble(JsonVal v) {
-	return (double) json_real_value(v);
-}
-
-inline bool toBool(JsonVal v) {
-	return json_is_true(v);
-}
-
-inline string toString(JsonVal v) {
-	return json_string_value(v);
-}
-
-inline JsonArray toArray(JsonVal v) {
-	return v;
-}
-
-inline JsonObj toObj(JsonVal v) {
-	return v;
-}
-
-
-inline JsonVal toJsonVal(int v) {
-	return json_integer(v);
-}
-
-inline JsonVal toJsonVal(double v) {
-	return json_real(v);
-}
-
-inline JsonVal toJsonVal(bool v) {
-	return json_boolean(v);
-}
-
-inline JsonVal toJsonVal(string v) {
-	return json_string(v.c_str());
-}
-
-inline JsonVal toJsonVal(JsonArray v) {
-	return v;
-}
-
-
-inline bool isNull(JsonVal v) {
-	return !v;
-}
-
-inline bool isBool(JsonVal v) {
-	return json_is_boolean(v);
-}
-
-inline bool isInt(JsonVal v) {
-	return json_is_integer(v);
-}
-
-inline bool isDouble(JsonVal v) {
-	return json_is_real(v);
-}
-
-inline bool isString(JsonVal v) {
-	return json_is_string(v);
-}
-
-inline bool isArray(JsonVal v) {
-	return json_is_array(v);
-}
-
-inline bool isObj(JsonVal v) {
-	return json_is_object(v);
-}
-
-inline JsonVal incref(JsonVal v) {
-	return json_incref(v);
-}
-
-inline void decref(JsonVal v) {
-	json_decref(v);
-}
-
-//array methods
-
-inline JsonArrayOut newJsonArray() {
-	return json_array();
-}
-
-inline void arrayAdd(JsonArray a, JsonVal v) {
-	json_array_append(a, v);
-}
-
-inline JsonVal arrayRead(JsonArray a, int i) {
-	return json_array_get(a, i);
-}
-
-inline int arraySize(JsonArray a) {
-	return json_array_size(a);
-}
-
-//object methods
-
-inline JsonObjOut newJsonObj() {
-	return json_object();
-}
-
-inline void objSet(JsonObj o, string k, JsonVal v) {
-	json_object_set(o, k.c_str(), v);
-}
-
-inline JsonVal objRead(JsonObj o, string k) {
-	return json_object_get(o, k.c_str());
-}
-
-
-inline JsonObjIterator jsonObjIterator(JsonObj o) {
-	return json_object_iter_key(json_object_iter(o));
-}
-
-inline JsonObjIterator jsonObjIteratorNext(JsonObj o, JsonObjIterator i) {
-	return json_object_iter_key(json_object_iter_next(o, json_object_key_to_iter(i)));
-}
-
-inline JsonObjIteratorKey jsonObjIteratorKey(JsonObjIterator i) {
-	return i;
-}
-
-inline JsonObjIteratorVal iteratorValue(JsonObjIterator i) {
-	return json_object_iter_value(json_object_key_to_iter(i));
-}
-
-inline bool iteratorAtEnd(JsonObjIterator i, JsonObj) {
-	return !i;
-}
-
-#endif
-
-class unknown;
-
-class Model {
-	friend class unknown;
-	public:
-		/**
-		 * Reads fields of this Model from file of the given path.
-		 */
-		int readJsonFile(string path);
-
-		/**
-		 * Writes JSON representation of this Model to JSON file of the given path.
-		 */
-		void writeJsonFile(string path, cyborgbear::JsonSerializationSettings sttngs = Compact);
-
-		/**
-		 * Loads fields of this Model from the given JSON text.
-		 */
-		int fromJson(string json);
-
-		/**
-		 * Returns JSON representation of this Model.
-		 */
-		string toJson(cyborgbear::JsonSerializationSettings sttngs = Compact);
-
-#ifdef CYBORGBEAR_BOOST_ENABLED
-		/**
-		 * Returns Boost serialization version of this object.
-		 */
-		virtual string toBoostBinary() = 0;
-
-		/**
-		 * Loads fields of this Model from the given Boost serialization text.
-		 */
-		virtual void fromBoostBinary(string dat) = 0;
-#endif
-
-#ifdef CYBORGBEAR_USING_QT
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonObjIteratorVal &obj) { return loadJsonObj(obj); };
-#endif
-	protected:
-		virtual cyborgbear::JsonValOut buildJsonObj() = 0;
-		virtual cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj) = 0;
-};
-
-class unknown: public Model {
-	cyborgbear::string m_data;
-	cyborgbear::Type m_type;
-
-#ifdef CYBORGBEAR_BOOST_ENABLED
-	friend class boost::serialization::access;
-
-	template<class Archive>
-	void serialize(Archive &ar, const unsigned int) {
-		ar & m_type;
-		ar & m_data;
-	}
-#endif
-
-	public:
-		unknown();
-		unknown(Model *v);
-		unknown(bool v);
-		unknown(int v);
-		unknown(double v);
-		unknown(string v);
-		virtual ~unknown();
-
-		bool loaded();
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-		cyborgbear::JsonValOut buildJsonObj();
-
-		bool toBool();
-		int toInt();
-		double toDouble();
-		string toString();
-
-		bool isBool();
-		bool isInt();
-		bool isDouble();
-		bool isString();
-		bool isObject();
-
-		void set(Model* v);
-		void set(bool v);
-		void set(int v);
-		void set(double v);
-		void set(string v);
-
-		bool operator==(const unknown&) const;
-		bool operator!=(const unknown&) const;
-
-#ifdef CYBORGBEAR_BOOST_ENABLED
-		/**
-		 * Returns Boost serialization version of this object.
-		 */
-		string toBoostBinary();
-
-		/**
-		 * Loads fields of this Model from the given Boost serialization text.
-		 */
-		void fromBoostBinary(string dat);
-#endif
-};
-
-};
-
-};
-
-
-
-
-namespace models {
-
-using cyborgbear::string;
-
-class Point: public cyborgbear::Model {
+class Point: public Model {
 
 	public:
 
 		Point();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Point&) const;
 
 		bool operator!=(const Point&) const;
 
-		string name() const { return "Point"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		int X;
 		int Y;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Size: public cyborgbear::Model {
+class Size: public Model {
 
 	public:
 
 		Size();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Size&) const;
 
 		bool operator!=(const Size&) const;
 
-		string name() const { return "Size"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		int Width;
 		int Height;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Bounds: public cyborgbear::Model {
+class Bounds: public Model {
 
 	public:
 
 		Bounds();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Bounds&) const;
 
 		bool operator!=(const Bounds&) const;
 
-		string name() const { return "Bounds"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		int X;
 		int Y;
 		int Width;
 		int Height;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class SaveVariables: public cyborgbear::Model {
+class SaveVariables: public Model {
 
 	public:
 
 		SaveVariables();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const SaveVariables&) const;
 
 		bool operator!=(const SaveVariables&) const;
 
-		string name() const { return "SaveVariables"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		std::map< string, cyborgbear::unknown > Vars;
+		Error fromJson(string);
+		std::map< string, unknown > Vars;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class SpriteSheetImage: public cyborgbear::Model {
+class SpriteSheetImage: public Model {
 
 	public:
 
 		SpriteSheetImage();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const SpriteSheetImage&) const;
 
 		bool operator!=(const SpriteSheetImage&) const;
 
-		string name() const { return "SpriteSheetImage"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		models::Bounds SrcBounds;
+		Error fromJson(string);
+		Bounds SrcBounds;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class SpriteSheet: public cyborgbear::Model {
+class SpriteSheet: public Model {
 
 	public:
 
 		SpriteSheet();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const SpriteSheet&) const;
 
 		bool operator!=(const SpriteSheet&) const;
 
-		string name() const { return "SpriteSheet"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		int TilesWide;
 		int TilesHigh;
 		int TileWidth;
 		int TileHeight;
 		string SrcFile;
-		std::map< int, models::SpriteSheetImage > Images;
+		std::map< int, SpriteSheetImage > Images;
 		int ImageIdIterator;
 		std::vector< int > RecycledImageIds;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Image: public cyborgbear::Model {
+class Image: public Model {
 
 	public:
 
 		Image();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Image&) const;
 
 		bool operator!=(const Image&) const;
 
-		string name() const { return "Image"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		string SpriteSheet;
 		int ImgId;
-		models::Size DefaultSize;
+		Size DefaultSize;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Interaction: public cyborgbear::Model {
+class Interaction: public Model {
 
 	public:
 
 		Interaction();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Interaction&) const;
 
 		bool operator!=(const Interaction&) const;
 
-		string name() const { return "Interaction"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		int Type;
-		cyborgbear::unknown Next;
+		unknown Next;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Sprite: public cyborgbear::Model {
+class Sprite: public Model {
 
 	public:
 
 		Sprite();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Sprite&) const;
 
 		bool operator!=(const Sprite&) const;
 
-		string name() const { return "Sprite"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		string Id;
 		string SpriteClass;
 		int Motion;
 		int Facing;
 		int SpriteType;
-		models::Interaction Interaction;
+		Interaction Interaction;
 		string Data;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class ZoneHeader: public cyborgbear::Model {
+class ZoneHeader: public Model {
 
 	public:
 
 		ZoneHeader();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const ZoneHeader&) const;
 
 		bool operator!=(const ZoneHeader&) const;
 
-		string name() const { return "ZoneHeader"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		string Zone;
 		int TilesWide;
 		int TilesHigh;
 		int Layers;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class ZoneInstance: public cyborgbear::Model {
+class ZoneInstance: public Model {
 
 	public:
 
 		ZoneInstance();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const ZoneInstance&) const;
 
 		bool operator!=(const ZoneInstance&) const;
 
-		string name() const { return "ZoneInstance"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		string AccessorID;
 		string ZoneHeader;
-		models::Point Address;
+		Point Address;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class CreatureType: public cyborgbear::Model {
+class CreatureType: public Model {
 
 	public:
 
 		CreatureType();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const CreatureType&) const;
 
 		bool operator!=(const CreatureType&) const;
 
-		string name() const { return "CreatureType"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		std::map< string, string > Name;
 		bool Special;
 		std::vector< string > StrongAgainst;
 		std::vector< string > WeakAgainst;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class AnimationSlide: public cyborgbear::Model {
+class AnimationSlide: public Model {
 
 	public:
 
 		AnimationSlide();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const AnimationSlide&) const;
 
 		bool operator!=(const AnimationSlide&) const;
 
-		string name() const { return "AnimationSlide"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		int Interval;
-		models::Image Image;
+		Image Image;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class AnimLayer: public cyborgbear::Model {
+class AnimLayer: public Model {
 
 	public:
 
 		AnimLayer();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const AnimLayer&) const;
 
 		bool operator!=(const AnimLayer&) const;
 
-		string name() const { return "AnimLayer"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		models::Point Point;
+		Error fromJson(string);
+		Point Point;
 		string Animation;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class User: public cyborgbear::Model {
+class User: public Model {
 
 	public:
 
 		User();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const User&) const;
 
 		bool operator!=(const User&) const;
 
-		string name() const { return "User"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		string Person;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Settings: public cyborgbear::Model {
+class Settings: public Model {
 
 	public:
 
 		Settings();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Settings&) const;
 
 		bool operator!=(const Settings&) const;
 
-		string name() const { return "Settings"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		bool Fullscreen;
 		int Width;
 		int Height;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class InitFile: public cyborgbear::Model {
+class InitFile: public Model {
 
 	public:
 
 		InitFile();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const InitFile&) const;
 
 		bool operator!=(const InitFile&) const;
 
-		string name() const { return "InitFile"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		string User;
 		string World;
 		string ZoneId;
 		string SpriteId;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Font: public cyborgbear::Model {
+class Font: public Model {
 
 	public:
 
 		Font();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Font&) const;
 
 		bool operator!=(const Font&) const;
 
-		string name() const { return "Font"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		int Size;
 		string TtfPath;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class StatusEffect: public cyborgbear::Model {
+class StatusEffect: public Model {
 
 	public:
 
 		StatusEffect();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const StatusEffect&) const;
 
 		bool operator!=(const StatusEffect&) const;
 
-		string name() const { return "StatusEffect"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		int AttackerEffect;
 		int EnemyEffect;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Fraction: public cyborgbear::Model {
+class Fraction: public Model {
 
 	public:
 
 		Fraction();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Fraction&) const;
 
 		bool operator!=(const Fraction&) const;
 
-		string name() const { return "Fraction"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		int Current;
 		int Available;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class SpriteClass: public cyborgbear::Model {
+class SpriteClass: public Model {
 
 	public:
 
 		SpriteClass();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const SpriteClass&) const;
 
 		bool operator!=(const SpriteClass&) const;
 
-		string name() const { return "SpriteClass"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		std::vector< std::vector< models::AnimLayer > > AnimLayers;
+		Error fromJson(string);
+		std::vector< std::vector< AnimLayer > > AnimLayers;
 		string Attributes;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Animation: public cyborgbear::Model {
+class Animation: public Model {
 
 	public:
 
 		Animation();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Animation&) const;
 
 		bool operator!=(const Animation&) const;
 
-		string name() const { return "Animation"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		string Import;
-		std::vector< models::AnimationSlide > Images;
+		std::vector< AnimationSlide > Images;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class CreatureMove: public cyborgbear::Model {
+class CreatureMove: public Model {
 
 	public:
 
 		CreatureMove();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const CreatureMove&) const;
 
 		bool operator!=(const CreatureMove&) const;
 
-		string name() const { return "CreatureMove"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		std::map< string, string > Name;
 		string Type;
 		int Power;
 		bool RequiresRegarge;
 		string Script;
-		models::StatusEffect Burn;
-		models::StatusEffect Freeze;
-		models::StatusEffect Paralyze;
-		models::StatusEffect Poison;
-		models::StatusEffect Sleep;
+		StatusEffect Burn;
+		StatusEffect Freeze;
+		StatusEffect Paralyze;
+		StatusEffect Poison;
+		StatusEffect Sleep;
 		int WorldAbilityFlags;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class CreatureClass: public cyborgbear::Model {
+class CreatureClass: public Model {
 
 	public:
 
 		CreatureClass();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const CreatureClass&) const;
 
 		bool operator!=(const CreatureClass&) const;
 
-		string name() const { return "CreatureClass"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		std::map< string, string > Name;
 		string Successor;
 		string Predecessor;
 		std::vector< string > Types;
 		std::vector< string > CanLearn;
 		std::map< int, string > LearnsAtLevel;
-		models::Animation FrontView;
-		models::Animation BackView;
+		Animation FrontView;
+		Animation BackView;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class CreatureMoveInstance: public cyborgbear::Model {
+class CreatureMoveInstance: public Model {
 
 	public:
 
 		CreatureMoveInstance();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const CreatureMoveInstance&) const;
 
 		bool operator!=(const CreatureMoveInstance&) const;
 
-		string name() const { return "CreatureMoveInstance"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		string CreatureMove;
-		models::Fraction PP;
+		Fraction PP;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class World: public cyborgbear::Model {
+class World: public Model {
 
 	public:
 
 		World();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const World&) const;
 
 		bool operator!=(const World&) const;
 
-		string name() const { return "World"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		std::vector< models::ZoneInstance > Zones;
+		Error fromJson(string);
+		std::vector< ZoneInstance > Zones;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Creature: public cyborgbear::Model {
+class Creature: public Model {
 
 	public:
 
 		Creature();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Creature&) const;
 
 		bool operator!=(const Creature&) const;
 
-		string name() const { return "Creature"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		int ID;
 		std::map< string, string > Name;
 		string CreatureClass;
 		bool Male;
 		int Level;
-		models::Fraction Health;
+		Fraction Health;
 		int Attack;
 		int SpecAttack;
 		int Defense;
@@ -1596,430 +548,656 @@ class Creature: public cyborgbear::Model {
 		bool Frozen;
 		bool Poisoned;
 		bool Asleep;
-		std::vector< models::CreatureMoveInstance > Moves;
+		std::vector< CreatureMoveInstance > Moves;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class TileClass: public cyborgbear::Model {
+class TileClass: public Model {
 
 	public:
 
 		TileClass();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const TileClass&) const;
 
 		bool operator!=(const TileClass&) const;
 
-		string name() const { return "TileClass"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		string Import;
 		int TerrainType;
-		models::AnimLayer LowerAnim;
-		models::AnimLayer UpperAnim;
+		AnimLayer LowerAnim;
+		AnimLayer UpperAnim;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class PersonClass: public cyborgbear::Model {
+class PersonClass: public Model {
 
 	public:
 
 		PersonClass();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const PersonClass&) const;
 
 		bool operator!=(const PersonClass&) const;
 
-		string name() const { return "PersonClass"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
+		Error fromJson(string);
 		string Import;
 		std::map< string, string > Title;
-		std::vector< std::vector< std::vector< models::AnimLayer > > > Overhead;
-		models::Animation FrontView;
-		models::Animation BackView;
+		std::vector< std::vector< std::vector< AnimLayer > > > Overhead;
+		Animation FrontView;
+		Animation BackView;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Tile: public cyborgbear::Model {
+class Tile: public Model {
 
 	public:
 
 		Tile();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Tile&) const;
 
 		bool operator!=(const Tile&) const;
 
-		string name() const { return "Tile"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		models::TileClass TileClass;
-		models::Sprite Occupant;
+		Error fromJson(string);
+		TileClass TileClass;
+		Sprite Occupant;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Zone: public cyborgbear::Model {
+class Zone: public Model {
 
 	public:
 
 		Zone();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Zone&) const;
 
 		bool operator!=(const Zone&) const;
 
-		string name() const { return "Zone"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		std::vector< std::vector< std::vector< models::Tile > > > Tiles;
+		Error fromJson(string);
+		std::vector< std::vector< std::vector< Tile > > > Tiles;
 };
 
-}
 
-
-namespace models {
-
-using cyborgbear::string;
-
-class Person: public cyborgbear::Model {
+class Person: public Model {
 
 	public:
 
 		Person();
 
-		cyborgbear::Error loadJsonObj(cyborgbear::JsonVal obj);
-
-		cyborgbear::JsonValOut buildJsonObj();
-
 		bool operator==(const Person&) const;
 
 		bool operator!=(const Person&) const;
 
-		string name() const { return "Person"; }
-#ifdef CYBORGBEAR_BOOST_ENABLED
+		string toJson();
 
-		virtual string toBoostBinary();
-
-		virtual void fromBoostBinary(string dat);
-#endif
-		models::PersonClass PersonClass;
+		Error fromJson(string);
+		PersonClass PersonClass;
 		std::map< string, string > Name;
 		std::vector< string > Creatures;
 };
 
+inline Error toJson(Point model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "X", model.X);
+	err |= writeVal(jo, "Y", model.Y);
+	return err;
+}
+
+inline Error toJson(Size model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Width", model.Width);
+	err |= writeVal(jo, "Height", model.Height);
+	return err;
+}
+
+inline Error toJson(Bounds model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "X", model.X);
+	err |= writeVal(jo, "Y", model.Y);
+	err |= writeVal(jo, "Width", model.Width);
+	err |= writeVal(jo, "Height", model.Height);
+	return err;
+}
+
+inline Error toJson(SaveVariables model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Vars", model.Vars);
+	return err;
+}
+
+inline Error toJson(SpriteSheetImage model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "SrcBounds", model.SrcBounds);
+	return err;
+}
+
+inline Error toJson(SpriteSheet model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "TilesWide", model.TilesWide);
+	err |= writeVal(jo, "TilesHigh", model.TilesHigh);
+	err |= writeVal(jo, "TileWidth", model.TileWidth);
+	err |= writeVal(jo, "TileHeight", model.TileHeight);
+	err |= writeVal(jo, "SrcFile", model.SrcFile);
+	err |= writeVal(jo, "Images", model.Images);
+	err |= writeVal(jo, "ImageIdIterator", model.ImageIdIterator);
+	err |= writeVal(jo, "RecycledImageIds", model.RecycledImageIds);
+	return err;
+}
+
+inline Error toJson(Image model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "SpriteSheet", model.SpriteSheet);
+	err |= writeVal(jo, "ImgId", model.ImgId);
+	err |= writeVal(jo, "DefaultSize", model.DefaultSize);
+	return err;
+}
+
+inline Error toJson(Interaction model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Type", model.Type);
+	err |= writeVal(jo, "Next", model.Next);
+	return err;
+}
+
+inline Error toJson(Sprite model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Id", model.Id);
+	err |= writeVal(jo, "SpriteClass", model.SpriteClass);
+	err |= writeVal(jo, "Motion", model.Motion);
+	err |= writeVal(jo, "Facing", model.Facing);
+	err |= writeVal(jo, "SpriteType", model.SpriteType);
+	err |= writeVal(jo, "Interaction", model.Interaction);
+	err |= writeVal(jo, "Data", model.Data);
+	return err;
+}
+
+inline Error toJson(ZoneHeader model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Zone", model.Zone);
+	err |= writeVal(jo, "TilesWide", model.TilesWide);
+	err |= writeVal(jo, "TilesHigh", model.TilesHigh);
+	err |= writeVal(jo, "Layers", model.Layers);
+	return err;
+}
+
+inline Error toJson(ZoneInstance model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "AccessorID", model.AccessorID);
+	err |= writeVal(jo, "ZoneHeader", model.ZoneHeader);
+	err |= writeVal(jo, "Address", model.Address);
+	return err;
+}
+
+inline Error toJson(CreatureType model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Name", model.Name);
+	err |= writeVal(jo, "Special", model.Special);
+	err |= writeVal(jo, "StrongAgainst", model.StrongAgainst);
+	err |= writeVal(jo, "WeakAgainst", model.WeakAgainst);
+	return err;
+}
+
+inline Error toJson(AnimationSlide model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Interval", model.Interval);
+	err |= writeVal(jo, "Image", model.Image);
+	return err;
+}
+
+inline Error toJson(AnimLayer model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Point", model.Point);
+	err |= writeVal(jo, "Animation", model.Animation);
+	return err;
+}
+
+inline Error toJson(User model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Person", model.Person);
+	return err;
+}
+
+inline Error toJson(Settings model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Fullscreen", model.Fullscreen);
+	err |= writeVal(jo, "Width", model.Width);
+	err |= writeVal(jo, "Height", model.Height);
+	return err;
+}
+
+inline Error toJson(InitFile model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "User", model.User);
+	err |= writeVal(jo, "World", model.World);
+	err |= writeVal(jo, "ZoneId", model.ZoneId);
+	err |= writeVal(jo, "SpriteId", model.SpriteId);
+	return err;
+}
+
+inline Error toJson(Font model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Size", model.Size);
+	err |= writeVal(jo, "TtfPath", model.TtfPath);
+	return err;
+}
+
+inline Error toJson(StatusEffect model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "AttackerEffect", model.AttackerEffect);
+	err |= writeVal(jo, "EnemyEffect", model.EnemyEffect);
+	return err;
+}
+
+inline Error toJson(Fraction model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Current", model.Current);
+	err |= writeVal(jo, "Available", model.Available);
+	return err;
+}
+
+inline Error toJson(SpriteClass model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "AnimLayers", model.AnimLayers);
+	err |= writeVal(jo, "Attributes", model.Attributes);
+	return err;
+}
+
+inline Error toJson(Animation model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Import", model.Import);
+	err |= writeVal(jo, "Images", model.Images);
+	return err;
+}
+
+inline Error toJson(CreatureMove model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Name", model.Name);
+	err |= writeVal(jo, "Type", model.Type);
+	err |= writeVal(jo, "Power", model.Power);
+	err |= writeVal(jo, "RequiresRegarge", model.RequiresRegarge);
+	err |= writeVal(jo, "Script", model.Script);
+	err |= writeVal(jo, "Burn", model.Burn);
+	err |= writeVal(jo, "Freeze", model.Freeze);
+	err |= writeVal(jo, "Paralyze", model.Paralyze);
+	err |= writeVal(jo, "Poison", model.Poison);
+	err |= writeVal(jo, "Sleep", model.Sleep);
+	err |= writeVal(jo, "WorldAbilityFlags", model.WorldAbilityFlags);
+	return err;
+}
+
+inline Error toJson(CreatureClass model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Name", model.Name);
+	err |= writeVal(jo, "Successor", model.Successor);
+	err |= writeVal(jo, "Predecessor", model.Predecessor);
+	err |= writeVal(jo, "Types", model.Types);
+	err |= writeVal(jo, "CanLearn", model.CanLearn);
+	err |= writeVal(jo, "LearnsAtLevel", model.LearnsAtLevel);
+	err |= writeVal(jo, "FrontView", model.FrontView);
+	err |= writeVal(jo, "BackView", model.BackView);
+	return err;
+}
+
+inline Error toJson(CreatureMoveInstance model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "CreatureMove", model.CreatureMove);
+	err |= writeVal(jo, "PP", model.PP);
+	return err;
+}
+
+inline Error toJson(World model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Zones", model.Zones);
+	return err;
+}
+
+inline Error toJson(Creature model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "ID", model.ID);
+	err |= writeVal(jo, "Name", model.Name);
+	err |= writeVal(jo, "CreatureClass", model.CreatureClass);
+	err |= writeVal(jo, "Male", model.Male);
+	err |= writeVal(jo, "Level", model.Level);
+	err |= writeVal(jo, "Health", model.Health);
+	err |= writeVal(jo, "Attack", model.Attack);
+	err |= writeVal(jo, "SpecAttack", model.SpecAttack);
+	err |= writeVal(jo, "Defense", model.Defense);
+	err |= writeVal(jo, "SpecDefense", model.SpecDefense);
+	err |= writeVal(jo, "Burned", model.Burned);
+	err |= writeVal(jo, "Frozen", model.Frozen);
+	err |= writeVal(jo, "Poisoned", model.Poisoned);
+	err |= writeVal(jo, "Asleep", model.Asleep);
+	err |= writeVal(jo, "Moves", model.Moves);
+	return err;
+}
+
+inline Error toJson(TileClass model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Import", model.Import);
+	err |= writeVal(jo, "TerrainType", model.TerrainType);
+	err |= writeVal(jo, "LowerAnim", model.LowerAnim);
+	err |= writeVal(jo, "UpperAnim", model.UpperAnim);
+	return err;
+}
+
+inline Error toJson(PersonClass model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Import", model.Import);
+	err |= writeVal(jo, "Title", model.Title);
+	err |= writeVal(jo, "Overhead", model.Overhead);
+	err |= writeVal(jo, "FrontView", model.FrontView);
+	err |= writeVal(jo, "BackView", model.BackView);
+	return err;
+}
+
+inline Error toJson(Tile model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "TileClass", model.TileClass);
+	err |= writeVal(jo, "Occupant", model.Occupant);
+	return err;
+}
+
+inline Error toJson(Zone model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Tiles", model.Tiles);
+	return err;
+}
+
+inline Error toJson(Person model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "PersonClass", model.PersonClass);
+	err |= writeVal(jo, "Name", model.Name);
+	err |= writeVal(jo, "Creatures", model.Creatures);
+	return err;
+}
+
+inline Error fromJson(Point *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "X", &model->X);
+	err |= readVal(jo, "Y", &model->Y);
+	return err;
+}
+
+inline Error fromJson(Size *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Width", &model->Width);
+	err |= readVal(jo, "Height", &model->Height);
+	return err;
+}
+
+inline Error fromJson(Bounds *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "X", &model->X);
+	err |= readVal(jo, "Y", &model->Y);
+	err |= readVal(jo, "Width", &model->Width);
+	err |= readVal(jo, "Height", &model->Height);
+	return err;
+}
+
+inline Error fromJson(SaveVariables *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Vars", &model->Vars);
+	return err;
+}
+
+inline Error fromJson(SpriteSheetImage *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "SrcBounds", &model->SrcBounds);
+	return err;
+}
+
+inline Error fromJson(SpriteSheet *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "TilesWide", &model->TilesWide);
+	err |= readVal(jo, "TilesHigh", &model->TilesHigh);
+	err |= readVal(jo, "TileWidth", &model->TileWidth);
+	err |= readVal(jo, "TileHeight", &model->TileHeight);
+	err |= readVal(jo, "SrcFile", &model->SrcFile);
+	err |= readVal(jo, "Images", &model->Images);
+	err |= readVal(jo, "ImageIdIterator", &model->ImageIdIterator);
+	err |= readVal(jo, "RecycledImageIds", &model->RecycledImageIds);
+	return err;
+}
+
+inline Error fromJson(Image *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "SpriteSheet", &model->SpriteSheet);
+	err |= readVal(jo, "ImgId", &model->ImgId);
+	err |= readVal(jo, "DefaultSize", &model->DefaultSize);
+	return err;
+}
+
+inline Error fromJson(Interaction *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Type", &model->Type);
+	err |= readVal(jo, "Next", &model->Next);
+	return err;
+}
+
+inline Error fromJson(Sprite *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Id", &model->Id);
+	err |= readVal(jo, "SpriteClass", &model->SpriteClass);
+	err |= readVal(jo, "Motion", &model->Motion);
+	err |= readVal(jo, "Facing", &model->Facing);
+	err |= readVal(jo, "SpriteType", &model->SpriteType);
+	err |= readVal(jo, "Interaction", &model->Interaction);
+	err |= readVal(jo, "Data", &model->Data);
+	return err;
+}
+
+inline Error fromJson(ZoneHeader *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Zone", &model->Zone);
+	err |= readVal(jo, "TilesWide", &model->TilesWide);
+	err |= readVal(jo, "TilesHigh", &model->TilesHigh);
+	err |= readVal(jo, "Layers", &model->Layers);
+	return err;
+}
+
+inline Error fromJson(ZoneInstance *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "AccessorID", &model->AccessorID);
+	err |= readVal(jo, "ZoneHeader", &model->ZoneHeader);
+	err |= readVal(jo, "Address", &model->Address);
+	return err;
+}
+
+inline Error fromJson(CreatureType *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Name", &model->Name);
+	err |= readVal(jo, "Special", &model->Special);
+	err |= readVal(jo, "StrongAgainst", &model->StrongAgainst);
+	err |= readVal(jo, "WeakAgainst", &model->WeakAgainst);
+	return err;
+}
+
+inline Error fromJson(AnimationSlide *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Interval", &model->Interval);
+	err |= readVal(jo, "Image", &model->Image);
+	return err;
+}
+
+inline Error fromJson(AnimLayer *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Point", &model->Point);
+	err |= readVal(jo, "Animation", &model->Animation);
+	return err;
+}
+
+inline Error fromJson(User *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Person", &model->Person);
+	return err;
+}
+
+inline Error fromJson(Settings *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Fullscreen", &model->Fullscreen);
+	err |= readVal(jo, "Width", &model->Width);
+	err |= readVal(jo, "Height", &model->Height);
+	return err;
+}
+
+inline Error fromJson(InitFile *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "User", &model->User);
+	err |= readVal(jo, "World", &model->World);
+	err |= readVal(jo, "ZoneId", &model->ZoneId);
+	err |= readVal(jo, "SpriteId", &model->SpriteId);
+	return err;
+}
+
+inline Error fromJson(Font *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Size", &model->Size);
+	err |= readVal(jo, "TtfPath", &model->TtfPath);
+	return err;
+}
+
+inline Error fromJson(StatusEffect *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "AttackerEffect", &model->AttackerEffect);
+	err |= readVal(jo, "EnemyEffect", &model->EnemyEffect);
+	return err;
+}
+
+inline Error fromJson(Fraction *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Current", &model->Current);
+	err |= readVal(jo, "Available", &model->Available);
+	return err;
+}
+
+inline Error fromJson(SpriteClass *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "AnimLayers", &model->AnimLayers);
+	err |= readVal(jo, "Attributes", &model->Attributes);
+	return err;
+}
+
+inline Error fromJson(Animation *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Import", &model->Import);
+	err |= readVal(jo, "Images", &model->Images);
+	return err;
+}
+
+inline Error fromJson(CreatureMove *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Name", &model->Name);
+	err |= readVal(jo, "Type", &model->Type);
+	err |= readVal(jo, "Power", &model->Power);
+	err |= readVal(jo, "RequiresRegarge", &model->RequiresRegarge);
+	err |= readVal(jo, "Script", &model->Script);
+	err |= readVal(jo, "Burn", &model->Burn);
+	err |= readVal(jo, "Freeze", &model->Freeze);
+	err |= readVal(jo, "Paralyze", &model->Paralyze);
+	err |= readVal(jo, "Poison", &model->Poison);
+	err |= readVal(jo, "Sleep", &model->Sleep);
+	err |= readVal(jo, "WorldAbilityFlags", &model->WorldAbilityFlags);
+	return err;
+}
+
+inline Error fromJson(CreatureClass *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Name", &model->Name);
+	err |= readVal(jo, "Successor", &model->Successor);
+	err |= readVal(jo, "Predecessor", &model->Predecessor);
+	err |= readVal(jo, "Types", &model->Types);
+	err |= readVal(jo, "CanLearn", &model->CanLearn);
+	err |= readVal(jo, "LearnsAtLevel", &model->LearnsAtLevel);
+	err |= readVal(jo, "FrontView", &model->FrontView);
+	err |= readVal(jo, "BackView", &model->BackView);
+	return err;
+}
+
+inline Error fromJson(CreatureMoveInstance *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "CreatureMove", &model->CreatureMove);
+	err |= readVal(jo, "PP", &model->PP);
+	return err;
+}
+
+inline Error fromJson(World *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Zones", &model->Zones);
+	return err;
+}
+
+inline Error fromJson(Creature *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "ID", &model->ID);
+	err |= readVal(jo, "Name", &model->Name);
+	err |= readVal(jo, "CreatureClass", &model->CreatureClass);
+	err |= readVal(jo, "Male", &model->Male);
+	err |= readVal(jo, "Level", &model->Level);
+	err |= readVal(jo, "Health", &model->Health);
+	err |= readVal(jo, "Attack", &model->Attack);
+	err |= readVal(jo, "SpecAttack", &model->SpecAttack);
+	err |= readVal(jo, "Defense", &model->Defense);
+	err |= readVal(jo, "SpecDefense", &model->SpecDefense);
+	err |= readVal(jo, "Burned", &model->Burned);
+	err |= readVal(jo, "Frozen", &model->Frozen);
+	err |= readVal(jo, "Poisoned", &model->Poisoned);
+	err |= readVal(jo, "Asleep", &model->Asleep);
+	err |= readVal(jo, "Moves", &model->Moves);
+	return err;
+}
+
+inline Error fromJson(TileClass *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Import", &model->Import);
+	err |= readVal(jo, "TerrainType", &model->TerrainType);
+	err |= readVal(jo, "LowerAnim", &model->LowerAnim);
+	err |= readVal(jo, "UpperAnim", &model->UpperAnim);
+	return err;
+}
+
+inline Error fromJson(PersonClass *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Import", &model->Import);
+	err |= readVal(jo, "Title", &model->Title);
+	err |= readVal(jo, "Overhead", &model->Overhead);
+	err |= readVal(jo, "FrontView", &model->FrontView);
+	err |= readVal(jo, "BackView", &model->BackView);
+	return err;
+}
+
+inline Error fromJson(Tile *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "TileClass", &model->TileClass);
+	err |= readVal(jo, "Occupant", &model->Occupant);
+	return err;
+}
+
+inline Error fromJson(Zone *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Tiles", &model->Tiles);
+	return err;
+}
+
+inline Error fromJson(Person *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "PersonClass", &model->PersonClass);
+	err |= readVal(jo, "Name", &model->Name);
+	err |= readVal(jo, "Creatures", &model->Creatures);
+	return err;
+}
+
+}
 }
 
 
-#ifdef CYBORGBEAR_BOOST_ENABLED
-#include <boost/serialization/list.hpp>
-#include <boost/serialization/string.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
-
-namespace boost {
-namespace serialization {
-
-template<class Archive>
-void serialize(Archive &ar, models::Point &model, const unsigned int) {
-	ar & model.X;
-	ar & model.Y;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Size &model, const unsigned int) {
-	ar & model.Width;
-	ar & model.Height;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Bounds &model, const unsigned int) {
-	ar & model.X;
-	ar & model.Y;
-	ar & model.Width;
-	ar & model.Height;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::SaveVariables &model, const unsigned int) {
-	ar & model.Vars;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::SpriteSheetImage &model, const unsigned int) {
-	ar & model.SrcBounds;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::SpriteSheet &model, const unsigned int) {
-	ar & model.TilesWide;
-	ar & model.TilesHigh;
-	ar & model.TileWidth;
-	ar & model.TileHeight;
-	ar & model.SrcFile;
-	ar & model.Images;
-	ar & model.ImageIdIterator;
-	ar & model.RecycledImageIds;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Image &model, const unsigned int) {
-	ar & model.SpriteSheet;
-	ar & model.ImgId;
-	ar & model.DefaultSize;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Interaction &model, const unsigned int) {
-	ar & model.Type;
-	ar & model.Next;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Sprite &model, const unsigned int) {
-	ar & model.Id;
-	ar & model.SpriteClass;
-	ar & model.Motion;
-	ar & model.Facing;
-	ar & model.SpriteType;
-	ar & model.Interaction;
-	ar & model.Data;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::ZoneHeader &model, const unsigned int) {
-	ar & model.Zone;
-	ar & model.TilesWide;
-	ar & model.TilesHigh;
-	ar & model.Layers;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::ZoneInstance &model, const unsigned int) {
-	ar & model.AccessorID;
-	ar & model.ZoneHeader;
-	ar & model.Address;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::CreatureType &model, const unsigned int) {
-	ar & model.Name;
-	ar & model.Special;
-	ar & model.StrongAgainst;
-	ar & model.WeakAgainst;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::AnimationSlide &model, const unsigned int) {
-	ar & model.Interval;
-	ar & model.Image;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::AnimLayer &model, const unsigned int) {
-	ar & model.Point;
-	ar & model.Animation;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::User &model, const unsigned int) {
-	ar & model.Person;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Settings &model, const unsigned int) {
-	ar & model.Fullscreen;
-	ar & model.Width;
-	ar & model.Height;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::InitFile &model, const unsigned int) {
-	ar & model.User;
-	ar & model.World;
-	ar & model.ZoneId;
-	ar & model.SpriteId;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Font &model, const unsigned int) {
-	ar & model.Size;
-	ar & model.TtfPath;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::StatusEffect &model, const unsigned int) {
-	ar & model.AttackerEffect;
-	ar & model.EnemyEffect;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Fraction &model, const unsigned int) {
-	ar & model.Current;
-	ar & model.Available;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::SpriteClass &model, const unsigned int) {
-	ar & model.AnimLayers;
-	ar & model.Attributes;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Animation &model, const unsigned int) {
-	ar & model.Import;
-	ar & model.Images;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::CreatureMove &model, const unsigned int) {
-	ar & model.Name;
-	ar & model.Type;
-	ar & model.Power;
-	ar & model.RequiresRegarge;
-	ar & model.Script;
-	ar & model.Burn;
-	ar & model.Freeze;
-	ar & model.Paralyze;
-	ar & model.Poison;
-	ar & model.Sleep;
-	ar & model.WorldAbilityFlags;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::CreatureClass &model, const unsigned int) {
-	ar & model.Name;
-	ar & model.Successor;
-	ar & model.Predecessor;
-	ar & model.Types;
-	ar & model.CanLearn;
-	ar & model.LearnsAtLevel;
-	ar & model.FrontView;
-	ar & model.BackView;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::CreatureMoveInstance &model, const unsigned int) {
-	ar & model.CreatureMove;
-	ar & model.PP;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::World &model, const unsigned int) {
-	ar & model.Zones;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Creature &model, const unsigned int) {
-	ar & model.ID;
-	ar & model.Name;
-	ar & model.CreatureClass;
-	ar & model.Male;
-	ar & model.Level;
-	ar & model.Health;
-	ar & model.Attack;
-	ar & model.SpecAttack;
-	ar & model.Defense;
-	ar & model.SpecDefense;
-	ar & model.Burned;
-	ar & model.Frozen;
-	ar & model.Poisoned;
-	ar & model.Asleep;
-	ar & model.Moves;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::TileClass &model, const unsigned int) {
-	ar & model.Import;
-	ar & model.TerrainType;
-	ar & model.LowerAnim;
-	ar & model.UpperAnim;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::PersonClass &model, const unsigned int) {
-	ar & model.Import;
-	ar & model.Title;
-	ar & model.Overhead;
-	ar & model.FrontView;
-	ar & model.BackView;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Tile &model, const unsigned int) {
-	ar & model.TileClass;
-	ar & model.Occupant;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Zone &model, const unsigned int) {
-	ar & model.Tiles;
-}
-
-template<class Archive>
-void serialize(Archive &ar, models::Person &model, const unsigned int) {
-	ar & model.PersonClass;
-	ar & model.Name;
-	ar & model.Creatures;
-}
-
-}
-}
-#endif
 #endif

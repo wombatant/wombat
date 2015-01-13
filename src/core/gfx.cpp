@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2014 gtalent2@gmail.com
+ * Copyright 2013-2015 gtalent2@gmail.com
  * 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,7 +36,7 @@ void draw(Image *img, common::Point pt) {
 
 // Image
 
-Flyweight<models::Image> imageCache([](models::cyborgbear::Model &key) -> Image* {
+Flyweight<models::Image> imageCache([](models::Model &key) -> Image* {
 	models::Image &mod = (models::Image&) key;
 	Image *i = new Image(mod);
 	if (i->loaded()) {
@@ -117,7 +117,7 @@ Animation::Animation(models::Animation model) {
 	for (auto img : model.Images) {
 		add(checkoutImage(img.Image));
 	}
-	m_key = model.toJson();
+	m_key = toJson(model);
 }
 
 Animation::~Animation() {
