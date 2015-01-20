@@ -18,17 +18,13 @@ using core::TaskState;
 const auto SettingsPath = "settings.json";
 
 class ClArgs {
-
 	private:
-
 		std::map<std::string, bool> m_args;
 
 	public:
-
 		ClArgs(int argc, const char **args);
 
 		bool operator[](std::string arg);
-
 };
 
 ClArgs::ClArgs(int argc, const char **args) {
@@ -58,24 +54,21 @@ Settings loadSettings(Path path) {
 	return settings;
 }
 
-
 int run(ClArgs args) {
 	core::debugOn(args["debug"]);
 	auto settings = loadSettings(SettingsPath);
-
+	// init subsystems
 	if (core::init(settings) != 0) {
 		return 1;
 	}
-
 	if (ui::init() != 0) {
 		return 2;
 	}
-
+	// start app
 	core::addTask(new App());
 	core::main();
-
+	// save current settings and exit
 	writeJsonFile(settings, SettingsPath);
-
 	return 0;
 }
 
