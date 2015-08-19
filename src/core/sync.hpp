@@ -77,7 +77,7 @@ class BaseEventQueue {
 		 * @param post Event that the popped Event will be read into
 		 * @return 0 if success, 1 if there are no posts
 		 */
-		virtual int popPost(Event &post) = 0;
+		virtual int popPost(Event *post) = 0;
 
 		/**
 		 * Indicates whether or not there are any pending posts.
@@ -109,7 +109,7 @@ class EventQueue: public BaseEventQueue {
 
 		void post(Event wakeup = Event::GenericPost);
 
-		int popPost(Event &post);
+		int popPost(Event *post);
 
 		bool hasPosts();
 

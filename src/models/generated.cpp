@@ -60,6 +60,24 @@ Sprite::Sprite() {
 	this->Data = "";
 }
 
+CreatureAttributeMod::CreatureAttributeMod() {
+	this->Name = "";
+	this->ModHP = 0;
+	this->ModBurn = 0;
+	this->ModFreeze = 0;
+	this->ModParalyze = 0;
+	this->ModPoison = 0;
+	this->ModSleep = 0;
+	this->HealBurned = 0;
+	this->HealFrozen = 0;
+	this->HealPoisoned = 0;
+	this->HealAsleep = 0;
+}
+
+Item::Item() {
+	this->ItemType = 0;
+}
+
 ZoneHeader::ZoneHeader() {
 	this->Zone = "";
 	this->TilesWide = 0;
@@ -70,10 +88,6 @@ ZoneHeader::ZoneHeader() {
 ZoneInstance::ZoneInstance() {
 	this->AccessorID = "";
 	this->ZoneHeader = "";
-}
-
-CreatureType::CreatureType() {
-	this->Special = 0;
 }
 
 AnimationSlide::AnimationSlide() {
@@ -132,16 +146,29 @@ CreatureMove::CreatureMove() {
 	this->WorldAbilityFlags = 0;
 }
 
-CreatureClass::CreatureClass() {
-	this->Successor = "";
-	this->Predecessor = "";
+CreatureType::CreatureType() {
+	this->Special = 0;
+}
+
+World::World() {
+}
+
+TileClass::TileClass() {
+	this->Import = "";
+	this->TerrainType = 0;
 }
 
 CreatureMoveInstance::CreatureMoveInstance() {
 	this->CreatureMove = "";
 }
 
-World::World() {
+CreatureClass::CreatureClass() {
+	this->Successor = "";
+	this->Predecessor = "";
+}
+
+PersonClass::PersonClass() {
+	this->Import = "";
 }
 
 Creature::Creature() {
@@ -159,22 +186,13 @@ Creature::Creature() {
 	this->Asleep = 0;
 }
 
-TileClass::TileClass() {
-	this->Import = "";
-	this->TerrainType = 0;
-}
-
-PersonClass::PersonClass() {
-	this->Import = "";
+Person::Person() {
 }
 
 Tile::Tile() {
 }
 
 Zone::Zone() {
-}
-
-Person::Person() {
 }
 
 bool Point::operator==(const Point &o) const {
@@ -252,6 +270,28 @@ bool Sprite::operator==(const Sprite &o) const {
 	return true;
 }
 
+bool CreatureAttributeMod::operator==(const CreatureAttributeMod &o) const {
+	if (Name != o.Name) return false;
+	if (ModHP != o.ModHP) return false;
+	if (ModBurn != o.ModBurn) return false;
+	if (ModFreeze != o.ModFreeze) return false;
+	if (ModParalyze != o.ModParalyze) return false;
+	if (ModPoison != o.ModPoison) return false;
+	if (ModSleep != o.ModSleep) return false;
+	if (HealBurned != o.HealBurned) return false;
+	if (HealFrozen != o.HealFrozen) return false;
+	if (HealPoisoned != o.HealPoisoned) return false;
+	if (HealAsleep != o.HealAsleep) return false;
+
+	return true;
+}
+
+bool Item::operator==(const Item &o) const {
+	if (ItemType != o.ItemType) return false;
+
+	return true;
+}
+
 bool ZoneHeader::operator==(const ZoneHeader &o) const {
 	if (Zone != o.Zone) return false;
 	if (TilesWide != o.TilesWide) return false;
@@ -265,15 +305,6 @@ bool ZoneInstance::operator==(const ZoneInstance &o) const {
 	if (AccessorID != o.AccessorID) return false;
 	if (ZoneHeader != o.ZoneHeader) return false;
 	if (Address != o.Address) return false;
-
-	return true;
-}
-
-bool CreatureType::operator==(const CreatureType &o) const {
-	if (Name != o.Name) return false;
-	if (Special != o.Special) return false;
-	if (StrongAgainst != o.StrongAgainst) return false;
-	if (WeakAgainst != o.WeakAgainst) return false;
 
 	return true;
 }
@@ -366,6 +397,37 @@ bool CreatureMove::operator==(const CreatureMove &o) const {
 	return true;
 }
 
+bool CreatureType::operator==(const CreatureType &o) const {
+	if (Name != o.Name) return false;
+	if (Special != o.Special) return false;
+	if (StrongAgainst != o.StrongAgainst) return false;
+	if (WeakAgainst != o.WeakAgainst) return false;
+
+	return true;
+}
+
+bool World::operator==(const World &o) const {
+	if (Zones != o.Zones) return false;
+
+	return true;
+}
+
+bool TileClass::operator==(const TileClass &o) const {
+	if (Import != o.Import) return false;
+	if (TerrainType != o.TerrainType) return false;
+	if (LowerAnim != o.LowerAnim) return false;
+	if (UpperAnim != o.UpperAnim) return false;
+
+	return true;
+}
+
+bool CreatureMoveInstance::operator==(const CreatureMoveInstance &o) const {
+	if (CreatureMove != o.CreatureMove) return false;
+	if (PP != o.PP) return false;
+
+	return true;
+}
+
 bool CreatureClass::operator==(const CreatureClass &o) const {
 	if (Name != o.Name) return false;
 	if (Successor != o.Successor) return false;
@@ -379,15 +441,12 @@ bool CreatureClass::operator==(const CreatureClass &o) const {
 	return true;
 }
 
-bool CreatureMoveInstance::operator==(const CreatureMoveInstance &o) const {
-	if (CreatureMove != o.CreatureMove) return false;
-	if (PP != o.PP) return false;
-
-	return true;
-}
-
-bool World::operator==(const World &o) const {
-	if (Zones != o.Zones) return false;
+bool PersonClass::operator==(const PersonClass &o) const {
+	if (Import != o.Import) return false;
+	if (Title != o.Title) return false;
+	if (Overhead != o.Overhead) return false;
+	if (FrontView != o.FrontView) return false;
+	if (BackView != o.BackView) return false;
 
 	return true;
 }
@@ -412,21 +471,10 @@ bool Creature::operator==(const Creature &o) const {
 	return true;
 }
 
-bool TileClass::operator==(const TileClass &o) const {
-	if (Import != o.Import) return false;
-	if (TerrainType != o.TerrainType) return false;
-	if (LowerAnim != o.LowerAnim) return false;
-	if (UpperAnim != o.UpperAnim) return false;
-
-	return true;
-}
-
-bool PersonClass::operator==(const PersonClass &o) const {
-	if (Import != o.Import) return false;
-	if (Title != o.Title) return false;
-	if (Overhead != o.Overhead) return false;
-	if (FrontView != o.FrontView) return false;
-	if (BackView != o.BackView) return false;
+bool Person::operator==(const Person &o) const {
+	if (PersonClass != o.PersonClass) return false;
+	if (Name != o.Name) return false;
+	if (Creatures != o.Creatures) return false;
 
 	return true;
 }
@@ -440,14 +488,6 @@ bool Tile::operator==(const Tile &o) const {
 
 bool Zone::operator==(const Zone &o) const {
 	if (Tiles != o.Tiles) return false;
-
-	return true;
-}
-
-bool Person::operator==(const Person &o) const {
-	if (PersonClass != o.PersonClass) return false;
-	if (Name != o.Name) return false;
-	if (Creatures != o.Creatures) return false;
 
 	return true;
 }
@@ -527,6 +567,28 @@ bool Sprite::operator!=(const Sprite &o) const {
 	return false;
 }
 
+bool CreatureAttributeMod::operator!=(const CreatureAttributeMod &o) const {
+	if (Name != o.Name) return true;
+	if (ModHP != o.ModHP) return true;
+	if (ModBurn != o.ModBurn) return true;
+	if (ModFreeze != o.ModFreeze) return true;
+	if (ModParalyze != o.ModParalyze) return true;
+	if (ModPoison != o.ModPoison) return true;
+	if (ModSleep != o.ModSleep) return true;
+	if (HealBurned != o.HealBurned) return true;
+	if (HealFrozen != o.HealFrozen) return true;
+	if (HealPoisoned != o.HealPoisoned) return true;
+	if (HealAsleep != o.HealAsleep) return true;
+
+	return false;
+}
+
+bool Item::operator!=(const Item &o) const {
+	if (ItemType != o.ItemType) return true;
+
+	return false;
+}
+
 bool ZoneHeader::operator!=(const ZoneHeader &o) const {
 	if (Zone != o.Zone) return true;
 	if (TilesWide != o.TilesWide) return true;
@@ -540,15 +602,6 @@ bool ZoneInstance::operator!=(const ZoneInstance &o) const {
 	if (AccessorID != o.AccessorID) return true;
 	if (ZoneHeader != o.ZoneHeader) return true;
 	if (Address != o.Address) return true;
-
-	return false;
-}
-
-bool CreatureType::operator!=(const CreatureType &o) const {
-	if (Name != o.Name) return true;
-	if (Special != o.Special) return true;
-	if (StrongAgainst != o.StrongAgainst) return true;
-	if (WeakAgainst != o.WeakAgainst) return true;
 
 	return false;
 }
@@ -641,6 +694,37 @@ bool CreatureMove::operator!=(const CreatureMove &o) const {
 	return false;
 }
 
+bool CreatureType::operator!=(const CreatureType &o) const {
+	if (Name != o.Name) return true;
+	if (Special != o.Special) return true;
+	if (StrongAgainst != o.StrongAgainst) return true;
+	if (WeakAgainst != o.WeakAgainst) return true;
+
+	return false;
+}
+
+bool World::operator!=(const World &o) const {
+	if (Zones != o.Zones) return true;
+
+	return false;
+}
+
+bool TileClass::operator!=(const TileClass &o) const {
+	if (Import != o.Import) return true;
+	if (TerrainType != o.TerrainType) return true;
+	if (LowerAnim != o.LowerAnim) return true;
+	if (UpperAnim != o.UpperAnim) return true;
+
+	return false;
+}
+
+bool CreatureMoveInstance::operator!=(const CreatureMoveInstance &o) const {
+	if (CreatureMove != o.CreatureMove) return true;
+	if (PP != o.PP) return true;
+
+	return false;
+}
+
 bool CreatureClass::operator!=(const CreatureClass &o) const {
 	if (Name != o.Name) return true;
 	if (Successor != o.Successor) return true;
@@ -654,15 +738,12 @@ bool CreatureClass::operator!=(const CreatureClass &o) const {
 	return false;
 }
 
-bool CreatureMoveInstance::operator!=(const CreatureMoveInstance &o) const {
-	if (CreatureMove != o.CreatureMove) return true;
-	if (PP != o.PP) return true;
-
-	return false;
-}
-
-bool World::operator!=(const World &o) const {
-	if (Zones != o.Zones) return true;
+bool PersonClass::operator!=(const PersonClass &o) const {
+	if (Import != o.Import) return true;
+	if (Title != o.Title) return true;
+	if (Overhead != o.Overhead) return true;
+	if (FrontView != o.FrontView) return true;
+	if (BackView != o.BackView) return true;
 
 	return false;
 }
@@ -687,21 +768,10 @@ bool Creature::operator!=(const Creature &o) const {
 	return false;
 }
 
-bool TileClass::operator!=(const TileClass &o) const {
-	if (Import != o.Import) return true;
-	if (TerrainType != o.TerrainType) return true;
-	if (LowerAnim != o.LowerAnim) return true;
-	if (UpperAnim != o.UpperAnim) return true;
-
-	return false;
-}
-
-bool PersonClass::operator!=(const PersonClass &o) const {
-	if (Import != o.Import) return true;
-	if (Title != o.Title) return true;
-	if (Overhead != o.Overhead) return true;
-	if (FrontView != o.FrontView) return true;
-	if (BackView != o.BackView) return true;
+bool Person::operator!=(const Person &o) const {
+	if (PersonClass != o.PersonClass) return true;
+	if (Name != o.Name) return true;
+	if (Creatures != o.Creatures) return true;
 
 	return false;
 }
@@ -715,14 +785,6 @@ bool Tile::operator!=(const Tile &o) const {
 
 bool Zone::operator!=(const Zone &o) const {
 	if (Tiles != o.Tiles) return true;
-
-	return false;
-}
-
-bool Person::operator!=(const Person &o) const {
-	if (PersonClass != o.PersonClass) return true;
-	if (Name != o.Name) return true;
-	if (Creatures != o.Creatures) return true;
 
 	return false;
 }

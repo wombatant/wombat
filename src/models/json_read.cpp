@@ -53,7 +53,7 @@ Error readVal(json_t *jv, double *v) {
 
 Error readVal(json_t *jv, bool *v) {
 	if (json_is_boolean(jv)) {
-		*v = json_boolean_value(jv);
+		*v = json_is_true(jv);
 		return Error::Ok;
 	}
 	return Error::TypeMismatch;

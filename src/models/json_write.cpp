@@ -26,7 +26,7 @@ Error writeVal(json_t **jv, bool v) {
 }
 
 Error writeVal(json_t **jv, std::string v) {
-	*jv = json_stringn(v.c_str(), v.size());
+	*jv = json_string(v.c_str());
 	return Error::Ok;
 }
 

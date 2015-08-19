@@ -32,12 +32,12 @@ int subscribe(Event::Type et) {
 
 TaskState::TaskState(uint64_t sleep) {
 	state = Running;
-	sleepDuration = sleep;
+	wakeupTime = _schedTime() + sleep;
 }
 
 TaskState::TaskState(TaskState::State state) {
 	this->state = state;
-	sleepDuration = 0;
+	wakeupTime = 0;
 }
 
 // Task
@@ -159,7 +159,7 @@ TaskState TaskProcessor::run(Event event) {
 	setActiveTaskProcessor(prevTp);
 
 	TaskProcessor::ScheduleItem nt;
-	if (nextTask(nt) == 0) {
+	if (nextTask(&nt) == 0) {
 		auto time = _schedTime();
 		if (time < nt.wakeupTime) {
 			return nt.wakeupTime - time;
@@ -191,7 +191,12 @@ void TaskProcessor::start() {
 			while (m_running) {
 				Event post;
 				if (taskState.state == TaskState::Running) {
-					post = m_events->wait(taskState.sleepDuration);
+					const auto time = _schedTime();
+					if (time < taskState.wakeupTime) {
+						post = m_events->wait(taskState.wakeupTime - time);
+					} else {
+						post = m_events->wait(0);
+					}
 				} else {
 					post = m_events->wait();
 				}
@@ -230,7 +235,7 @@ void TaskProcessor::addSubscription(Event::Type et) {
 Task *TaskProcessor::popActiveTask() {
 	TaskProcessor::ScheduleItem nt;
 	m_mutex.lock();
-	if (nextTask(nt) == 0) {
+	if (nextTask(&nt) == 0) {
 		auto time = _schedTime();
 		if (time >= nt.wakeupTime) {
 			m_schedule.pop_back();
@@ -241,13 +246,13 @@ Task *TaskProcessor::popActiveTask() {
 	return nullptr;
 }
 
-int TaskProcessor::nextTask(TaskProcessor::ScheduleItem &t) {
+int TaskProcessor::nextTask(TaskProcessor::ScheduleItem *t) {
 	int retval = 0;
 	m_mutex.lock();
 	if (m_schedule.empty()) {
 		retval = 1;
 	} else {
-		t = m_schedule.back();
+		*t = m_schedule.back();
 	}
 	m_mutex.unlock();
 	return retval;
@@ -261,7 +266,7 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 			// remove old wake up time
 			deschedule(task);
 
-			const auto wakeup = _schedTime() + state.sleepDuration;
+			const auto wakeup = state.wakeupTime;
 			const auto val = TaskProcessor::ScheduleItem(task, wakeup);
 
 			bool inserted = false;
