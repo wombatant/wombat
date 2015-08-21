@@ -139,21 +139,25 @@ void main() {
 	SDL_Event sev;
 	TaskState taskState = TaskState::Waiting;
 	while (_running) {
-		if (taskState.state == TaskState::Running) {
-			auto time = _schedTime();
-			if (time < taskState.wakeupTime) { 
-				auto sleep = taskState.wakeupTime - time;
-				// yes... SDL_WaitEventTimeout uses 0 indicate failure...
-				if (SDL_WaitEventTimeout(&sev, sleep) == 0) {
+		auto eventReturned = SDL_PollEvent(&sev);
+		if (!eventReturned) {
+			if (taskState.state == TaskState::Running) {
+				auto time = _schedTime();
+				if (time < taskState.wakeupTime) {
+					auto sleep = taskState.wakeupTime - time;
+					// yes... SDL_WaitEventTimeout uses 0 indicate failure...
+					if (!SDL_WaitEventTimeout(&sev, sleep)) {
+						_mainEventQueue.post(Event::Timeout);
+						sev.type = Event_SemaphorePost;
+					}
+				} else {
+					// no time to sleep, process timeout event
 					_mainEventQueue.post(Event::Timeout);
 					sev.type = Event_SemaphorePost;
 				}
 			} else {
-				_mainEventQueue.post(Event::Timeout);
-				sev.type = Event_SemaphorePost;
+				SDL_WaitEvent(&sev);
 			}
-		} else {
-			SDL_WaitEvent(&sev);
 		}
 
 		const auto t = sev.type;
