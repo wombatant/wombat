@@ -39,9 +39,9 @@ class TaskState {
 		State state = Continue;
 
 		/**
-		 * Time (milliseconds) til the Task wants to run again.
+		 * Time (milliseconds) the Task wants to run again.
 		 */
-		uint64 sleepDuration = 0;
+		uint64 wakeupTime = 0;
 
 		/**
 		 * Constructor
@@ -52,9 +52,9 @@ class TaskState {
 		/**
 		 * Constructor
 		 * State is set to Running.
-		 * @param sleep time to sleep in milliseconds
+		 * @param wakeup time to sleep in milliseconds
 		 */
-		TaskState(uint64 sleep);
+		TaskState(uint64 wakeup);
 };
 
 class Task {
@@ -223,7 +223,7 @@ class TaskProcessor: public Task {
 		 * @param t the next task will be read into this value
 		 * @return 0 if success, 1 if there is no next task
 		 */
-		int nextTask(ScheduleItem &t);
+		int nextTask(ScheduleItem *t);
 
 		/**
 		 * Sets the state of the task and schedules it appropriately.

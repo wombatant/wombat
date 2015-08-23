@@ -194,6 +194,50 @@ class Sprite: public Model {
 };
 
 
+class CreatureAttributeMod: public Model {
+
+	public:
+
+		CreatureAttributeMod();
+
+		bool operator==(const CreatureAttributeMod&) const;
+
+		bool operator!=(const CreatureAttributeMod&) const;
+
+		string toJson();
+
+		Error fromJson(string);
+		string Name;
+		int ModHP;
+		int ModBurn;
+		int ModFreeze;
+		int ModParalyze;
+		int ModPoison;
+		int ModSleep;
+		bool HealBurned;
+		bool HealFrozen;
+		bool HealPoisoned;
+		bool HealAsleep;
+};
+
+
+class Item: public Model {
+
+	public:
+
+		Item();
+
+		bool operator==(const Item&) const;
+
+		bool operator!=(const Item&) const;
+
+		string toJson();
+
+		Error fromJson(string);
+		int ItemType;
+};
+
+
 class ZoneHeader: public Model {
 
 	public:
@@ -230,26 +274,6 @@ class ZoneInstance: public Model {
 		string AccessorID;
 		string ZoneHeader;
 		Point Address;
-};
-
-
-class CreatureType: public Model {
-
-	public:
-
-		CreatureType();
-
-		bool operator==(const CreatureType&) const;
-
-		bool operator!=(const CreatureType&) const;
-
-		string toJson();
-
-		Error fromJson(string);
-		std::map< string, string > Name;
-		bool Special;
-		std::vector< string > StrongAgainst;
-		std::vector< string > WeakAgainst;
 };
 
 
@@ -462,6 +486,81 @@ class CreatureMove: public Model {
 };
 
 
+class CreatureType: public Model {
+
+	public:
+
+		CreatureType();
+
+		bool operator==(const CreatureType&) const;
+
+		bool operator!=(const CreatureType&) const;
+
+		string toJson();
+
+		Error fromJson(string);
+		std::map< string, string > Name;
+		bool Special;
+		std::vector< string > StrongAgainst;
+		std::vector< string > WeakAgainst;
+};
+
+
+class World: public Model {
+
+	public:
+
+		World();
+
+		bool operator==(const World&) const;
+
+		bool operator!=(const World&) const;
+
+		string toJson();
+
+		Error fromJson(string);
+		std::vector< ZoneInstance > Zones;
+};
+
+
+class TileClass: public Model {
+
+	public:
+
+		TileClass();
+
+		bool operator==(const TileClass&) const;
+
+		bool operator!=(const TileClass&) const;
+
+		string toJson();
+
+		Error fromJson(string);
+		string Import;
+		int TerrainType;
+		AnimLayer LowerAnim;
+		AnimLayer UpperAnim;
+};
+
+
+class CreatureMoveInstance: public Model {
+
+	public:
+
+		CreatureMoveInstance();
+
+		bool operator==(const CreatureMoveInstance&) const;
+
+		bool operator!=(const CreatureMoveInstance&) const;
+
+		string toJson();
+
+		Error fromJson(string);
+		string CreatureMove;
+		Fraction PP;
+};
+
+
 class CreatureClass: public Model {
 
 	public:
@@ -486,38 +585,24 @@ class CreatureClass: public Model {
 };
 
 
-class CreatureMoveInstance: public Model {
+class PersonClass: public Model {
 
 	public:
 
-		CreatureMoveInstance();
+		PersonClass();
 
-		bool operator==(const CreatureMoveInstance&) const;
+		bool operator==(const PersonClass&) const;
 
-		bool operator!=(const CreatureMoveInstance&) const;
+		bool operator!=(const PersonClass&) const;
 
 		string toJson();
 
 		Error fromJson(string);
-		string CreatureMove;
-		Fraction PP;
-};
-
-
-class World: public Model {
-
-	public:
-
-		World();
-
-		bool operator==(const World&) const;
-
-		bool operator!=(const World&) const;
-
-		string toJson();
-
-		Error fromJson(string);
-		std::vector< ZoneInstance > Zones;
+		string Import;
+		std::map< string, string > Title;
+		std::vector< std::vector< std::vector< AnimLayer > > > Overhead;
+		Animation FrontView;
+		Animation BackView;
 };
 
 
@@ -552,44 +637,22 @@ class Creature: public Model {
 };
 
 
-class TileClass: public Model {
+class Person: public Model {
 
 	public:
 
-		TileClass();
+		Person();
 
-		bool operator==(const TileClass&) const;
+		bool operator==(const Person&) const;
 
-		bool operator!=(const TileClass&) const;
+		bool operator!=(const Person&) const;
 
 		string toJson();
 
 		Error fromJson(string);
-		string Import;
-		int TerrainType;
-		AnimLayer LowerAnim;
-		AnimLayer UpperAnim;
-};
-
-
-class PersonClass: public Model {
-
-	public:
-
-		PersonClass();
-
-		bool operator==(const PersonClass&) const;
-
-		bool operator!=(const PersonClass&) const;
-
-		string toJson();
-
-		Error fromJson(string);
-		string Import;
-		std::map< string, string > Title;
-		std::vector< std::vector< std::vector< AnimLayer > > > Overhead;
-		Animation FrontView;
-		Animation BackView;
+		PersonClass PersonClass;
+		std::map< string, string > Name;
+		std::vector< string > Creatures;
 };
 
 
@@ -625,25 +688,6 @@ class Zone: public Model {
 
 		Error fromJson(string);
 		std::vector< std::vector< std::vector< Tile > > > Tiles;
-};
-
-
-class Person: public Model {
-
-	public:
-
-		Person();
-
-		bool operator==(const Person&) const;
-
-		bool operator!=(const Person&) const;
-
-		string toJson();
-
-		Error fromJson(string);
-		PersonClass PersonClass;
-		std::map< string, string > Name;
-		std::vector< string > Creatures;
 };
 
 inline Error toJson(Point model, json_t *jo) {
@@ -721,6 +765,28 @@ inline Error toJson(Sprite model, json_t *jo) {
 	return err;
 }
 
+inline Error toJson(CreatureAttributeMod model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Name", model.Name);
+	err |= writeVal(jo, "ModHP", model.ModHP);
+	err |= writeVal(jo, "ModBurn", model.ModBurn);
+	err |= writeVal(jo, "ModFreeze", model.ModFreeze);
+	err |= writeVal(jo, "ModParalyze", model.ModParalyze);
+	err |= writeVal(jo, "ModPoison", model.ModPoison);
+	err |= writeVal(jo, "ModSleep", model.ModSleep);
+	err |= writeVal(jo, "HealBurned", model.HealBurned);
+	err |= writeVal(jo, "HealFrozen", model.HealFrozen);
+	err |= writeVal(jo, "HealPoisoned", model.HealPoisoned);
+	err |= writeVal(jo, "HealAsleep", model.HealAsleep);
+	return err;
+}
+
+inline Error toJson(Item model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "ItemType", model.ItemType);
+	return err;
+}
+
 inline Error toJson(ZoneHeader model, json_t *jo) {
 	Error err = Error::Ok;
 	err |= writeVal(jo, "Zone", model.Zone);
@@ -735,15 +801,6 @@ inline Error toJson(ZoneInstance model, json_t *jo) {
 	err |= writeVal(jo, "AccessorID", model.AccessorID);
 	err |= writeVal(jo, "ZoneHeader", model.ZoneHeader);
 	err |= writeVal(jo, "Address", model.Address);
-	return err;
-}
-
-inline Error toJson(CreatureType model, json_t *jo) {
-	Error err = Error::Ok;
-	err |= writeVal(jo, "Name", model.Name);
-	err |= writeVal(jo, "Special", model.Special);
-	err |= writeVal(jo, "StrongAgainst", model.StrongAgainst);
-	err |= writeVal(jo, "WeakAgainst", model.WeakAgainst);
 	return err;
 }
 
@@ -835,6 +892,37 @@ inline Error toJson(CreatureMove model, json_t *jo) {
 	return err;
 }
 
+inline Error toJson(CreatureType model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Name", model.Name);
+	err |= writeVal(jo, "Special", model.Special);
+	err |= writeVal(jo, "StrongAgainst", model.StrongAgainst);
+	err |= writeVal(jo, "WeakAgainst", model.WeakAgainst);
+	return err;
+}
+
+inline Error toJson(World model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Zones", model.Zones);
+	return err;
+}
+
+inline Error toJson(TileClass model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "Import", model.Import);
+	err |= writeVal(jo, "TerrainType", model.TerrainType);
+	err |= writeVal(jo, "LowerAnim", model.LowerAnim);
+	err |= writeVal(jo, "UpperAnim", model.UpperAnim);
+	return err;
+}
+
+inline Error toJson(CreatureMoveInstance model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= writeVal(jo, "CreatureMove", model.CreatureMove);
+	err |= writeVal(jo, "PP", model.PP);
+	return err;
+}
+
 inline Error toJson(CreatureClass model, json_t *jo) {
 	Error err = Error::Ok;
 	err |= writeVal(jo, "Name", model.Name);
@@ -848,16 +936,13 @@ inline Error toJson(CreatureClass model, json_t *jo) {
 	return err;
 }
 
-inline Error toJson(CreatureMoveInstance model, json_t *jo) {
+inline Error toJson(PersonClass model, json_t *jo) {
 	Error err = Error::Ok;
-	err |= writeVal(jo, "CreatureMove", model.CreatureMove);
-	err |= writeVal(jo, "PP", model.PP);
-	return err;
-}
-
-inline Error toJson(World model, json_t *jo) {
-	Error err = Error::Ok;
-	err |= writeVal(jo, "Zones", model.Zones);
+	err |= writeVal(jo, "Import", model.Import);
+	err |= writeVal(jo, "Title", model.Title);
+	err |= writeVal(jo, "Overhead", model.Overhead);
+	err |= writeVal(jo, "FrontView", model.FrontView);
+	err |= writeVal(jo, "BackView", model.BackView);
 	return err;
 }
 
@@ -881,22 +966,11 @@ inline Error toJson(Creature model, json_t *jo) {
 	return err;
 }
 
-inline Error toJson(TileClass model, json_t *jo) {
+inline Error toJson(Person model, json_t *jo) {
 	Error err = Error::Ok;
-	err |= writeVal(jo, "Import", model.Import);
-	err |= writeVal(jo, "TerrainType", model.TerrainType);
-	err |= writeVal(jo, "LowerAnim", model.LowerAnim);
-	err |= writeVal(jo, "UpperAnim", model.UpperAnim);
-	return err;
-}
-
-inline Error toJson(PersonClass model, json_t *jo) {
-	Error err = Error::Ok;
-	err |= writeVal(jo, "Import", model.Import);
-	err |= writeVal(jo, "Title", model.Title);
-	err |= writeVal(jo, "Overhead", model.Overhead);
-	err |= writeVal(jo, "FrontView", model.FrontView);
-	err |= writeVal(jo, "BackView", model.BackView);
+	err |= writeVal(jo, "PersonClass", model.PersonClass);
+	err |= writeVal(jo, "Name", model.Name);
+	err |= writeVal(jo, "Creatures", model.Creatures);
 	return err;
 }
 
@@ -910,14 +984,6 @@ inline Error toJson(Tile model, json_t *jo) {
 inline Error toJson(Zone model, json_t *jo) {
 	Error err = Error::Ok;
 	err |= writeVal(jo, "Tiles", model.Tiles);
-	return err;
-}
-
-inline Error toJson(Person model, json_t *jo) {
-	Error err = Error::Ok;
-	err |= writeVal(jo, "PersonClass", model.PersonClass);
-	err |= writeVal(jo, "Name", model.Name);
-	err |= writeVal(jo, "Creatures", model.Creatures);
 	return err;
 }
 
@@ -996,6 +1062,28 @@ inline Error fromJson(Sprite *model, json_t *jo) {
 	return err;
 }
 
+inline Error fromJson(CreatureAttributeMod *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Name", &model->Name);
+	err |= readVal(jo, "ModHP", &model->ModHP);
+	err |= readVal(jo, "ModBurn", &model->ModBurn);
+	err |= readVal(jo, "ModFreeze", &model->ModFreeze);
+	err |= readVal(jo, "ModParalyze", &model->ModParalyze);
+	err |= readVal(jo, "ModPoison", &model->ModPoison);
+	err |= readVal(jo, "ModSleep", &model->ModSleep);
+	err |= readVal(jo, "HealBurned", &model->HealBurned);
+	err |= readVal(jo, "HealFrozen", &model->HealFrozen);
+	err |= readVal(jo, "HealPoisoned", &model->HealPoisoned);
+	err |= readVal(jo, "HealAsleep", &model->HealAsleep);
+	return err;
+}
+
+inline Error fromJson(Item *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "ItemType", &model->ItemType);
+	return err;
+}
+
 inline Error fromJson(ZoneHeader *model, json_t *jo) {
 	Error err = Error::Ok;
 	err |= readVal(jo, "Zone", &model->Zone);
@@ -1010,15 +1098,6 @@ inline Error fromJson(ZoneInstance *model, json_t *jo) {
 	err |= readVal(jo, "AccessorID", &model->AccessorID);
 	err |= readVal(jo, "ZoneHeader", &model->ZoneHeader);
 	err |= readVal(jo, "Address", &model->Address);
-	return err;
-}
-
-inline Error fromJson(CreatureType *model, json_t *jo) {
-	Error err = Error::Ok;
-	err |= readVal(jo, "Name", &model->Name);
-	err |= readVal(jo, "Special", &model->Special);
-	err |= readVal(jo, "StrongAgainst", &model->StrongAgainst);
-	err |= readVal(jo, "WeakAgainst", &model->WeakAgainst);
 	return err;
 }
 
@@ -1110,6 +1189,37 @@ inline Error fromJson(CreatureMove *model, json_t *jo) {
 	return err;
 }
 
+inline Error fromJson(CreatureType *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Name", &model->Name);
+	err |= readVal(jo, "Special", &model->Special);
+	err |= readVal(jo, "StrongAgainst", &model->StrongAgainst);
+	err |= readVal(jo, "WeakAgainst", &model->WeakAgainst);
+	return err;
+}
+
+inline Error fromJson(World *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Zones", &model->Zones);
+	return err;
+}
+
+inline Error fromJson(TileClass *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "Import", &model->Import);
+	err |= readVal(jo, "TerrainType", &model->TerrainType);
+	err |= readVal(jo, "LowerAnim", &model->LowerAnim);
+	err |= readVal(jo, "UpperAnim", &model->UpperAnim);
+	return err;
+}
+
+inline Error fromJson(CreatureMoveInstance *model, json_t *jo) {
+	Error err = Error::Ok;
+	err |= readVal(jo, "CreatureMove", &model->CreatureMove);
+	err |= readVal(jo, "PP", &model->PP);
+	return err;
+}
+
 inline Error fromJson(CreatureClass *model, json_t *jo) {
 	Error err = Error::Ok;
 	err |= readVal(jo, "Name", &model->Name);
@@ -1123,16 +1233,13 @@ inline Error fromJson(CreatureClass *model, json_t *jo) {
 	return err;
 }
 
-inline Error fromJson(CreatureMoveInstance *model, json_t *jo) {
+inline Error fromJson(PersonClass *model, json_t *jo) {
 	Error err = Error::Ok;
-	err |= readVal(jo, "CreatureMove", &model->CreatureMove);
-	err |= readVal(jo, "PP", &model->PP);
-	return err;
-}
-
-inline Error fromJson(World *model, json_t *jo) {
-	Error err = Error::Ok;
-	err |= readVal(jo, "Zones", &model->Zones);
+	err |= readVal(jo, "Import", &model->Import);
+	err |= readVal(jo, "Title", &model->Title);
+	err |= readVal(jo, "Overhead", &model->Overhead);
+	err |= readVal(jo, "FrontView", &model->FrontView);
+	err |= readVal(jo, "BackView", &model->BackView);
 	return err;
 }
 
@@ -1156,22 +1263,11 @@ inline Error fromJson(Creature *model, json_t *jo) {
 	return err;
 }
 
-inline Error fromJson(TileClass *model, json_t *jo) {
+inline Error fromJson(Person *model, json_t *jo) {
 	Error err = Error::Ok;
-	err |= readVal(jo, "Import", &model->Import);
-	err |= readVal(jo, "TerrainType", &model->TerrainType);
-	err |= readVal(jo, "LowerAnim", &model->LowerAnim);
-	err |= readVal(jo, "UpperAnim", &model->UpperAnim);
-	return err;
-}
-
-inline Error fromJson(PersonClass *model, json_t *jo) {
-	Error err = Error::Ok;
-	err |= readVal(jo, "Import", &model->Import);
-	err |= readVal(jo, "Title", &model->Title);
-	err |= readVal(jo, "Overhead", &model->Overhead);
-	err |= readVal(jo, "FrontView", &model->FrontView);
-	err |= readVal(jo, "BackView", &model->BackView);
+	err |= readVal(jo, "PersonClass", &model->PersonClass);
+	err |= readVal(jo, "Name", &model->Name);
+	err |= readVal(jo, "Creatures", &model->Creatures);
 	return err;
 }
 
@@ -1185,14 +1281,6 @@ inline Error fromJson(Tile *model, json_t *jo) {
 inline Error fromJson(Zone *model, json_t *jo) {
 	Error err = Error::Ok;
 	err |= readVal(jo, "Tiles", &model->Tiles);
-	return err;
-}
-
-inline Error fromJson(Person *model, json_t *jo) {
-	Error err = Error::Ok;
-	err |= readVal(jo, "PersonClass", &model->PersonClass);
-	err |= readVal(jo, "Name", &model->Name);
-	err |= readVal(jo, "Creatures", &model->Creatures);
 	return err;
 }
 

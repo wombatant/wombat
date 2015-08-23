@@ -10,6 +10,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
+#include "../_misc.hpp"
 #include "../gfx.hpp"
 #include "../task.hpp"
 #include "../types.hpp"
@@ -43,7 +44,7 @@ class SdlMainEventQueue: public BaseEventQueue {
 
 		void post(Event wakeup = Event::GenericPost) override;
 
-		int popPost(Event &post) override;
+		int popPost(Event *post) override;
 
 		bool hasPosts() override;
 
@@ -94,10 +95,10 @@ void SdlMainEventQueue::post(Event post) {
 	m_mutex.unlock();
 }
 
-int SdlMainEventQueue::popPost(Event &post) {
+int SdlMainEventQueue::popPost(Event *post) {
 	m_mutex.lock();
 	if (hasPosts()) {
-		post = m_posts.front();
+		*post = m_posts.front();
 		m_posts.pop();
 		m_mutex.unlock();
 		return 0;
@@ -138,13 +139,25 @@ void main() {
 	SDL_Event sev;
 	TaskState taskState = TaskState::Waiting;
 	while (_running) {
-		if (taskState.state == TaskState::Running) {
-			// yes... SDL_WaitEventTimeout uses 0 indicate failure...
-			if (SDL_WaitEventTimeout(&sev, taskState.sleepDuration) == 0) {
-				_mainEventQueue.post(Event::Timeout);
+		auto eventReturned = SDL_PollEvent(&sev);
+		if (!eventReturned) {
+			if (taskState.state == TaskState::Running) {
+				auto time = _schedTime();
+				if (time < taskState.wakeupTime) {
+					auto sleep = taskState.wakeupTime - time;
+					// yes... SDL_WaitEventTimeout uses 0 indicate failure...
+					if (!SDL_WaitEventTimeout(&sev, sleep)) {
+						_mainEventQueue.post(Event::Timeout);
+						sev.type = Event_SemaphorePost;
+					}
+				} else {
+					// no time to sleep, process timeout event
+					_mainEventQueue.post(Event::Timeout);
+					sev.type = Event_SemaphorePost;
+				}
+			} else {
+				SDL_WaitEvent(&sev);
 			}
-		} else {
-			SDL_WaitEvent(&sev);
 		}
 
 		const auto t = sev.type;
@@ -153,7 +166,7 @@ void main() {
 		if (t == Event_DrawEvent) {
 			_draw();
 		} else if (sev.type == Event_SemaphorePost) {
-			if (_mainEventQueue.popPost(ev) == 0) {
+			if (_mainEventQueue.popPost(&ev) == 0) {
 				taskState = _taskProcessor.run(ev);
 			}
 		} else if (t == SDL_WINDOWEVENT) {

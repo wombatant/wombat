@@ -49,7 +49,7 @@ Event EventQueue::wait() {
 	while (1) {
 		SDL_SemWait((SDL_sem*) m_semaphore);
 
-		if (popPost(post) == 0) {
+		if (popPost(&post) == 0) {
 			break;
 		}
 	}
@@ -66,7 +66,7 @@ Event EventQueue::wait(uint64_t timeout) {
 
 		if (wakeup == SDL_MUTEX_TIMEDOUT) {
 			return Event::Timeout;
-		} else if (popPost(post) == 0) {
+		} else if (popPost(&post) == 0) {
 			break;
 		} else {
 			// no timeout, but another thread got the post

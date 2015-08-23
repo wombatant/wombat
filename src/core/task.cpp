@@ -32,12 +32,12 @@ int subscribe(Event::Type et) {
 
 TaskState::TaskState(uint64_t sleep) {
 	state = Running;
-	sleepDuration = sleep;
+	wakeupTime = _schedTime() + sleep;
 }
 
 TaskState::TaskState(TaskState::State state) {
 	this->state = state;
-	sleepDuration = 0;
+	wakeupTime = 0;
 }
 
 // Task
@@ -117,49 +117,45 @@ TaskState TaskProcessor::run(Event event) {
 		for (auto t : subs) {
 			runTask(t, event);
 		}
-	}
-
-	if (!event.getTaskPost()) {
+	} else if (!event.getTaskPost()) {
 		switch (event.type()) {
-		case Event::Timeout: // Timeout means something wants to run
-			// put a limit on the number of Tasks processed in a single iteration
-			for (int i = 0; i < 100; i++) {
-				auto nt = popActiveTask();
-				if (nt) {
-					runTask(nt, event);
-				} else {
-					break;
+			case Event::Timeout: // Timeout means something wants to run
+				// put a limit on the number of Tasks processed in a single iteration
+				{
+					auto nt = popActiveTask();
+					if (nt) {
+						runTask(nt, event);
+					} else {
+						break;
+					}
 				}
-			}
-			break;
-		case Event::ChannelMessage:
-			runTask(event.task(), event);
-			break;
-		case Event::InitTask:
-			if (event.task()) {
-				m_currentTask = event.task();
-				event.task()->init();
-				processTaskState(event.task(), TaskState::Running);
-				m_currentTask = nullptr;
-			}
-			break;
-		case Event::GenericPost:
-			// GenericPost is already designated for use only as a
-			//  sleep refresh in this switch or exit the thread loop
-			break;
-		default:
-			break;
+				break;
+			case Event::ChannelMessage:
+				runTask(event.task(), event);
+				break;
+			case Event::InitTask:
+				if (event.task()) {
+					m_currentTask = event.task();
+					event.task()->init();
+					processTaskState(event.task(), TaskState::Running);
+					m_currentTask = nullptr;
+				}
+				break;
+			case Event::GenericPost:
+				// GenericPost is already designated for use only as a
+				//  sleep refresh in this switch or exit the thread loop
+				break;
+			default:
+				break;
 		}
-	} else {
-		if (event.task()) {
-			runTask(event.task(), event);
-		}
+	} else if (event.task()) {
+		runTask(event.task(), event);
 	}
 
 	setActiveTaskProcessor(prevTp);
 
 	TaskProcessor::ScheduleItem nt;
-	if (nextTask(nt) == 0) {
+	if (nextTask(&nt) == 0) {
 		auto time = _schedTime();
 		if (time < nt.wakeupTime) {
 			return nt.wakeupTime - time;
@@ -191,7 +187,12 @@ void TaskProcessor::start() {
 			while (m_running) {
 				Event post;
 				if (taskState.state == TaskState::Running) {
-					post = m_events->wait(taskState.sleepDuration);
+					const auto time = _schedTime();
+					if (time < taskState.wakeupTime) {
+						post = m_events->wait(taskState.wakeupTime - time);
+					} else {
+						post = m_events->wait(0);
+					}
 				} else {
 					post = m_events->wait();
 				}
@@ -230,7 +231,7 @@ void TaskProcessor::addSubscription(Event::Type et) {
 Task *TaskProcessor::popActiveTask() {
 	TaskProcessor::ScheduleItem nt;
 	m_mutex.lock();
-	if (nextTask(nt) == 0) {
+	if (nextTask(&nt) == 0) {
 		auto time = _schedTime();
 		if (time >= nt.wakeupTime) {
 			m_schedule.pop_back();
@@ -241,13 +242,13 @@ Task *TaskProcessor::popActiveTask() {
 	return nullptr;
 }
 
-int TaskProcessor::nextTask(TaskProcessor::ScheduleItem &t) {
+int TaskProcessor::nextTask(TaskProcessor::ScheduleItem *t) {
 	int retval = 0;
 	m_mutex.lock();
 	if (m_schedule.empty()) {
 		retval = 1;
 	} else {
-		t = m_schedule.back();
+		*t = m_schedule.back();
 	}
 	m_mutex.unlock();
 	return retval;
@@ -256,46 +257,46 @@ int TaskProcessor::nextTask(TaskProcessor::ScheduleItem &t) {
 void TaskProcessor::processTaskState(Task *task, TaskState state) {
 	m_mutex.lock();
 	switch (state.state) {
-	case TaskState::Running:
-		{
-			// remove old wake up time
-			deschedule(task);
+		case TaskState::Running:
+			{
+				// remove old wake up time
+				deschedule(task);
 
-			const auto wakeup = _schedTime() + state.sleepDuration;
-			const auto val = TaskProcessor::ScheduleItem(task, wakeup);
+				const auto wakeup = state.wakeupTime;
+				const auto val = TaskProcessor::ScheduleItem(task, wakeup);
 
-			bool inserted = false;
-			for (uint i = 0; i < m_schedule.size(); i++) {
-				auto ptr = m_schedule.begin() + i;
-				if (wakeup > ptr->wakeupTime) {
-					m_schedule.insert(ptr, val);
-					inserted = true;
-					break;
+				bool inserted = false;
+				for (uint i = 0; i < m_schedule.size(); i++) {
+					auto ptr = m_schedule.begin() + i;
+					if (wakeup > ptr->wakeupTime) {
+						m_schedule.insert(ptr, val);
+						inserted = true;
+						break;
+					}
+				}
+
+				if (!inserted) {
+					m_schedule.push_back(val);
 				}
 			}
-
-			if (!inserted) {
-				m_schedule.push_back(val);
-			}
-		}
-		break;
-	case TaskState::Waiting:
-		// make sure the Task is not in the schedule
-		deschedule(task);
-		break;
-	case TaskState::Done:
-		if (task->autoDelete()) {
+			break;
+		case TaskState::Waiting:
+			// make sure the Task is not in the schedule
 			deschedule(task);
-			// actually delete the Task
-			delete task;
-		}
-		break;
-	case TaskState::Continue:
-		// Continue exists to do nothing
-		break;
-	default:
-		// do nothing
-		break;
+			break;
+		case TaskState::Done:
+			if (task->autoDelete()) {
+				deschedule(task);
+				// actually delete the Task
+				delete task;
+			}
+			break;
+		case TaskState::Continue:
+			// Continue exists to do nothing
+			break;
+		default:
+			// do nothing
+			break;
 	}
 	m_mutex.unlock();
 }
