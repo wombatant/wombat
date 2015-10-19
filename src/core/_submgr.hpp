@@ -44,7 +44,7 @@ class SubscriptionManager {
 		 * the Event's Event::Type.
 		 * @param event the Event to publish
 		 */
-		void post(Event event);
+		void post(const Event &event);
 
 		/**
 		 * Gets the subscribers to the given Event::Type.

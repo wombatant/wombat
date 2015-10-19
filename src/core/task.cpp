@@ -224,8 +224,6 @@ void TaskProcessor::addSubscription(Event::Type et) {
 	if (m_submgr.subs(et).size() == 0) {
 		_submgr.addSubscription(et, this);
 	}
-
-	m_submgr.addSubscription(et, m_currentTask);
 }
 
 Task *TaskProcessor::popActiveTask() {
