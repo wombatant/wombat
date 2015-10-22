@@ -18,7 +18,9 @@ add_executable(
 
 target_link_libraries(json_test ${JANSSON_LIBRARY})
 
-add_test("json_test" json_test)
+add_test("json_test:readWrite"     json_test 0)
+add_test("json_test:fieldType"     json_test 1)
+add_test("json_test:fieldPresence" json_test 2)
 
 #install(TARGETS WombatModels DESTINATION lib)
 install(

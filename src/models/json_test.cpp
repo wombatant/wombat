@@ -139,22 +139,19 @@ int missingFieldTest() {
 
 int main(int argc, char **args) {
 	cout << args[0] << endl;
-	int testNo;
+	int testNo = -1;
 	if (argc > 1) {
 		testNo = args[1][0] - '0';
 	}
 	int retval = 0;
-	// general read/write test
-	if (argc == 1 || testNo == 0) {
+	if (testNo == 0) { // general read/write test
 		retval |= readWriteTest();
-	}
-	// type mismatch detection test
-	if (argc == 1 || testNo == 1) {
+	} else if (testNo == 1) { // type mismatch detection test
 		retval |= typeMismatchTest();
-	}
-	// missing field detection test
-	if (argc == 1 || testNo == 2) {
+	} else if (testNo == 2) { // missing field detection test
 		retval |= missingFieldTest();
+	} else {
+		retval = 1;
 	}
 	return retval;
 }
