@@ -7,6 +7,8 @@ install:
 	make -j -C build ARGS="install"
 clean:
 	make -j -C build ARGS="clean"
+test:
+	make -j -C build ARGS="test"
 run: make
 	./build/current/src/wombat/wombat -debug
 

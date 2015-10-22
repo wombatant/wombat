@@ -19,4 +19,6 @@ add_definitions(
 	#-Os # GCC size optimization flag
 )
 
+enable_testing()
+
 add_subdirectory(src)

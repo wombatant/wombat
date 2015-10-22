@@ -18,6 +18,8 @@ add_executable(
 
 target_link_libraries(json_test ${JANSSON_LIBRARY})
 
+add_test("json_test" json_test)
+
 #install(TARGETS WombatModels DESTINATION lib)
 install(
 	FILES
