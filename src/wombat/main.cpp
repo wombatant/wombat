@@ -64,9 +64,11 @@ int run(ClArgs args) {
 	if (ui::init() != 0) {
 		return 2;
 	}
+
 	// start app
 	core::addTask(new App());
 	core::main();
+
 	// save current settings and exit
 	writeJsonFile(settings, SettingsPath);
 	return 0;

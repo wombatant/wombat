@@ -73,7 +73,7 @@ class Task {
 		 * Posts an Event for this Task to receive.
 		 * @param event Event for this Task to receive
 		 */
-		void post(Event event);
+		virtual void post(Event event);
 
 		virtual void init();
 
@@ -166,7 +166,7 @@ class TaskProcessor: public Task {
 		 */
 		virtual ~TaskProcessor();
 
-		TaskState run(Event);
+		TaskState run(Event) override;
 
 		/**
 		 * Adds the given Task to this TaskProcessor.
@@ -201,7 +201,13 @@ class TaskProcessor: public Task {
 		 * Posts the given Event to this TaskProcessor's semaphore.
 		 * @param event the Event to post to the semaphore
 		 */
-		void post(Event event);
+		void post(Event event) override;
+
+		/**
+		 * Gets the currently running Task, or null if there is none.
+		 * @return the currently running Task
+		 */
+		Task *activeTask();
 
 	protected:
 		/**

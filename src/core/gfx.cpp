@@ -7,16 +7,31 @@
  */
 #include <iostream>
 #include "misc.hpp"
+#include "sync.hpp"
 #include "gfx.hpp"
 
 namespace wombat {
 namespace core {
 
+Mutex _drawersLock;
 std::vector<Drawer*> _drawers;
 
 
 void addDrawer(Drawer *d) {
+	_drawersLock.lock();
 	_drawers.push_back(d);
+	_drawersLock.unlock();
+}
+
+void removeDrawer(Drawer *d) {
+	_drawersLock.lock();
+	for (size_t i = 0; i < _drawers.size(); i++) {
+		if (_drawers[i] == d) {
+			_drawers.erase(_drawers.begin() + i);
+			break;
+		}
+	}
+	_drawersLock.unlock();
 }
 
 // Graphics

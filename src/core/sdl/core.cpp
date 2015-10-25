@@ -19,46 +19,13 @@ namespace wombat {
 namespace core {
 
 extern SubscriptionManager _submgr;
+extern Mutex _drawersLock;
 extern std::vector<Drawer*> _drawers;
 extern bool _running;
 
-class SdlMainEventQueue: public BaseEventQueue {
-	private:
-		std::queue<Event> m_posts;
-		Mutex m_mutex;
+extern TaskProcessor _taskProcessor;
 
-	public:
-		/**
-		 * Constructor
-		 */
-		SdlMainEventQueue();
-
-		/**
-		 * Destructor
-		 */
-		~SdlMainEventQueue();
-
-		Event wait() override;
-
-		Event wait(uint64_t timeout) override;
-
-		void post(Event wakeup = Event::GenericPost) override;
-
-		int popPost(Event *post) override;
-
-		bool hasPosts() override;
-
-	// disallow copying
-	private:
-		SdlMainEventQueue(const SdlMainEventQueue&);
-		SdlMainEventQueue &operator=(const SdlMainEventQueue&);
-};
-
-BaseEventQueue &_mainEventQueue = *new SdlMainEventQueue();
-
-TaskProcessor _taskProcessor(&_mainEventQueue);
-
-const auto Event_DrawEvent = SDL_RegisterEvents(1);
+const auto Event_QuitEvent = SDL_RegisterEvents(1);
 const auto Event_SemaphorePost = SDL_RegisterEvents(1);
 
 SDL_Window *_display = nullptr;
@@ -67,124 +34,62 @@ SDL_Renderer *_renderer = nullptr;
 Key toWombatKey(SDL_Event);
 void _updateEventTime();
 
-// SdlMainEventQueue Implementation
+// Main TaskProcessor modifiers
 
-SdlMainEventQueue::SdlMainEventQueue() {
-}
-
-SdlMainEventQueue::~SdlMainEventQueue() {
-}
-
-Event SdlMainEventQueue::wait() {
-	return Event::UnknownEvent;
-}
-
-Event SdlMainEventQueue::wait(uint64_t timeout) {
-	return Event::UnknownEvent;
-}
-
-void SdlMainEventQueue::post(Event post) {
-	m_mutex.lock();
-	m_posts.push(post);
-
+void quit() {
+	_running = false;
 	SDL_Event ev;
 	SDL_zero(ev);
-	ev.type = Event_SemaphorePost;
+	ev.type = Event_QuitEvent;
 	SDL_PushEvent(&ev);
-
-	m_mutex.unlock();
 }
-
-int SdlMainEventQueue::popPost(Event *post) {
-	m_mutex.lock();
-	if (hasPosts()) {
-		*post = m_posts.front();
-		m_posts.pop();
-		m_mutex.unlock();
-		return 0;
-	}
-	m_mutex.unlock();
-	return 1;
-}
-
-bool SdlMainEventQueue::hasPosts() {
-	return m_posts.size();
-}
-
-// Main TaskProcessor modifiers
 
 void _draw() {
 	setRGB(0, 0, 0);
 	SDL_RenderClear(_renderer);
+	_drawersLock.lock();
 	for (auto d : _drawers) {
 		d->draw();
 		resetViewport();
 	}
+	_drawersLock.unlock();
 	SDL_RenderPresent(_renderer);
 }
 
-void draw() {
-	// TODO: Make it run this commented out code if the current thread is
-	//       not the main thread.
-	//SDL_Event ev;
-	//SDL_zero(ev);
-	//ev.type = Event_DrawEvent;
-	//SDL_PushEvent(&ev);
-
-	_draw();
-}
-
 void main() {
+	// start main TaskProcessor
+	_taskProcessor.start();
+
 	// handle events
 	SDL_Event sev;
-	TaskState taskState = TaskState::Waiting;
+	Event ev;
 	while (_running) {
-		auto eventReturned = SDL_PollEvent(&sev);
-		if (!eventReturned) {
-			if (taskState.state == TaskState::Running) {
-				auto time = _schedTime();
-				if (time < taskState.wakeupTime) {
-					auto sleep = taskState.wakeupTime - time;
-					// yes... SDL_WaitEventTimeout uses 0 indicate failure...
-					if (!SDL_WaitEventTimeout(&sev, sleep)) {
-						_mainEventQueue.post(Event::Timeout);
-						sev.type = Event_SemaphorePost;
-					}
-				} else {
-					// no time to sleep, process timeout event
-					_mainEventQueue.post(Event::Timeout);
-					sev.type = Event_SemaphorePost;
-				}
-			} else {
-				SDL_WaitEvent(&sev);
-			}
-		}
+		auto eventReturned = !SDL_PollEvent(&sev);
 
-		const auto t = sev.type;
-		Event ev;
-		_updateEventTime();
-		if (t == Event_DrawEvent) {
+		if (eventReturned) {
 			_draw();
-		} else if (sev.type == Event_SemaphorePost) {
-			if (_mainEventQueue.popPost(&ev) == 0) {
-				taskState = _taskProcessor.run(ev);
-			}
-		} else if (t == SDL_WINDOWEVENT) {
+		} else if (sev.type == Event_QuitEvent) {
+			// do nothing, allow loop exit
+		} else if (sev.type == SDL_WINDOWEVENT) {
 			if (sev.window.event == SDL_WINDOWEVENT_RESIZED) {
 				_submgr.post(Event::ScreenSizeChange);
 			}
-		} else if (t == SDL_QUIT) {
+		} else if (sev.type == SDL_QUIT) {
 			_submgr.post(Event::Quit);
-		} else if (t == SDL_KEYUP) {
+		} else if (sev.type == SDL_KEYUP) {
 			ev.m_type = Event::KeyUp;
 			ev.m_body.key = toWombatKey(sev);
 			_submgr.post(ev);
-		} else if (t == SDL_KEYDOWN) {
+		} else if (sev.type == SDL_KEYDOWN) {
 			ev.m_type = Event::KeyDown;
 			ev.m_body.key = toWombatKey(sev);
 			_submgr.post(ev);
 		}
 	}
+
+	// stop main TaskProcessor
+	_taskProcessor.stop();
+	_taskProcessor.done();
 }
 
 int init(models::Settings settings) {

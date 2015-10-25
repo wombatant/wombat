@@ -90,11 +90,7 @@ TaskProcessor::TaskProcessor(BaseEventQueue *sem) {
 		m_events = sem;
 		m_semInternal = false;
 	} else {
-		if (SupportsThreads) {
-			m_events = new EventQueue();
-		} else {
-			m_events = &_mainEventQueue;
-		}
+		m_events = new EventQueue();
 		m_semInternal = true;
 	}
 }
@@ -182,24 +178,24 @@ void TaskProcessor::start() {
 	if (!m_running) {
 		m_running = true;
 		if (SupportsThreads) {
-		startThread([this]() {
-			TaskState taskState;
-			while (m_running) {
+			startThread([this]() {
+				TaskState taskState;
 				Event post;
-				if (taskState.state == TaskState::Running) {
-					const auto time = _schedTime();
-					if (time < taskState.wakeupTime) {
-						post = m_events->wait(taskState.wakeupTime - time);
+				while (m_running) {
+					if (taskState.state == TaskState::Running) {
+						const auto time = _schedTime();
+						if (time < taskState.wakeupTime) {
+							post = m_events->wait(taskState.wakeupTime - time);
+						} else {
+							post = m_events->wait(0);
+						}
 					} else {
-						post = m_events->wait(0);
+						post = m_events->wait();
 					}
-				} else {
-					post = m_events->wait();
+					taskState = run(post);
 				}
-				taskState = run(post);
-			}
-			m_done.write(true);
-		});
+				m_done.write(true);
+			});
 		} else {
 			core::addTask(this);
 		}
@@ -208,8 +204,8 @@ void TaskProcessor::start() {
 }
 
 void TaskProcessor::stop() {
-	m_events->post();
 	m_running = false;
+	m_events->post();
 }
 
 void TaskProcessor::done() {
@@ -223,6 +219,9 @@ void TaskProcessor::post(Event event) {
 void TaskProcessor::addSubscription(Event::Type et) {
 	if (m_submgr.subs(et).size() == 0) {
 		_submgr.addSubscription(et, this);
+	}
+	if (m_currentTask) {
+		m_submgr.addSubscription(et, m_currentTask);
 	}
 }
 
@@ -283,9 +282,9 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 			deschedule(task);
 			break;
 		case TaskState::Done:
+			deschedule(task);
+			m_submgr.removeFromAllSubs(task);
 			if (task->autoDelete()) {
-				deschedule(task);
-				// actually delete the Task
 				delete task;
 			}
 			break;
@@ -314,6 +313,10 @@ void TaskProcessor::deschedule(Task *task) {
 			m_schedule.erase(m_schedule.begin() + i);
 		}
 	}
+}
+
+Task *TaskProcessor::activeTask() {
+	return m_currentTask;
 }
 
 }
