@@ -64,7 +64,7 @@ void main() {
 	SDL_Event sev;
 	Event ev;
 	while (_running) {
-		auto eventReturned = !SDL_PollEvent(&sev);
+		auto eventReturned = !SDL_WaitEventTimeout(&sev, 1);
 
 		if (eventReturned) {
 			_draw();
