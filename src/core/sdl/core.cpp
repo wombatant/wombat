@@ -34,7 +34,9 @@ SDL_Renderer *_renderer = nullptr;
 Key toWombatKey(SDL_Event);
 void _updateEventTime();
 
-// Main TaskProcessor modifiers
+static int _eventFilter(void *userdata, SDL_Event *event) {
+	return !((event->type == SDL_KEYDOWN) && event->key.repeat);
+}
 
 void quit() {
 	_running = false;
@@ -60,11 +62,18 @@ void main() {
 	// start main TaskProcessor
 	_taskProcessor.start();
 
+	// setup event filter
+	static bool eventFilterSet = false;
+	if (!eventFilterSet) {
+		SDL_SetEventFilter(_eventFilter, nullptr);
+		eventFilterSet = true;
+	}
+
 	// handle events
 	SDL_Event sev;
 	Event ev;
 	while (_running) {
-		auto eventReturned = !SDL_WaitEventTimeout(&sev, 1);
+		auto eventReturned = !SDL_WaitEventTimeout(&sev, 0);
 
 		if (eventReturned) {
 			_draw();
