@@ -35,7 +35,7 @@ Key toWombatKey(SDL_Event);
 void _updateEventTime();
 
 static int _eventFilter(void *userdata, SDL_Event *event) {
-	return !((event->type == SDL_KEYDOWN) && event->key.repeat);
+	return (!((event->type == SDL_KEYDOWN) && event->key.repeat)) && event->type != SDL_TEXTINPUT;
 }
 
 void quit() {
@@ -73,7 +73,7 @@ void main() {
 	SDL_Event sev;
 	Event ev;
 	while (_running) {
-		auto eventReturned = !SDL_WaitEventTimeout(&sev, 0);
+		auto eventReturned = !SDL_PollEvent(&sev);
 
 		if (eventReturned) {
 			_draw();
