@@ -153,6 +153,7 @@ class TaskProcessor: public Task {
 		BaseEventQueue *m_events;
 		Channel<bool> m_done;
 		Task *m_currentTask;
+		std::vector<Task*> m_tasks;
 
 	public:
 		/**
@@ -165,8 +166,6 @@ class TaskProcessor: public Task {
 		 * Destructor
 		 */
 		virtual ~TaskProcessor();
-
-		TaskState run(Event) override;
 
 		/**
 		 * Adds the given Task to this TaskProcessor.
@@ -237,6 +236,8 @@ class TaskProcessor: public Task {
 		 * @param state the state to give the task
 		 */
 		void processTaskState(Task *task, TaskState state);
+
+		TaskState run(Event) override;
 
 		/**
 		 * Runs the given Task.

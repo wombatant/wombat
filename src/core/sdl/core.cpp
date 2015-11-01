@@ -38,15 +38,7 @@ static int _eventFilter(void *userdata, SDL_Event *event) {
 	return (!((event->type == SDL_KEYDOWN) && event->key.repeat)) && event->type != SDL_TEXTINPUT;
 }
 
-void quit() {
-	_running = false;
-	SDL_Event ev;
-	SDL_zero(ev);
-	ev.type = Event_QuitEvent;
-	SDL_PushEvent(&ev);
-}
-
-void _draw() {
+static void _draw() {
 	setRGB(0, 0, 0);
 	SDL_RenderClear(_renderer);
 	_drawersLock.lock();
@@ -56,6 +48,14 @@ void _draw() {
 	}
 	_drawersLock.unlock();
 	SDL_RenderPresent(_renderer);
+}
+
+void quit() {
+	_running = false;
+	SDL_Event ev;
+	SDL_zero(ev);
+	ev.type = Event_QuitEvent;
+	SDL_PushEvent(&ev);
 }
 
 void main() {

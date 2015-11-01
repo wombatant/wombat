@@ -108,7 +108,7 @@ TaskState TaskProcessor::run(Event event) {
 
 	setActiveTaskProcessor(this);
 
-	if (event.type() < Event::OptionalEventTypeRange) {
+	if (event.type() < Event::OptionalEventTypeRange) { // is optional
 		auto &subs = m_submgr.subs(event.type());
 		for (auto t : subs) {
 			runTask(t, event);
@@ -169,6 +169,7 @@ void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState stat
 
 void TaskProcessor::addTask(Task *task, TaskState state) {
 	task->_setTaskProcessor(this);
+	m_tasks.push_back(task);
 	// post to the semaphore to refresh the sleep time
 	m_events->post(Event(Event::InitTask, task));
 }
@@ -178,9 +179,12 @@ void TaskProcessor::start() {
 	if (!m_running) {
 		m_running = true;
 		if (SupportsThreads) {
+
 			startThread([this]() {
 				TaskState taskState;
 				Event post;
+
+				// event loop
 				while (m_running) {
 					if (taskState.state == TaskState::Running) {
 						const auto time = _schedTime();
@@ -194,8 +198,15 @@ void TaskProcessor::start() {
 					}
 					taskState = run(post);
 				}
+
+				// send FinishTask to all Tasks
+				for (auto t : m_tasks) {
+					runTask(t, Event::FinishTask);
+				}
+
 				m_done.write(true);
 			});
+
 		} else {
 			core::addTask(this);
 		}
@@ -284,6 +295,12 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 		case TaskState::Done:
 			deschedule(task);
 			m_submgr.removeFromAllSubs(task);
+			for (size_t i = 0; i < m_tasks.size(); i++) {
+				auto t = m_tasks[i];
+				if (t == task) {
+					m_tasks.erase(m_tasks.begin() + i);
+				}
+			}
 			if (task->autoDelete()) {
 				delete task;
 			}

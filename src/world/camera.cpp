@@ -40,6 +40,9 @@ TaskState Camera::run(Event e) {
 	case Event::KeyUp:
 		keyEvent(e);
 		break;
+	case Event::FinishTask:
+		retval = TaskState::Done;
+		break;
 	default:
 		break;
 	}
