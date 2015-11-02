@@ -23,13 +23,14 @@ App::App() {
 	core::read(world, initFile.World);
 	m_world = new world::World(world);
 
-	auto camera = new world::Camera(m_world);
-	camera->init(initFile);
-	core::addDrawer(camera);
-	core::addTask(camera);
+	m_camera = new world::Camera(m_world);
+	m_camera->init(initFile);
+	core::addDrawer(m_camera);
+	core::addTask(m_camera);
 }
 
 App::~App() {
+	core::removeDrawer(m_camera);
 	delete m_world;
 }
 
@@ -44,13 +45,6 @@ TaskState App::run(Event e) {
 	TaskState retval = TaskState::Continue;
 
 	switch (e.type()) {
-	case Event::ScreenSizeChange:
-		core::draw();
-		break;
-	case Event::Timeout:
-		core::draw();
-		retval = 0;
-		break;
 	case Event::Quit:
 		quit();
 		retval = TaskState::Done;

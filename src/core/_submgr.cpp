@@ -31,11 +31,10 @@ void SubscriptionManager::removeFromAllSubs(Task *task) {
 	}
 }
 
-void SubscriptionManager::post(Event e) {
+void SubscriptionManager::post(const Event &e) {
 	for (auto t : m_subs[(int) e.type()]) {
-		auto tp = dynamic_cast<TaskProcessor*>(t);
-		if (tp) {
-			tp->post(e);
+		if (t) {
+			t->post(e);
 		}
 	}
 }

@@ -11,9 +11,14 @@ add_definitions(
 	-std=c++11
 	-Wall
 	-Wsign-compare
+	-g
+	#-fno-rtti
+	#-fcolor-diagnostics
 	#-Werror
 	#--analyze
 	#-Os # GCC size optimization flag
 )
+
+enable_testing()
 
 add_subdirectory(src)

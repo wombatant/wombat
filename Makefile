@@ -7,8 +7,12 @@ install:
 	make -j -C build ARGS="install"
 clean:
 	make -j -C build ARGS="clean"
+test:
+	make -j -C build ARGS="test"
 run: make
 	./build/current/src/wombat/wombat -debug
+debug: make
+	gdb ./build/current/src/wombat/wombat
 
 sdl:
 	./scripts/setup_build

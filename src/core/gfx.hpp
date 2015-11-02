@@ -223,6 +223,8 @@ class Drawer {
 
 void addDrawer(Drawer*);
 
+void removeDrawer(Drawer *d);
+
 Animation *checkoutAnimation(Path path);
 
 Animation *checkoutAnimation(models::Animation &anim);

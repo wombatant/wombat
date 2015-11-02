@@ -60,8 +60,8 @@ TaskState Person::run(Event e) {
 	switch ((int) e.type()) {
 	case StartMoving:
 		{
-			Motion flag;
-			if (e.read(flag) == 0) {
+			int32_t flag;
+			if (e.read(&flag) == 0) {
 				bool alreadyMoving = m_motion != Still;
 				m_motion |= flag;
 				if (m_motion != Person::Still && !alreadyMoving) {
@@ -72,8 +72,8 @@ TaskState Person::run(Event e) {
 		break;
 	case StopMoving:
 		{
-			Motion flag;
-			if (e.read(flag) == 0) {
+			int32_t flag;
+			if (e.read(&flag) == 0) {
 				m_motion ^= flag;
 			}
 		}

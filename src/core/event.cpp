@@ -14,12 +14,6 @@ namespace core {
 
 // Event
 
-const Event::Copier Event::DefaultCopy = [](Body *dest, Event::Body src) {
-	defaultCopy(dest, src);
-};
-
-const std::function<void(void*)> Event::DefaultFree = [](void*) {};
-
 Event::Event(Event::Type type) {
 	m_type = type;
 	memset(&m_body, 0, sizeof(m_body));
@@ -35,24 +29,25 @@ Event::Event(int type, Task *task) {
 	m_task = task;
 }
 
+Event::Event(int type, int32_t integer) {
+	m_type = (Event::Type) type;
+	m_body.integer32 = integer;
+}
+
 Event::Event(const Event &src) {
 	*this = src;
 }
 
 Event::~Event() {
-	if (m_body.other.data != nullptr) {
-		m_free(m_body.other.data);
-	}
 }
 
-Event &Event::operator=(const Event &src) {
-	m_type = src.m_type;
-	m_taskPost = src.m_taskPost;
-	m_task = src.m_task;
-	m_copy = src.m_copy;
-	m_free = src.m_free;
-	m_copy(&m_body, src.m_body);
-	return *this;
+int Event::read(int32_t *integer) {
+	if (integer) {
+		*integer = m_body.integer32;
+		return 0;
+	} else {
+		return 1;
+	}
 }
 
 void Event::setTask(class Task *task) {
@@ -65,10 +60,6 @@ void Event::setTaskPost(bool taskPost) {
 
 bool Event::getTaskPost() {
 	return m_taskPost;
-}
-
-void Event::defaultCopy(void *dest, Event::Body &src) {
-	memcpy(dest, &src, sizeof(Event::Body));
 }
 
 }

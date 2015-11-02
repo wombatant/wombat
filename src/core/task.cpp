@@ -90,11 +90,7 @@ TaskProcessor::TaskProcessor(BaseEventQueue *sem) {
 		m_events = sem;
 		m_semInternal = false;
 	} else {
-		if (SupportsThreads) {
-			m_events = new EventQueue();
-		} else {
-			m_events = &_mainEventQueue;
-		}
+		m_events = new EventQueue();
 		m_semInternal = true;
 	}
 }
@@ -112,7 +108,7 @@ TaskState TaskProcessor::run(Event event) {
 
 	setActiveTaskProcessor(this);
 
-	if (event.type() < Event::OptionalEventTypeRange) {
+	if (event.type() < Event::OptionalEventTypeRange) { // is optional
 		auto &subs = m_submgr.subs(event.type());
 		for (auto t : subs) {
 			runTask(t, event);
@@ -173,6 +169,7 @@ void TaskProcessor::addTask(std::function<TaskState(Event)> task, TaskState stat
 
 void TaskProcessor::addTask(Task *task, TaskState state) {
 	task->_setTaskProcessor(this);
+	m_tasks.push_back(task);
 	// post to the semaphore to refresh the sleep time
 	m_events->post(Event(Event::InitTask, task));
 }
@@ -182,24 +179,34 @@ void TaskProcessor::start() {
 	if (!m_running) {
 		m_running = true;
 		if (SupportsThreads) {
-		startThread([this]() {
-			TaskState taskState;
-			while (m_running) {
+
+			startThread([this]() {
+				TaskState taskState;
 				Event post;
-				if (taskState.state == TaskState::Running) {
-					const auto time = _schedTime();
-					if (time < taskState.wakeupTime) {
-						post = m_events->wait(taskState.wakeupTime - time);
+
+				// event loop
+				while (m_running) {
+					if (taskState.state == TaskState::Running) {
+						const auto time = _schedTime();
+						if (time < taskState.wakeupTime) {
+							post = m_events->wait(taskState.wakeupTime - time);
+						} else {
+							post = m_events->wait(0);
+						}
 					} else {
-						post = m_events->wait(0);
+						post = m_events->wait();
 					}
-				} else {
-					post = m_events->wait();
+					taskState = run(post);
 				}
-				taskState = run(post);
-			}
-			m_done.write(true);
-		});
+
+				// send FinishTask to all Tasks
+				for (auto t : m_tasks) {
+					runTask(t, Event::FinishTask);
+				}
+
+				m_done.write(true);
+			});
+
 		} else {
 			core::addTask(this);
 		}
@@ -208,8 +215,8 @@ void TaskProcessor::start() {
 }
 
 void TaskProcessor::stop() {
-	m_events->post();
 	m_running = false;
+	m_events->post();
 }
 
 void TaskProcessor::done() {
@@ -224,8 +231,9 @@ void TaskProcessor::addSubscription(Event::Type et) {
 	if (m_submgr.subs(et).size() == 0) {
 		_submgr.addSubscription(et, this);
 	}
-
-	m_submgr.addSubscription(et, m_currentTask);
+	if (m_currentTask) {
+		m_submgr.addSubscription(et, m_currentTask);
+	}
 }
 
 Task *TaskProcessor::popActiveTask() {
@@ -285,9 +293,15 @@ void TaskProcessor::processTaskState(Task *task, TaskState state) {
 			deschedule(task);
 			break;
 		case TaskState::Done:
+			deschedule(task);
+			m_submgr.removeFromAllSubs(task);
+			for (size_t i = 0; i < m_tasks.size(); i++) {
+				auto t = m_tasks[i];
+				if (t == task) {
+					m_tasks.erase(m_tasks.begin() + i);
+				}
+			}
 			if (task->autoDelete()) {
-				deschedule(task);
-				// actually delete the Task
 				delete task;
 			}
 			break;
@@ -316,6 +330,10 @@ void TaskProcessor::deschedule(Task *task) {
 			m_schedule.erase(m_schedule.begin() + i);
 		}
 	}
+}
+
+Task *TaskProcessor::activeTask() {
+	return m_currentTask;
 }
 
 }

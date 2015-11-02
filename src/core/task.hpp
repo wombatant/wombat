@@ -73,7 +73,7 @@ class Task {
 		 * Posts an Event for this Task to receive.
 		 * @param event Event for this Task to receive
 		 */
-		void post(Event event);
+		virtual void post(Event event);
 
 		virtual void init();
 
@@ -153,6 +153,7 @@ class TaskProcessor: public Task {
 		BaseEventQueue *m_events;
 		Channel<bool> m_done;
 		Task *m_currentTask;
+		std::vector<Task*> m_tasks;
 
 	public:
 		/**
@@ -165,8 +166,6 @@ class TaskProcessor: public Task {
 		 * Destructor
 		 */
 		virtual ~TaskProcessor();
-
-		TaskState run(Event);
 
 		/**
 		 * Adds the given Task to this TaskProcessor.
@@ -201,7 +200,13 @@ class TaskProcessor: public Task {
 		 * Posts the given Event to this TaskProcessor's semaphore.
 		 * @param event the Event to post to the semaphore
 		 */
-		void post(Event event);
+		void post(Event event) override;
+
+		/**
+		 * Gets the currently running Task, or null if there is none.
+		 * @return the currently running Task
+		 */
+		Task *activeTask();
 
 	protected:
 		/**
@@ -231,6 +236,8 @@ class TaskProcessor: public Task {
 		 * @param state the state to give the task
 		 */
 		void processTaskState(Task *task, TaskState state);
+
+		TaskState run(Event) override;
 
 		/**
 		 * Runs the given Task.

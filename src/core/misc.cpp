@@ -11,6 +11,7 @@
 #include <vector>
 #include <chrono>
 #include <time.h>
+#include "_tls.hpp"
 #include "task.hpp"
 
 namespace wombat {
@@ -21,7 +22,7 @@ time_t refTime;
 bool _running = false;
 static bool _debug = false;
 std::string _language = "english";
-extern TaskProcessor _taskProcessor;
+TaskProcessor _taskProcessor;
 
 void setLanguage(std::string lang) {
 	_language = lang;
@@ -35,16 +36,20 @@ bool running() {
 	return _running;
 }
 
-void quit() {
-	_running = false;
-}
-
 void addTask(std::function<TaskState(Event)> task, TaskState state) {
-	_taskProcessor.addTask(task, state);
+	auto tp = activeTaskProcessor();
+	if (tp == nullptr) {
+		tp = &_taskProcessor;
+	}
+	tp->addTask(task, state);
 }
 
 void addTask(Task *task, TaskState state) {
-	_taskProcessor.addTask(task, state);
+	auto tp = activeTaskProcessor();
+	if (tp == nullptr) {
+		tp = &_taskProcessor;
+	}
+	tp->addTask(task, state);
 }
 
 void _updateEventTime() {

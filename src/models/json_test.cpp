@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 gtalent2@gmail.com
+ * Copyright 2015 gtalent2@gmail.com
  * 
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -89,10 +89,26 @@ int readWriteTest() {
 	TestModel1 model;
 	bool pass = false;
 	// read JSON
-	string json = "{\"field1\":true,\"field2\":42,\"field3\":9.0,\"field4\":\"Narf!\",\"field5\":[42],\"field6\":{\"field1\":42},\"field7\":{\"4\":5}}";
+	auto json = "{"
+	"\n   \"field1\": true,"
+	"\n   \"field2\": 42,"
+	"\n   \"field3\": 9.0,"
+	"\n   \"field4\": \"Narf!\","
+	"\n   \"field5\": ["
+	"\n      42"
+	"\n   ],"
+	"\n   \"field6\": {"
+	"\n      \"field1\": 42"
+	"\n   },"
+	"\n   \"field7\": {"
+	"\n      \"4\": 5"
+	"\n   }"
+	"\n}";
 	fromJson(&model, json);
 	//write JSON
-	string generatedJson = toJson(model);
+	auto generatedJson = toJson(model);
+	cout << json << endl;
+	cout << generatedJson << endl;
 	// test to see if input matches output
 	if (json == generatedJson) {
 		pass = true;
@@ -123,22 +139,19 @@ int missingFieldTest() {
 
 int main(int argc, char **args) {
 	cout << args[0] << endl;
-	int testNo;
+	int testNo = -1;
 	if (argc > 1) {
 		testNo = args[1][0] - '0';
 	}
 	int retval = 0;
-	// general read/write test
-	if (argc == 1 || testNo == 0) {
+	if (testNo == 0) { // general read/write test
 		retval |= readWriteTest();
-	}
-	// type mismatch detection test
-	if (argc == 1 || testNo == 1) {
+	} else if (testNo == 1) { // type mismatch detection test
 		retval |= typeMismatchTest();
-	}
-	// missing field detection test
-	if (argc == 1 || testNo == 2) {
+	} else if (testNo == 2) { // missing field detection test
 		retval |= missingFieldTest();
+	} else {
+		retval = 1;
 	}
 	return retval;
 }
