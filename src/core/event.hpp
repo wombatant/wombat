@@ -76,13 +76,10 @@ class Event {
 			Key key;
 			void *channel;
 			struct {
-				int size;
 				void *data;
 			} other;
+			int32_t integer32;
 		};
-		typedef std::function<void(Body*, Body)> Copier;
-		static const Copier DefaultCopy;
-		static const std::function<void(void*)> DefaultFree;
 
 		Type m_type;
 		/**
@@ -91,8 +88,6 @@ class Event {
 		class Task *m_task = nullptr;
 		Body m_body;
 		bool m_taskPost = false; // a Event posted through Task::post
-		Copier m_copy = DefaultCopy;
-		std::function<void(void *dest)> m_free = DefaultFree;
 
 	public:
 		/**
@@ -117,31 +112,21 @@ class Event {
 
 		/**
 		 * Constructor
+		 * @param type the value for the type value of the Event
+		 * @param integer integer value to send
+		 */
+		Event(int type, int32_t integer);
+
+		/**
+		 * Constructor
 		 * @param event Event to copy
 		 */
 		Event(const Event &event);
 
 		/**
-		 * Constructor
-		 * @param val the value that the event carries, this needs to be a memcpy friendly type
-		 */
-		template<typename T>
-		explicit Event(T val);
-
-		/**
-		 * Constructor
-		 * @param type the value for the type value of the Event
-		 * @param val the value that the event carries, this needs to be a memcpy friendly type
-		 */
-		template<typename T>
-		Event(int type, T val);
-
-		/**
 		 * Destructor
 		 */
 		~Event();
-
-		Event &operator=(const Event &src);
 
 		/**
 		 * Gets the Type describing this Event.
@@ -183,8 +168,7 @@ class Event {
 		 * @param val reference to the value to write to
 		 * @return 0 if successful
 		 */
-		template<typename T>
-		int read(T &val);
+		int read(int32_t *integer);
 
 	protected:
 		/**
@@ -204,59 +188,7 @@ class Event {
 		 * @return whether or not this is the result of a Task::post
 		 */
 		bool getTaskPost();
-
-	private:
-		static void defaultCopy(void *dest, Body &src);
-
-		template<typename T>
-		static void appEventCopy(Body *dest, Body src);
 };
-
-template<typename T>
-Event::Event(T val) {
-	m_body.other.size = sizeof(T);
-	m_body.other.data = new T;
-	*((T*) m_body.other.data) = val;
-	m_copy = [](Body *dest, Event::Body src) {
-		appEventCopy<T>(dest, src);
-	};
-	m_free = [](void *data) {
-		delete (T*) data;
-	};
-	m_type = Event::AppEvent;
-}
-
-template<typename T>
-Event::Event(int type, T val) {
-	m_body.other.size = sizeof(T);
-	m_body.other.data = new T;
-	*((T*) m_body.other.data) = val;
-	m_copy = [](Body *dest, Event::Body src) {
-		appEventCopy<T>(dest, src);
-	};
-	m_free = [](void *data) {
-		delete (T*) data;
-	};
-	m_type = (Event::Type) type;
-}
-
-template<typename T>
-void Event::appEventCopy(Body *dest, Event::Body src) {
-	dest->other.size = src.other.size;
-	dest->other.data = new T;
-	*((T*) dest->other.data) = *((T*) src.other.data);
-}
-
-template<typename T>
-int Event::read(T &val) {
-	auto data = (T*) m_body.other.data;
-
-	if (data && m_body.other.size == sizeof(T)) {
-		val = *data;
-		return 0;
-	}
-	return 1;
-}
 
 }
 }
