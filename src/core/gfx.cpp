@@ -51,7 +51,7 @@ void draw(Image *img, common::Point pt) {
 
 // Image
 
-Flyweight<models::Image> imageCache([](models::Model &key) -> Image* {
+static Flyweight<models::Image> imageCache([](models::Model &key) -> Image* {
 	models::Image &mod = (models::Image&) key;
 	Image *i = new Image(mod);
 	if (i->loaded()) {
@@ -136,6 +136,9 @@ Animation::Animation(models::Animation model) {
 }
 
 Animation::~Animation() {
+	for (auto img : m_imgs) {
+		checkinImage(img);
+	}
 }
 
 std::string Animation::key() {
