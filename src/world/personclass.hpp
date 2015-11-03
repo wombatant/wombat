@@ -33,7 +33,7 @@ class PersonClass: public core::Flyweight<models::PersonClass>::GenericValue {
 		          models::SpriteMotion motion);
 
 	private:
-		AnimLayer anim(models::TerrainType tt, models::SpriteDirection, models::SpriteMotion);
+		AnimLayer *anim(models::TerrainType tt, models::SpriteDirection, models::SpriteMotion);
 
 	public:
 		/**
