@@ -42,20 +42,20 @@ PersonClass::PersonClass(models::PersonClass model) {
 void PersonClass::draw(common::Point pt,
                        TerrainType tt, SpriteDirection facing, SpriteMotion motion) {
 	auto anim = this->anim(tt, facing, motion);
-	if (anim.animation) {
-		core::draw(anim.animation->getImage(), pt + anim.point);
+	if (anim && anim->animation) {
+		core::draw(anim->animation->getImage(), pt + anim->point);
 	}
 }
 
-AnimLayer PersonClass::anim(TerrainType tt, SpriteDirection facing, SpriteMotion motion) {
+AnimLayer *PersonClass::anim(TerrainType tt, SpriteDirection facing, SpriteMotion motion) {
 	for (int i = 0; i < 2; i++) {
 		if ((uint) facing < m_animations.size() && (uint) motion < m_animations[(uint) facing].size()) {
-			return m_animations[(uint) tt][(uint) facing][(uint) motion];
+			return &m_animations[(uint) tt][(uint) facing][(uint) motion];
 		}
 		facing = (SpriteDirection) 0;
 		motion = (SpriteMotion) 0;
 	}
-	return AnimLayer();
+	return nullptr;
 }
 
 PersonClass *PersonClass::checkout(models::PersonClass model) {
